@@ -4,30 +4,43 @@
 
 using namespace std;
 
+Graph *readNotDirectedWeightedEdges(string filename)
+{
+    ifstream file(filename);
+
+    if (!file.is_open())
+    {
+        cout << "Error opening file" << endl;
+        return nullptr;
+    }
+
+    string order;
+
+    getline(file, order);
+
+    Graph *graph = new Graph(stoi(order), false, true, false);
+
+    while (!file.eof())
+    {
+        int sourceId, targetId;
+        float weight;
+
+        file >> sourceId >> targetId >> weight;
+
+        graph->addNode(sourceId);
+        graph->addNode(targetId);
+
+        graph->addEdge(sourceId, targetId, weight);
+    }
+
+    file.close();
+
+    return graph;
+}
+
 int main()
 {
-    Graph *graph = new Graph(5, false, true, false);
-
-    graph->addNode(1);
-    graph->addNode(2);
-    graph->addNode(3);
-    graph->addNode(4);
-    graph->addNode(5);
-
-    graph->addEdge(1, 2, 15);
-    graph->addEdge(3, 4, 11);
-    graph->addEdge(4, 1, 12);
-    graph->addEdge(4, 5, 112);
-    graph->addEdge(5, 2, 5);
-    graph->addEdge(5, 1, 25);
-    graph->addEdge(1, 3, 48);
-    graph->addEdge(2, 4, 1);
-    graph->addEdge(2, 3, 6);
-    graph->addEdge(3, 5, 71);
-
+    Graph *graph = readNotDirectedWeightedEdges("graph.txt");
     graph->printGraph("graph.dot");
-
-    delete graph;
-
     return 0;
 }

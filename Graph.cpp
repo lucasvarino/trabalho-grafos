@@ -83,7 +83,7 @@ void Graph::printGraph(string filename)
 
     while (currentNode != nullptr)
     {
-        file << currentNode->getId() << endl;
+        file << currentNode->getId() << ";" << endl;
         currentNode = currentNode->getNextNode();
     }
 
@@ -150,7 +150,6 @@ void Graph::addNode(int id)
 {
     if (this->searchNode(id) != nullptr)
     {
-        cout << "Nó já existe" << endl;
         return;
     }
 
