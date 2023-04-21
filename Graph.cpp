@@ -183,3 +183,45 @@ void Graph::addEdge(int id, int targetId, float weight)
     node->addEdge(targetNode, this->directed, weight);
     this->numberOfEdges++;
 }
+
+void Graph::removeNode(int id)
+{
+    Node *currentNode = this->firstNode;
+    Node *previousNode = nullptr;
+
+    while (currentNode != nullptr)
+    {
+        if (currentNode->getId() == id)
+        {
+            if (previousNode == nullptr)
+            {
+                this->firstNode = currentNode->getNextNode();
+            }
+            else
+            {
+                previousNode->setNextNode(currentNode->getNextNode());
+            }
+
+            delete currentNode;
+            this->order--;
+            return;
+        }
+
+        previousNode = currentNode;
+        currentNode = currentNode->getNextNode();
+    }
+}
+
+void Graph::removeEdge(int id, int targetId)
+{
+    Node *node = this->searchNode(id);
+
+    if (node == nullptr)
+    {
+        cout << "Nó não encontrado" << endl;
+        return;
+    }
+
+    node->removeEdge(this->searchNode(targetId));
+    this->numberOfEdges--;
+}

@@ -32,7 +32,10 @@ public:
     void setNextNode(Node *nextNode);
     void setWeight(float weight);
 
+    Edge *searchEdge(int targetId);
+
     void addEdge(Node *target, bool directed, float weight);
+    void removeEdge(Node *target);
 };
 
 #endif // NODE_H_INCLUDED

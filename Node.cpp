@@ -101,3 +101,65 @@ void Node::addEdge(Node *target, bool directed, float weight)
         target->inDegree++;
     }
 }
+
+Edge *Node::searchEdge(int targetId)
+{
+    Edge *currentEdge = this->firstEdge;
+
+    while (currentEdge != nullptr)
+    {
+        if (currentEdge->getTargetId() == targetId)
+        {
+            return currentEdge;
+        }
+
+        currentEdge = currentEdge->getNextEdge();
+    }
+
+    return nullptr;
+}
+
+void Node::removeEdge(Node *target)
+{
+    Edge *currentEdge = this->firstEdge;
+    Edge *previousEdge = nullptr;
+
+    while (currentEdge != nullptr)
+    {
+        if (currentEdge->getTargetId() == target->getId())
+        {
+            if (previousEdge == nullptr)
+            {
+                this->firstEdge = currentEdge->getNextEdge();
+            }
+            else
+            {
+                previousEdge->setNextEdge(currentEdge->getNextEdge());
+            }
+
+            if (currentEdge->getNextEdge() == nullptr)
+            {
+                this->lastEdge = previousEdge;
+            }
+
+            if (currentEdge->isDirected())
+            {
+                this->outDegree--;
+                target->inDegree--;
+            }
+            else
+            {
+                this->outDegree--;
+                this->inDegree--;
+                target->outDegree--;
+                target->inDegree--;
+            }
+
+            delete currentEdge;
+            return;
+        }
+
+        previousEdge = currentEdge;
+        currentEdge = currentEdge->getNextEdge();
+    }
+}
