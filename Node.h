@@ -28,6 +28,11 @@ public:
     unsigned int getOutDegree();
     float getWeight();
     Node *getNextNode();
+
+    void setNextNode(Node *nextNode);
+    void setWeight(float weight);
+
+    void addEdge(Node *target, bool directed, float weight);
 };
 
 #endif // NODE_H_INCLUDED

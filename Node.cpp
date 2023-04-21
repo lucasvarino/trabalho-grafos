@@ -61,3 +61,43 @@ Node *Node::getNextNode()
 {
     return this->nextNode;
 }
+
+void Node::setNextNode(Node *nextNode)
+{
+    this->nextNode = nextNode;
+}
+
+void Node::setWeight(float weight)
+{
+    this->weight = weight;
+}
+
+void Node::addEdge(Node *target, bool directed, float weight)
+{
+    Edge *newEdge = new Edge(target->getId(), weight);
+
+    if (this->firstEdge == nullptr)
+    {
+        this->firstEdge = newEdge;
+        this->lastEdge = newEdge;
+    }
+    else
+    {
+        this->lastEdge->setNextEdge(newEdge);
+        this->lastEdge = newEdge;
+    }
+
+    if (directed)
+    {
+        this->outDegree++;
+        target->inDegree++;
+        newEdge->setDirected(true);
+    }
+    else
+    {
+        this->outDegree++;
+        this->inDegree++;
+        target->outDegree++;
+        target->inDegree++;
+    }
+}

@@ -25,6 +25,12 @@ public:
     bool isWeightedEdges();
     bool isWeightedNodes();
     bool isDirected();
+
+    void printGraph(string filename);
+
+    void addNode(int id);
+    void addEdge(int id, int targetId, float weight);
+    Node *searchNode(int id);
 };
 
 #endif // GRAPH_H_INCLUDED

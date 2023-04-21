@@ -10,7 +10,7 @@ private:
     bool directed;
 
 public:
-    Edge(int targetId);
+    Edge(int targetId, float weight);
     ~Edge();
 
     int getTargetId();

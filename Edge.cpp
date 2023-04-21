@@ -3,11 +3,11 @@
 
 using namespace std;
 
-Edge::Edge(int targetId)
+Edge::Edge(int targetId, float weight)
 {
     this->targetId = targetId;
     this->nextEdge = nullptr;
-    this->weight = 0;
+    this->weight = weight;
     this->directed = false;
 }
 
