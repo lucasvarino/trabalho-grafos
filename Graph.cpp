@@ -225,3 +225,27 @@ void Graph::removeEdge(int id, int targetId)
     node->removeEdge(this->searchNode(targetId));
     this->numberOfEdges--;
 }
+
+bool Graph::isKRegular(int k)
+{
+    Node *currentNode = this->firstNode;
+
+    while (currentNode != nullptr)
+    {
+        if (this->isDirected())
+        {
+            if (currentNode->getInDegree() != k || currentNode->getOutDegree() != k)
+            {
+                return false;
+            }
+        }
+        else if (currentNode->getOutDegree() != k)
+        {
+            return false;
+        }
+
+        currentNode = currentNode->getNextNode();
+    }
+
+    return true;
+}

@@ -33,6 +33,8 @@ public:
     Node *searchNode(int id);
     void removeNode(int id);
     void removeEdge(int id, int targetId);
+
+    bool isKRegular(int k);
 };
 
 #endif // GRAPH_H_INCLUDED
