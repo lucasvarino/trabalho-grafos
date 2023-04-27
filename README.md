@@ -5,3 +5,4 @@ Trabalho da Disciplina Teoria dos Grafos (DCC059), ministrada no semestre 2023.1
 Alunos:
 
 - Lucas de Oliveira Varino (202165090AC)
+- Rafael de Oliveira Zimbrão (202165124AC)
