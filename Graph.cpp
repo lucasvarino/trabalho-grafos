@@ -162,12 +162,12 @@ void Graph::addEdge(int id, int targetId, float weight)
     }
 
     node->addEdge(targetNode, this->directed, weight);
+    targetNode->addEdge(node, this->directed, weight);
     this->numberOfEdges++;
 }
 
 void Graph::removeNode(int id)
 {
-    // TODO: Remover as arestas
     Node *currentNode = this->firstNode;
     Node *previousNode = nullptr;
 
