@@ -43,7 +43,7 @@ int main()
     Graph *graph = readNotDirectedWeightedEdges("graph.txt");
     graph->printGraph("graph.dot");
 
-    vector<int> openNeighborhood = graph->getOpenNeighborhood(3);
+    vector<int> openNeighborhood = graph->getClosedNeighborhood(3);
 
     cout << "N(" << 1 << ") = ";
     for (int i = 0; i < openNeighborhood.size(); i++)

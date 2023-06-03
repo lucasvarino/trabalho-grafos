@@ -36,7 +36,8 @@ public:
     void removeEdge(int id, int targetId);
 
     bool isKRegular(int k);
-    vector<int> getOpenNeighborhood(int id); // TODO: Verificar com professor se é melhor retornar os nós ou os ids
+    vector<int> getOpenNeighborhood(int id);
+    vector<int> getClosedNeighborhood(int id);
 };
 
 #endif // GRAPH_H_INCLUDED

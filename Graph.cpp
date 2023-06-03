@@ -263,3 +263,11 @@ vector<int> Graph::getOpenNeighborhood(int id)
 
     return neighborhood;
 }
+
+vector<int> Graph::getClosedNeighborhood(int id)
+{
+    vector<int> neighborhood = this->getOpenNeighborhood(id);
+    neighborhood.push_back(id);
+
+    return neighborhood;
+}
