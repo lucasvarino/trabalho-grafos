@@ -206,21 +206,3 @@ void Node::removeEdge(int id)
         currentEdge = currentEdge->getNextEdge();
     }
 }
-
-vector<int> Node::getOpenNeighborhood(int id)
-{
-    vector<int> openNeighborhood;
-    Edge *currentEdge = this->firstEdge;
-
-    while (currentEdge != nullptr)
-    {
-        if (currentEdge->getTargetId() != id)
-        {
-            openNeighborhood.push_back(currentEdge->getTargetId());
-        }
-
-        currentEdge = currentEdge->getNextEdge();
-    }
-
-    return openNeighborhood;
-}

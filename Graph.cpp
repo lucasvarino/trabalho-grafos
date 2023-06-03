@@ -162,7 +162,11 @@ void Graph::addEdge(int id, int targetId, float weight)
     }
 
     node->addEdge(targetNode, this->directed, weight);
-    targetNode->addEdge(node, this->directed, weight);
+
+    if (!this->directed)
+    {
+        targetNode->addEdge(node, this->directed, weight);
+    }
     this->numberOfEdges++;
 }
 
@@ -233,23 +237,29 @@ bool Graph::isKRegular(int k)
     return true;
 }
 
-// vector<int> Graph::getOpenNeighborhood(int id)
-// {
-//     Node *node = this->searchNode(id);
+vector<int> Graph::getOpenNeighborhood(int id)
+{
+    Node *search = this->searchNode(id);
 
-//     if (node == nullptr)
-//     {
-//         cout << "Nó não encontrado" << endl;
-//         return vector<int>();
-//     }
+    if (search == nullptr)
+    {
+        return vector<int>();
+    }
 
-//     while (node != nullptr)
-//     {
-//         if (node->getId() == id)
-//         {
-//             return node->getOpenNeighborhood();
-//         }
+    Node *node = this->firstNode;
+    vector<int> neighborhood;
 
-//         node = node->getNextNode();
-//     }
-// }
+    while (node != nullptr)
+    {
+        Edge *edge = node->searchEdge(id);
+
+        if (edge != nullptr)
+        {
+            neighborhood.push_back(node->getId());
+        }
+
+        node = node->getNextNode();
+    }
+
+    return neighborhood;
+}
