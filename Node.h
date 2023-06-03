@@ -2,6 +2,7 @@
 #define NODE_H_INCLUDED
 
 #include <iostream>
+#include <vector>
 #include "Edge.h"
 
 using namespace std;
@@ -36,6 +37,9 @@ public:
 
     void addEdge(Node *target, bool directed, float weight);
     void removeEdge(Node *target);
+    void removeEdge(int id);
+
+    vector<int> getOpenNeighborhood(int id);
 };
 
 #endif // NODE_H_INCLUDED

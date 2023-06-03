@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include "Node.h"
 
 using namespace std;
@@ -162,4 +163,64 @@ void Node::removeEdge(Node *target)
         previousEdge = currentEdge;
         currentEdge = currentEdge->getNextEdge();
     }
+}
+
+void Node::removeEdge(int id)
+{
+    Edge *currentEdge = this->firstEdge;
+    Edge *previousEdge = nullptr;
+
+    while (currentEdge != nullptr)
+    {
+        if (currentEdge->getTargetId() == id)
+        {
+            if (previousEdge == nullptr)
+            {
+                this->firstEdge = currentEdge->getNextEdge();
+            }
+            else
+            {
+                previousEdge->setNextEdge(currentEdge->getNextEdge());
+            }
+
+            if (currentEdge->getNextEdge() == nullptr)
+            {
+                this->lastEdge = previousEdge;
+            }
+
+            if (currentEdge->isDirected())
+            {
+                this->outDegree--;
+            }
+            else
+            {
+                this->outDegree--;
+                this->inDegree--;
+            }
+
+            delete currentEdge;
+            return;
+        }
+
+        previousEdge = currentEdge;
+        currentEdge = currentEdge->getNextEdge();
+    }
+}
+
+vector<int> Node::getOpenNeighborhood(int id)
+{
+    vector<int> openNeighborhood;
+    Edge *currentEdge = this->firstEdge;
+
+    while (currentEdge != nullptr)
+    {
+        if (currentEdge->getTargetId() != id)
+        {
+            openNeighborhood.push_back(currentEdge->getTargetId());
+        }
+
+        currentEdge = currentEdge->getNextEdge();
+    }
+
+    return openNeighborhood;
 }

@@ -1,6 +1,6 @@
-#include <iostream>
-#include <fstream>
 #include "Graph.h"
+#include <fstream>
+#include <iostream>
 
 using namespace std;
 
@@ -28,40 +28,19 @@ Graph::~Graph()
     }
 }
 
-int Graph::getOrder()
-{
-    return this->order;
-}
+int Graph::getOrder() { return this->order; }
 
-int Graph::getNumberOfEdges()
-{
-    return this->numberOfEdges;
-}
+int Graph::getNumberOfEdges() { return this->numberOfEdges; }
 
-Node *Graph::getFirstNode()
-{
-    return this->firstNode;
-}
+Node *Graph::getFirstNode() { return this->firstNode; }
 
-Node *Graph::getLastNode()
-{
-    return this->lastNode;
-}
+Node *Graph::getLastNode() { return this->lastNode; }
 
-bool Graph::isWeightedEdges()
-{
-    return this->weightedEdges;
-}
+bool Graph::isWeightedEdges() { return this->weightedEdges; }
 
-bool Graph::isWeightedNodes()
-{
-    return this->weightedNodes;
-}
+bool Graph::isWeightedNodes() { return this->weightedNodes; }
 
-bool Graph::isDirected()
-{
-    return this->directed;
-}
+bool Graph::isDirected() { return this->directed; }
 
 void Graph::printGraph(string filename)
 {
@@ -99,7 +78,8 @@ void Graph::printGraph(string filename)
 
             while (currentEdge != nullptr)
             {
-                file << currentNode->getId() << " -- " << currentEdge->getTargetId() << " [label=" << currentEdge->getWeight() << "]" << endl;
+                file << currentNode->getId() << " -- " << currentEdge->getTargetId()
+                     << " [label=" << currentEdge->getWeight() << "]" << endl;
                 currentEdge = currentEdge->getNextEdge();
             }
 
@@ -114,7 +94,8 @@ void Graph::printGraph(string filename)
 
             while (currentEdge != nullptr)
             {
-                file << currentNode->getId() << " -- " << currentEdge->getTargetId() << endl;
+                file << currentNode->getId() << " -- " << currentEdge->getTargetId()
+                     << endl;
                 currentEdge = currentEdge->getNextEdge();
             }
 
@@ -186,11 +167,15 @@ void Graph::addEdge(int id, int targetId, float weight)
 
 void Graph::removeNode(int id)
 {
+    // TODO: Remover as arestas
     Node *currentNode = this->firstNode;
     Node *previousNode = nullptr;
 
     while (currentNode != nullptr)
     {
+
+        currentNode->removeEdge(id);
+        cout << "Removendo aresta do nó " << currentNode->getId() << " para o nó " << id << endl;
         if (currentNode->getId() == id)
         {
             if (previousNode == nullptr)
@@ -201,15 +186,14 @@ void Graph::removeNode(int id)
             {
                 previousNode->setNextNode(currentNode->getNextNode());
             }
-
-            delete currentNode;
-            this->order--;
-            return;
         }
-
         previousNode = currentNode;
         currentNode = currentNode->getNextNode();
     }
+
+    delete currentNode;
+    this->order--;
+    return;
 }
 
 void Graph::removeEdge(int id, int targetId)
@@ -218,7 +202,6 @@ void Graph::removeEdge(int id, int targetId)
 
     if (node == nullptr)
     {
-        cout << "Nó não encontrado" << endl;
         return;
     }
 
@@ -249,3 +232,24 @@ bool Graph::isKRegular(int k)
 
     return true;
 }
+
+// vector<int> Graph::getOpenNeighborhood(int id)
+// {
+//     Node *node = this->searchNode(id);
+
+//     if (node == nullptr)
+//     {
+//         cout << "Nó não encontrado" << endl;
+//         return vector<int>();
+//     }
+
+//     while (node != nullptr)
+//     {
+//         if (node->getId() == id)
+//         {
+//             return node->getOpenNeighborhood();
+//         }
+
+//         node = node->getNextNode();
+//     }
+// }
