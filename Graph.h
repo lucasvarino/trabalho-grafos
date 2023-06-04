@@ -38,6 +38,8 @@ public:
     bool isKRegular(int k);
     vector<int> getOpenNeighborhood(int id);
     vector<int> getClosedNeighborhood(int id);
+
+    bool isComplete();
 };
 
 #endif // GRAPH_H_INCLUDED

@@ -90,16 +90,7 @@ void Node::addEdge(Node *target, bool directed, float weight)
 
     if (directed)
     {
-        this->outDegree++;
-        target->inDegree++;
         newEdge->setDirected(true);
-    }
-    else
-    {
-        this->outDegree++;
-        this->inDegree++;
-        target->outDegree++;
-        target->inDegree++;
     }
 }
 
@@ -204,5 +195,18 @@ void Node::removeEdge(int id)
 
         previousEdge = currentEdge;
         currentEdge = currentEdge->getNextEdge();
+    }
+}
+
+void Node::incrementDegree(bool directed)
+{
+    if (directed)
+    {
+        this->outDegree++;
+    }
+    else
+    {
+        this->outDegree++;
+        this->inDegree++;
     }
 }

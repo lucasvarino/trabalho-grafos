@@ -146,7 +146,6 @@ void Graph::addNode(int id)
         this->lastNode->setNextNode(newNode);
         this->lastNode = newNode;
     }
-
     this->order++;
 }
 
@@ -161,12 +160,22 @@ void Graph::addEdge(int id, int targetId, float weight)
         return;
     }
 
+    if (node->searchEdge(targetId) != nullptr)
+    {
+        return;
+    }
     node->addEdge(targetNode, this->directed, weight);
+    node->incrementDegree(this->directed);
 
     if (!this->directed)
     {
-        targetNode->addEdge(node, this->directed, weight);
+        if (targetNode->searchEdge(id) == nullptr)
+        {
+            targetNode->addEdge(node, this->directed, weight);
+            targetNode->incrementDegree(this->directed);
+        }
     }
+
     this->numberOfEdges++;
 }
 
@@ -270,4 +279,32 @@ vector<int> Graph::getClosedNeighborhood(int id)
     neighborhood.push_back(id);
 
     return neighborhood;
+}
+
+bool Graph::isComplete()
+{
+    // Verificar se todos os vértices tem grau n - 1 e se o número de arestas é n(n-1)/2
+
+    int n = this->getOrder();
+
+    Node *currentNode = this->getFirstNode();
+
+    while (currentNode != nullptr)
+    {
+        if (this->isDirected())
+        {
+            if (currentNode->getInDegree() != n - 1 || currentNode->getOutDegree() != n - 1)
+            {
+                return false;
+            }
+        }
+        else if (currentNode->getInDegree() != n - 1)
+        {
+            return false;
+        }
+
+        currentNode = currentNode->getNextNode();
+    }
+
+    return true;
 }

@@ -32,6 +32,7 @@ public:
 
     void setNextNode(Node *nextNode);
     void setWeight(float weight);
+    void incrementDegree(bool directed);
 
     Edge *searchEdge(int targetId);
 

@@ -18,7 +18,7 @@ Graph *readNotDirectedWeightedEdges(string filename)
 
     getline(file, order);
 
-    Graph *graph = new Graph(stoi(order), false, true, false);
+    Graph *graph = new Graph(0, false, true, false);
 
     while (!file.eof())
     {
@@ -40,16 +40,10 @@ Graph *readNotDirectedWeightedEdges(string filename)
 
 int main()
 {
-    Graph *graph = readNotDirectedWeightedEdges("graph.txt");
+    Graph *graph = readNotDirectedWeightedEdges("complete.txt");
     graph->printGraph("graph.dot");
 
-    vector<int> openNeighborhood = graph->getClosedNeighborhood(3);
-
-    cout << "N(" << 1 << ") = ";
-    for (int i = 0; i < openNeighborhood.size(); i++)
-    {
-        cout << openNeighborhood[i] << " ";
-    }
+    cout << "Is complete: " << graph->isComplete() << endl;
 
     return 0;
 }
