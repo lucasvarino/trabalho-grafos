@@ -40,10 +40,15 @@ Graph *readNotDirectedWeightedEdges(string filename)
 
 int main()
 {
-    Graph *graph = readNotDirectedWeightedEdges("complete.txt");
+    Graph *graph = readNotDirectedWeightedEdges("graph.txt");
     graph->printGraph("graph.dot");
 
-    cout << "Is complete: " << graph->isComplete() << endl;
+    vector<int> directTransitiveClosure = graph->directTransitiveClosure(1);
+
+    for (int i = 0; i < directTransitiveClosure.size(); i++)
+    {
+        cout << directTransitiveClosure[i] << " ";
+    }
 
     return 0;
 }

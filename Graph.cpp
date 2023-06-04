@@ -1,6 +1,9 @@
 #include "Graph.h"
 #include <fstream>
 #include <iostream>
+#include <vector>
+#include <stack>
+#include <algorithm>
 
 using namespace std;
 
@@ -307,4 +310,43 @@ bool Graph::isComplete()
     }
 
     return true;
+}
+
+vector<int> Graph::depthSearch(int id)
+{
+    Node *node = this->searchNode(id);
+
+    if (node == nullptr)
+    {
+        return vector<int>();
+    }
+    vector<int> visited;
+    stack<Node *> stack;
+    stack.push(node);
+
+    while (!stack.empty())
+    {
+        node = stack.top();
+        stack.pop();
+
+        if (find(visited.begin(), visited.end(), node->getId()) == visited.end())
+        {
+            visited.push_back(node->getId());
+
+            Edge *edge = node->getFirstEdge();
+
+            while (edge != nullptr)
+            {
+                stack.push(this->searchNode(edge->getTargetId()));
+                edge = edge->getNextEdge();
+            }
+        }
+    }
+
+    return visited;
+}
+
+vector<int> Graph::directTransitiveClosure(int id)
+{
+    return this->depthSearch(id);
 }

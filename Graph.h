@@ -40,6 +40,9 @@ public:
     vector<int> getClosedNeighborhood(int id);
 
     bool isComplete();
+
+    vector<int> depthSearch(int id);
+    vector<int> directTransitiveClosure(int id);
 };
 
 #endif // GRAPH_H_INCLUDED
