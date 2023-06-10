@@ -33,7 +33,7 @@
 *.app
 
 # output
-*.txt
+/output/*.txt
 *.dot
 
 ### VisualStudioCode ###
