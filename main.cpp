@@ -73,11 +73,11 @@ Graph *readGreedy(string filename)
 
     if (order == graph->getOrder() && numberOfEdges == graph->getNumberOfEdges())
     {
-        cout << "Graph read successfully" << endl;
+        cout << "Graph read successfully!" << endl;
     }
     else
     {
-        cout << "Error reading graph" << endl;
+        cout << "Error reading graph." << endl;
     }
 
     file.close();
