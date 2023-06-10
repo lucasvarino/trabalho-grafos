@@ -38,17 +38,67 @@ Graph *readNotDirectedWeightedEdges(string filename)
     return graph;
 }
 
-int main()
+Graph *readGreedy(string filename)
 {
-    Graph *graph = readNotDirectedWeightedEdges("graph.txt");
-    graph->printGraph("graph.dot");
+    ifstream file(filename);
 
-    vector<int> directTransitiveClosure = graph->directTransitiveClosure(1);
-
-    for (int i = 0; i < directTransitiveClosure.size(); i++)
+    if (!file.is_open())
     {
-        cout << directTransitiveClosure[i] << " ";
+        cout << "Error opening file" << endl;
+        return nullptr;
     }
+
+    string orderS;
+    string numberOfEdgesS;
+    file >> orderS >> numberOfEdgesS;
+    int order = stoi(orderS);
+    int numberOfEdges = stoi(numberOfEdgesS);
+
+    Graph *graph = new Graph(0, false, false, false);
+    
+    cout << "Starting reading graph..." << endl;
+    
+    while (!file.eof())
+    {
+        char aux;
+        int sourceId, targetId;
+
+        file >> aux >> sourceId >> targetId;
+
+        graph->addNode(sourceId);
+        graph->addNode(targetId);
+
+        graph->addEdge(sourceId, targetId, 0);
+    }
+
+    if (order == graph->getOrder() && numberOfEdges == graph->getNumberOfEdges())
+    {
+        cout << "Graph read successfully" << endl;
+    }
+    else
+    {
+        cout << "Error reading graph" << endl;
+    }
+
+    file.close();
+
+    return graph;
+}
+
+int main(int argc, char const *argv[])
+{
+    // Verificação se todos os parâmetros do programa foram entrados
+    if (argc != 3)
+    {
+
+        cout << "ERROR: Expecting: ./<program_name> <input_file> <output_file> " << endl;
+        return 1;
+    }
+    string program_name = argv[0];
+    string input_file = argv[1];
+    string output_file = argv[2];
+
+    Graph *graph = readGreedy(input_file);
 
     return 0;
 }
