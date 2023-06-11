@@ -130,7 +130,7 @@ Node *Graph::searchNode(int id)
     return nullptr;
 }
 
-void Graph::addNode(int id)
+void Graph::addNode(int id, float weight)
 {
     if (this->searchNode(id) != nullptr)
     {
@@ -138,6 +138,7 @@ void Graph::addNode(int id)
     }
 
     Node *newNode = new Node(id);
+    newNode->setWeight(weight);
 
     if (this->firstNode == nullptr)
     {

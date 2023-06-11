@@ -29,7 +29,7 @@ public:
 
     void printGraph(string filename);
 
-    void addNode(int id);
+    void addNode(int id, float weight);
     void addEdge(int id, int targetId, float weight);
     Node *searchNode(int id);
     void removeNode(int id);

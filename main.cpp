@@ -27,8 +27,8 @@ Graph *readNotDirectedWeightedEdges(string filename)
 
         file >> sourceId >> targetId >> weight;
 
-        graph->addNode(sourceId);
-        graph->addNode(targetId);
+        graph->addNode(sourceId, 0);
+        graph->addNode(targetId, 0);
 
         graph->addEdge(sourceId, targetId, weight);
     }
@@ -55,9 +55,9 @@ Graph *readGreedy(string filename)
     int numberOfEdges = stoi(numberOfEdgesS);
 
     Graph *graph = new Graph(0, false, false, false);
-    
+
     cout << "Starting reading graph..." << endl;
-    
+
     while (!file.eof())
     {
         char aux;
@@ -65,8 +65,8 @@ Graph *readGreedy(string filename)
 
         file >> aux >> sourceId >> targetId;
 
-        graph->addNode(sourceId);
-        graph->addNode(targetId);
+        graph->addNode(sourceId, sourceId % 3 + 1);
+        graph->addNode(targetId, targetId % 3 + 1);
 
         graph->addEdge(sourceId, targetId, 0);
     }
