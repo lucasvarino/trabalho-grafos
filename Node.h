@@ -17,6 +17,8 @@ private:
     unsigned int outDegree;
     float weight;
     Node *nextNode;
+    int numberOfEdges;
+    bool marked;
 
 public:
     Node(int id);
@@ -29,16 +31,22 @@ public:
     unsigned int getOutDegree();
     float getWeight();
     Node *getNextNode();
+    int getNumberOfEdges();
+    bool isMarked();
 
     void setNextNode(Node *nextNode);
     void setWeight(float weight);
     void incrementDegree(bool directed);
+    void incrementNumberOfEdges();
+    void decrementNumberOfEdges();
+    void setMarked(bool marked);
 
     Edge *searchEdge(int targetId);
 
     void addEdge(Node *target, bool directed, float weight);
     void removeEdge(Node *target);
     void removeEdge(int id);
+    void removeAllEdges();
 
     vector<int> getOpenNeighborhood(int id);
 };

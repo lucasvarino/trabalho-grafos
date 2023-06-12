@@ -3,6 +3,16 @@
 
 #include "Node.h"
 #include <vector>
+#include <queue>
+
+struct Compare
+{
+    bool operator()(const std::pair<float, int> &a, const std::pair<float, int> &b)
+    {
+        // Comparação com base no valor float do par
+        return a.first > b.first; // '>' para obter uma min heap
+    }
+};
 
 class Graph
 {
@@ -34,8 +44,10 @@ public:
     Node *searchNode(int id);
     void removeNode(int id);
     void removeEdge(int id, int targetId);
+    void removeAllEdges(int id);
 
     bool isKRegular(int k);
+    bool isIsolated(); // Grafo sem arestas
     vector<int> getOpenNeighborhood(int id);
     vector<int> getClosedNeighborhood(int id);
 
@@ -43,6 +55,11 @@ public:
 
     vector<int> depthSearch(int id);
     vector<int> directTransitiveClosure(int id);
+
+    // Trabalho 2 - Algoritmos Gulosos
+    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *relativeWeight(); // Retorna o vértice de menor peso relativo
+    vector<int> relativeHeuristc();                                                        // Retorna o conjunto solução usando a heuristica do peso relativo
+    void imprimeNoEArestas();
 };
 
 #endif // GRAPH_H_INCLUDED

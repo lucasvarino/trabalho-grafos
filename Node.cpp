@@ -13,6 +13,7 @@ Node::Node(int id)
     this->outDegree = 0;
     this->weight = 0;
     this->nextNode = nullptr;
+    this->numberOfEdges = 0;
 }
 
 Node::~Node()
@@ -198,6 +199,23 @@ void Node::removeEdge(int id)
     }
 }
 
+void Node::removeAllEdges()
+{
+    Edge *currentEdge = this->firstEdge;
+
+    while (currentEdge != nullptr)
+    {
+        Edge *nextEdge = currentEdge->getNextEdge();
+        delete currentEdge;
+        currentEdge = nextEdge;
+    }
+
+    this->firstEdge = nullptr;
+    this->lastEdge = nullptr;
+    this->inDegree = 0;
+    this->outDegree = 0;
+}
+
 void Node::incrementDegree(bool directed)
 {
     if (directed)
@@ -209,4 +227,37 @@ void Node::incrementDegree(bool directed)
         this->outDegree++;
         this->inDegree++;
     }
+}
+
+int Node::getNumberOfEdges()
+{
+    Edge *currentEdge = this->firstEdge;
+
+    while (currentEdge != nullptr)
+    {
+        this->numberOfEdges++;
+        currentEdge = currentEdge->getNextEdge();
+    }
+
+    return this->numberOfEdges;
+}
+
+void Node::incrementNumberOfEdges()
+{
+    this->numberOfEdges++;
+}
+
+void Node::decrementNumberOfEdges()
+{
+    this->numberOfEdges--;
+}
+
+bool Node::isMarked()
+{
+    return this->marked;
+}
+
+void Node::setMarked(bool marked)
+{
+    this->marked = marked;
 }

@@ -4,6 +4,8 @@
 #include <vector>
 #include <stack>
 #include <algorithm>
+#include <map>
+#include <queue>
 
 using namespace std;
 
@@ -170,6 +172,7 @@ void Graph::addEdge(int id, int targetId, float weight)
     }
     node->addEdge(targetNode, this->directed, weight);
     node->incrementDegree(this->directed);
+    node->incrementNumberOfEdges();
 
     if (!this->directed)
     {
@@ -222,8 +225,32 @@ void Graph::removeEdge(int id, int targetId)
         return;
     }
 
-    node->removeEdge(this->searchNode(targetId));
+    Node *targetNode = this->searchNode(targetId);
+    node->removeEdge(targetNode);
+    targetNode->removeEdge(node);
+    node->decrementNumberOfEdges();
+    targetNode->decrementNumberOfEdges();
     this->numberOfEdges--;
+}
+
+void Graph::removeAllEdges(int id)
+{
+    Node *node = this->searchNode(id);
+
+    if (node == nullptr)
+    {
+        return;
+    }
+
+    Edge *currentEdge = node->getFirstEdge();
+    Edge *aux = nullptr;
+
+    while (currentEdge != nullptr)
+    {
+        aux = currentEdge;
+        currentEdge = currentEdge->getNextEdge();
+        this->removeEdge(id, aux->getTargetId());
+    }
 }
 
 bool Graph::isKRegular(int k)
@@ -350,4 +377,127 @@ vector<int> Graph::depthSearch(int id)
 vector<int> Graph::directTransitiveClosure(int id)
 {
     return this->depthSearch(id);
+}
+
+bool Graph::isIsolated()
+{
+    Node *currentNode = this->firstNode;
+
+    while (currentNode != nullptr)
+    {
+        Edge *edge = currentNode->getFirstEdge();
+
+        if (edge != nullptr)
+        {
+            return false;
+        }
+
+        currentNode = currentNode->getNextNode();
+    }
+
+    return true;
+}
+
+priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::relativeWeight()
+{
+    // Retorna o id do vértice com menor peso relativo
+    // O peso relativo é calculado pelo peso do vértice dividido pelo número de arestas que ele possui
+
+    Node *currentNode = this->firstNode;
+    Node *relativeWeightNode = currentNode;
+
+    // Inicializa a min heap, utilizar para sempre ter o menor peso relativo no topo
+    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> minHeap;
+
+    while (currentNode != nullptr)
+    {
+        if (currentNode->isMarked())
+        {
+            currentNode = currentNode->getNextNode();
+            continue;
+        }
+
+        minHeap.push(make_pair(currentNode->getWeight() / currentNode->getNumberOfEdges(), currentNode->getId()));
+        currentNode = currentNode->getNextNode();
+    }
+
+    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *minHeapPtr = new priority_queue<pair<float, int>, vector<pair<float, int>>, Compare>(minHeap);
+    return minHeapPtr;
+}
+
+vector<int> Graph::relativeHeuristc()
+{
+    // Conjunto solução inicial
+    map<int, bool> solution;
+    vector<int> solutionVector;
+
+    for (int i = 0; i < this->getOrder(); i++)
+    {
+        solution.insert(make_pair(i, false));
+    }
+
+    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *minHeap = this->relativeWeight();
+
+    bool viable = false;
+    int firstHeuristcNode = minHeap->top().second;
+    float totalWeight = 0;
+
+    minHeap->pop();
+
+    while (!minHeap->empty())
+    {
+        // this->imprimeNoEArestas();
+        // Coloca o vértice na solução
+        Node *node = this->searchNode(firstHeuristcNode);
+        solution[firstHeuristcNode] = true;
+        solutionVector.push_back(firstHeuristcNode);
+        totalWeight += node->getWeight();
+
+        this->removeAllEdges(firstHeuristcNode);
+        node->setMarked(true);
+
+        // Verifica se a solução é viável
+        if (this->isIsolated())
+        {
+            viable = true;
+            break;
+        }
+
+        // Atualiza a min heap
+        delete minHeap;
+        minHeap = this->relativeWeight();
+        firstHeuristcNode = minHeap->top().second;
+        minHeap->pop();
+    }
+
+    cout << "Tamanho da solução: " << solutionVector.size() << endl;
+    cout << "Peso total da solução: " << totalWeight << endl;
+
+    if (!viable)
+    {
+        return vector<int>();
+    }
+    return solutionVector;
+}
+
+void Graph::imprimeNoEArestas()
+{
+    cout << "=============================" << endl;
+    cout << "Imprimindo nós e arestas" << endl;
+    cout << "=============================" << endl;
+    cout << endl;
+    Node *currentNode = this->firstNode;
+
+    while (currentNode != nullptr)
+    {
+        cout << "Nó: " << currentNode->getId() << endl;
+        Edge *currentEdge = currentNode->getFirstEdge();
+
+        while (currentEdge != nullptr)
+        {
+            currentEdge = currentEdge->getNextEdge();
+        }
+
+        currentNode = currentNode->getNextNode();
+    }
 }
