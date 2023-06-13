@@ -40,6 +40,7 @@ Graph *readNotDirectedWeightedEdges(string filename)
 
 Graph *readGreedy(string filename)
 {
+    srand(time(NULL));
     ifstream file(filename);
 
     if (!file.is_open())
@@ -65,8 +66,15 @@ Graph *readGreedy(string filename)
 
         file >> aux >> sourceId >> targetId;
 
-        graph->addNode(sourceId, sourceId % 3 + 1);
-        graph->addNode(targetId, targetId % 3 + 1);
+        // Mudando o peso dos vértices apenas para comparação com o outro artigo
+        // A Fast and Robust Heuristic Algorithm for the Minimum Weight Vertex Cover Problem
+        // TODO: Voltar o peso para i mod 3 + 1
+
+        int random_weight = rand() % 101 + 20; // Generates a number between 20 and 120
+
+        graph->addNode(sourceId, random_weight);
+        random_weight = rand() % 101 + 20; // Generates a new random number for the next node
+        graph->addNode(targetId, random_weight);
 
         graph->addEdge(sourceId, targetId, 0);
     }
