@@ -6,6 +6,8 @@
 #include <algorithm>
 #include <map>
 #include <queue>
+#include <chrono>
+#include <math.h>
 
 using namespace std;
 
@@ -242,7 +244,7 @@ void Graph::removeAllEdges(int id)
         return;
     }
 
-    Edge *currentEdge = node->getFirstEdge();
+    Edge *currentEdge = node->getAuxFirstEdge();
     Edge *aux = nullptr;
 
     while (currentEdge != nullptr)
@@ -251,6 +253,7 @@ void Graph::removeAllEdges(int id)
         currentEdge = currentEdge->getNextEdge();
         this->removeEdge(id, aux->getTargetId());
     }
+    
 }
 
 bool Graph::isKRegular(int k)
@@ -385,7 +388,7 @@ bool Graph::isIsolated()
 
     while (currentNode != nullptr)
     {
-        Edge *edge = currentNode->getFirstEdge();
+        Edge *edge = currentNode->getAuxFirstEdge();
 
         if (edge != nullptr)
         {
@@ -470,6 +473,14 @@ vector<int> Graph::relativeHeuristc()
         minHeap->pop();
     }
 
+    for (int i = 0; i < order; i++)
+    {
+        Node *node = this->firstNode;
+        node->updateAuxEdges();
+        node = node->getNextNode();
+    }
+    
+
     cout << "Tamanho da solução: " << solutionVector.size() << endl;
     cout << "Peso total da solução: " << totalWeight << endl;
 
@@ -500,4 +511,43 @@ void Graph::imprimeNoEArestas()
 
         currentNode = currentNode->getNextNode();
     }
+}
+
+vector<int> Graph::greedyRandomized(double alfa, int numInter){
+    chrono::time_point<chrono::system_clock> start, end;
+    start = chrono::system_clock::now();
+    map<int, bool> solution;
+    vector<int> solutionVector;
+    vector<int> bestSolution;
+    for (int i = 0; i < this->getOrder(); i++)
+    {
+        solution.insert(make_pair(i, false));
+    }
+
+    bool viable = false;
+    float totalWeight = 0;
+    while (numInter >0)
+    {
+
+        numInter--;
+    }
+
+    end = chrono::system_clock::now();
+    chrono::duration<double> elapsed_seconds = end - start;
+
+    for (size_t i = 0; i < solutionVector.size(); i++)
+    {
+        cout << solutionVector[i] << " ";
+    }
+    cout << endl;
+    
+
+    cout << "Tamanho da solução: " << solutionVector.size() << endl;
+    cout << "Peso total da solução: " << totalWeight << endl;
+    cout << "Tempo de execução: " << elapsed_seconds.count() << endl;
+    if (!viable)
+    {
+        return vector<int>();
+    }
+    return solutionVector;
 }

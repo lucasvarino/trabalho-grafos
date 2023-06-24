@@ -96,7 +96,7 @@ Graph *readGreedy(string filename)
 int main(int argc, char const *argv[])
 {
     // Verificação se todos os parâmetros do programa foram entrados
-    if (argc != 3)
+    if (argc != 2)
     {
 
         cout << "ERROR: Expecting: ./<program_name> <input_file> <output_file> " << endl;
@@ -104,10 +104,12 @@ int main(int argc, char const *argv[])
     }
     string program_name = argv[0];
     string input_file = argv[1];
-    string output_file = argv[2];
 
     Graph *graph = readGreedy(input_file);
 
     vector<int> solution = graph->relativeHeuristc();
+    solution = graph->relativeHeuristc();
+    //vector<int> solution = graph->greedyRandomized(0.5, 5);
+    
     return 0;
 }

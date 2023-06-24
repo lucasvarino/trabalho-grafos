@@ -12,6 +12,10 @@ class Node
 private:
     Edge *firstEdge;
     Edge *lastEdge;
+
+    Edge *auxFirstEdge;
+    Edge *auxLastEdge;
+
     int id;
     unsigned int inDegree; // Caso o grafo não seja direcionado, inDegree = outDegree
     unsigned int outDegree;
@@ -26,6 +30,10 @@ public:
 
     Edge *getFirstEdge();
     Edge *getLastEdge();
+    Edge *getAuxFirstEdge();
+    Edge *getAuxLastEdge();
+
+
     int getId();
     unsigned int getInDegree();
     unsigned int getOutDegree();
@@ -33,6 +41,8 @@ public:
     Node *getNextNode();
     int getNumberOfEdges();
     bool isMarked();
+
+    void updateAuxEdges();
 
     void setNextNode(Node *nextNode);
     void setWeight(float weight);

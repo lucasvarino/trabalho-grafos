@@ -8,6 +8,8 @@ Node::Node(int id)
 {
     this->firstEdge = nullptr;
     this->lastEdge = nullptr;
+    this->auxFirstEdge = nullptr;
+    this->auxLastEdge = nullptr;
     this->id = id;
     this->inDegree = 0;
     this->outDegree = 0;
@@ -34,9 +36,19 @@ Edge *Node::getFirstEdge()
     return this->firstEdge;
 }
 
+Edge *Node::getAuxFirstEdge()
+{
+    return this->auxFirstEdge;
+}
+
 Edge *Node::getLastEdge()
 {
     return this->lastEdge;
+}
+
+Edge *Node::getAuxLastEdge()
+{
+    return this->auxLastEdge;
 }
 
 int Node::getId()
@@ -114,7 +126,7 @@ Edge *Node::searchEdge(int targetId)
 
 void Node::removeEdge(Node *target)
 {
-    Edge *currentEdge = this->firstEdge;
+    Edge *currentEdge = this->auxFirstEdge;
     Edge *previousEdge = nullptr;
 
     while (currentEdge != nullptr)
@@ -123,7 +135,7 @@ void Node::removeEdge(Node *target)
         {
             if (previousEdge == nullptr)
             {
-                this->firstEdge = currentEdge->getNextEdge();
+                this->auxFirstEdge = currentEdge->getNextEdge();
             }
             else
             {
@@ -132,7 +144,7 @@ void Node::removeEdge(Node *target)
 
             if (currentEdge->getNextEdge() == nullptr)
             {
-                this->lastEdge = previousEdge;
+                this->auxLastEdge = previousEdge;
             }
 
             if (currentEdge->isDirected())
@@ -159,7 +171,7 @@ void Node::removeEdge(Node *target)
 
 void Node::removeEdge(int id)
 {
-    Edge *currentEdge = this->firstEdge;
+    Edge *currentEdge = this->auxFirstEdge;
     Edge *previousEdge = nullptr;
 
     while (currentEdge != nullptr)
@@ -168,7 +180,7 @@ void Node::removeEdge(int id)
         {
             if (previousEdge == nullptr)
             {
-                this->firstEdge = currentEdge->getNextEdge();
+                this->auxFirstEdge = currentEdge->getNextEdge();
             }
             else
             {
@@ -201,7 +213,7 @@ void Node::removeEdge(int id)
 
 void Node::removeAllEdges()
 {
-    Edge *currentEdge = this->firstEdge;
+    Edge *currentEdge = this->auxFirstEdge;
 
     while (currentEdge != nullptr)
     {
@@ -210,7 +222,7 @@ void Node::removeAllEdges()
         currentEdge = nextEdge;
     }
 
-    this->firstEdge = nullptr;
+    this->auxFirstEdge = nullptr;
     this->lastEdge = nullptr;
     this->inDegree = 0;
     this->outDegree = 0;
@@ -231,7 +243,7 @@ void Node::incrementDegree(bool directed)
 
 int Node::getNumberOfEdges()
 {
-    Edge *currentEdge = this->firstEdge;
+    Edge *currentEdge = this->auxFirstEdge;
 
     while (currentEdge != nullptr)
     {
@@ -260,4 +272,9 @@ bool Node::isMarked()
 void Node::setMarked(bool marked)
 {
     this->marked = marked;
+}
+
+void Node::updateAuxEdges(){
+    this->auxFirstEdge = this->firstEdge;
+    this->auxLastEdge = this->lastEdge;
 }

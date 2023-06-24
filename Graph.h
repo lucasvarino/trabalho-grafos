@@ -58,8 +58,9 @@ public:
 
     // Trabalho 2 - Algoritmos Gulosos
     priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *relativeWeight(); // Retorna o vértice de menor peso relativo
-    vector<int> relativeHeuristc();                                                        // Retorna o conjunto solução usando a heuristica do peso relativo
-    void imprimeNoEArestas();
+    vector<int> relativeHeuristc();             // Retorna o conjunto solução usando a heuristica do peso relativo
+    vector<int> greedyRandomized(double alfa, int numInter);
+    void imprimeNoEArestas(); 
 };
 
 #endif // GRAPH_H_INCLUDED
