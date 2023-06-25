@@ -105,6 +105,7 @@ void Node::addEdge(Node *target, bool directed, float weight)
     {
         newEdge->setDirected(true);
     }
+    updateAuxEdges();
 }
 
 Edge *Node::searchEdge(int targetId)
