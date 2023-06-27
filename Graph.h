@@ -52,6 +52,7 @@ public:
     vector<int> getClosedNeighborhood(int id);
 
     bool isComplete();
+    int getNumberOfUnmarkedEdges(Node *node);
 
     vector<int> depthSearch(int id);
     vector<int> directTransitiveClosure(int id);

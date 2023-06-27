@@ -157,6 +157,5 @@ int main(int argc, char const *argv[])
 
     vector<int> solution = graph->relativeHeuristc();
 
-    cout << "Passei o gustavo hahahahahahahahah" << endl;
     return 0;
 }

@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <map>
 #include <queue>
+#include <cmath>
 
 using namespace std;
 
@@ -387,15 +388,41 @@ bool Graph::isIsolated()
     {
         Edge *edge = currentNode->getFirstEdge();
 
-        if (edge != nullptr)
+        while (edge != nullptr)
         {
-            return false;
+            Node *targetNode = this->searchNode(edge->getTargetId());
+
+            if (!targetNode->isMarked() && !currentNode->isMarked())
+            {
+                return false;
+            }
+
+            edge = edge->getNextEdge();
         }
 
         currentNode = currentNode->getNextNode();
     }
 
     return true;
+}
+
+int Graph::getNumberOfUnmarkedEdges(Node *node)
+{
+    Edge *edge = node->getFirstEdge();
+    int numberOfUnmarkedEdges = 0;
+
+    while (edge != nullptr)
+    {
+        Node *targetNode = this->searchNode(edge->getTargetId());
+        if (!targetNode->isMarked() && !node->isMarked())
+        {
+            numberOfUnmarkedEdges++;
+        }
+
+        edge = edge->getNextEdge();
+    }
+
+    return numberOfUnmarkedEdges;
 }
 
 priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::relativeWeight()
@@ -417,7 +444,9 @@ priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::rela
             continue;
         }
 
-        minHeap.push(make_pair(currentNode->getWeight() / currentNode->getNumberOfEdges(), currentNode->getId()));
+        // int relative = ceil(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode));
+
+        minHeap.push(make_pair(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode), currentNode->getId()));
         currentNode = currentNode->getNextNode();
     }
 
@@ -453,7 +482,7 @@ vector<int> Graph::relativeHeuristc()
         solutionVector.push_back(firstHeuristcNode);
         totalWeight += node->getWeight();
 
-        this->removeAllEdges(firstHeuristcNode);
+        // Marca o vértice
         node->setMarked(true);
 
         // Verifica se a solução é viável
@@ -472,6 +501,13 @@ vector<int> Graph::relativeHeuristc()
 
     cout << "Tamanho da solução: " << solutionVector.size() << endl;
     cout << "Peso total da solução: " << totalWeight << endl;
+
+    cout << "Conjunto solução: " << endl;
+
+    for (int i = 0; i < solutionVector.size(); i++)
+    {
+        cout << solutionVector[i] << " ";
+    }
 
     if (!viable)
     {

@@ -5,16 +5,18 @@ class Edge
 {
 private:
     int targetId;
+    int originId;
     Edge *nextEdge;
     float weight;
     bool directed;
 
 public:
-    Edge(int targetId, float weight);
+    Edge(int targetId, int originId, float weight);
     ~Edge();
 
     int getTargetId();
     Edge *getNextEdge();
+    int getOriginId();
     float getWeight();
     bool isDirected();
 

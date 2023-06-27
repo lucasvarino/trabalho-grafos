@@ -76,7 +76,7 @@ void Node::setWeight(float weight)
 
 void Node::addEdge(Node *target, bool directed, float weight)
 {
-    Edge *newEdge = new Edge(target->getId(), weight);
+    Edge *newEdge = new Edge(target->getId(), this->id, weight);
 
     if (this->firstEdge == nullptr)
     {
