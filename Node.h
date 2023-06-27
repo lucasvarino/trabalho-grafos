@@ -12,12 +12,17 @@ class Node
 private:
     Edge *firstEdge;
     Edge *lastEdge;
+
+    Edge *auxFirstEdge;
+    Edge *auxLastEdge;
+
     int id;
     unsigned int inDegree; // Caso o grafo não seja direcionado, inDegree = outDegree
     unsigned int outDegree;
     float weight;
     Node *nextNode;
     int numberOfEdges;
+    int numberOfAuxEdges;
     bool marked;
 
 public:
@@ -26,27 +31,43 @@ public:
 
     Edge *getFirstEdge();
     Edge *getLastEdge();
+    Edge *getAuxFirstEdge();
+    Edge *getAuxLastEdge();
+
     int getId();
     unsigned int getInDegree();
     unsigned int getOutDegree();
     float getWeight();
     Node *getNextNode();
     int getNumberOfEdges();
+
+    int getNumberOfAuxEdges();
+
     bool isMarked();
 
     void setNextNode(Node *nextNode);
     void setWeight(float weight);
     void incrementDegree(bool directed);
     void incrementNumberOfEdges();
+    void incrementNumberOfAuxEdges();
     void decrementNumberOfEdges();
+    void decrementNumberOfAuxEdges();
     void setMarked(bool marked);
 
     Edge *searchEdge(int targetId);
 
     void addEdge(Node *target, bool directed, float weight);
+    void addAuxEdge(Node *target, bool directed, float weight);
     void removeEdge(Node *target);
+    void removeAuxEdge(Node *target);
     void removeEdge(int id);
+    void removeAuxEdge(int id);
     void removeAllEdges();
+    void removeAllAuxEdges();
+
+    void updateAuxEdges();
+
+
 
     vector<int> getOpenNeighborhood(int id);
 };

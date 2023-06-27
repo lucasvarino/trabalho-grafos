@@ -13,6 +13,7 @@ Graph::Graph(int order, bool directed, bool weightedEdges, bool weightedNodes)
 {
     this->order = order;
     this->numberOfEdges = 0;
+    this->numberOfAuxEdges = 0;
     this->firstNode = nullptr;
     this->lastNode = nullptr;
     this->weightedEdges = weightedEdges;
@@ -173,6 +174,7 @@ void Graph::addEdge(int id, int targetId, float weight)
     node->addEdge(targetNode, this->directed, weight);
     node->incrementDegree(this->directed);
     node->incrementNumberOfEdges();
+    node->incrementNumberOfAuxEdges();
 
     if (!this->directed)
     {
@@ -184,6 +186,7 @@ void Graph::addEdge(int id, int targetId, float weight)
     }
 
     this->numberOfEdges++;
+    this->numberOfAuxEdges++;
 }
 
 void Graph::removeNode(int id)
@@ -229,11 +232,14 @@ void Graph::removeEdge(int id, int targetId)
     node->removeEdge(targetNode);
     targetNode->removeEdge(node);
     node->decrementNumberOfEdges();
+    node->decrementNumberOfAuxEdges();
     targetNode->decrementNumberOfEdges();
+    targetNode->decrementNumberOfAuxEdges();
     this->numberOfEdges--;
+    this->numberOfAuxEdges--;
 }
 
-void Graph::removeAllEdges(int id)
+void Graph::removeAuxEdge(int id, int targetId)
 {
     Node *node = this->searchNode(id);
 
@@ -242,14 +248,42 @@ void Graph::removeAllEdges(int id)
         return;
     }
 
-    Edge *currentEdge = node->getFirstEdge();
+    Node *targetNode = this->searchNode(targetId);
+    node->removeAuxEdge(targetNode);
+    targetNode->removeAuxEdge(node);
+    node->decrementNumberOfAuxEdges();
+    targetNode->decrementNumberOfAuxEdges();
+    this->numberOfAuxEdges--;
+}
+
+void Graph::removeAllAuxEdges(int id)
+{
+    Node *node = this->searchNode(id);
+
+    if (node == nullptr)
+    {
+        return;
+    }
+
+    Edge *currentEdge = node->getAuxFirstEdge();
     Edge *aux = nullptr;
 
     while (currentEdge != nullptr)
     {
         aux = currentEdge;
         currentEdge = currentEdge->getNextEdge();
-        this->removeEdge(id, aux->getTargetId());
+        this->removeAuxEdge(id, aux->getTargetId());
+    }
+}
+
+void Graph::updateAllAuxEdges(){
+
+    Node *currentNode = this->firstNode;
+    while (currentNode != nullptr)
+    {
+        currentNode->updateAuxEdges();
+        cout << "original:" << currentNode->getNumberOfEdges() << endl<< "aux:" << currentNode->getNumberOfAuxEdges() << endl;
+        currentNode = currentNode->getNextNode();
     }
 }
 
@@ -385,7 +419,7 @@ bool Graph::isIsolated()
 
     while (currentNode != nullptr)
     {
-        Edge *edge = currentNode->getFirstEdge();
+        Edge *edge = currentNode->getAuxFirstEdge();
 
         if (edge != nullptr)
         {
@@ -397,6 +431,8 @@ bool Graph::isIsolated()
 
     return true;
 }
+
+
 
 priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::relativeWeight()
 {
@@ -417,7 +453,7 @@ priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::rela
             continue;
         }
 
-        minHeap.push(make_pair(currentNode->getWeight() / currentNode->getNumberOfEdges(), currentNode->getId()));
+        minHeap.push(make_pair(currentNode->getWeight() / currentNode->getNumberOfAuxEdges(), currentNode->getId()));
         currentNode = currentNode->getNextNode();
     }
 
@@ -441,7 +477,6 @@ vector<int> Graph::relativeHeuristc()
     bool viable = false;
     int firstHeuristcNode = minHeap->top().second;
     float totalWeight = 0;
-
     minHeap->pop();
 
     while (!minHeap->empty())
@@ -453,7 +488,7 @@ vector<int> Graph::relativeHeuristc()
         solutionVector.push_back(firstHeuristcNode);
         totalWeight += node->getWeight();
 
-        this->removeAllEdges(firstHeuristcNode);
+        this->removeAllAuxEdges(firstHeuristcNode);
         node->setMarked(true);
 
         // Verifica se a solução é viável
@@ -470,6 +505,10 @@ vector<int> Graph::relativeHeuristc()
         minHeap->pop();
     }
 
+    cout << this->numberOfAuxEdges << endl;
+    this->updateAllAuxEdges();
+    cout << "updated:" << this->numberOfAuxEdges << endl;
+    cout << "original:" << this->numberOfEdges << endl;
     cout << "Tamanho da solução: " << solutionVector.size() << endl;
     cout << "Peso total da solução: " << totalWeight << endl;
 

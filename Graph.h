@@ -19,6 +19,7 @@ class Graph
 private:
     int order;
     int numberOfEdges;
+    int numberOfAuxEdges;
     Node *firstNode;
     Node *lastNode;
     bool weightedEdges;
@@ -44,7 +45,9 @@ public:
     Node *searchNode(int id);
     void removeNode(int id);
     void removeEdge(int id, int targetId);
-    void removeAllEdges(int id);
+    void removeAuxEdge(int id, int targetId);
+    void removeAllAuxEdges(int id);
+    void updateAllAuxEdges();
 
     bool isKRegular(int k);
     bool isIsolated(); // Grafo sem arestas

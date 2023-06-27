@@ -109,5 +109,6 @@ int main(int argc, char const *argv[])
     Graph *graph = readGreedy(input_file);
 
     vector<int> solution = graph->relativeHeuristc();
+    //solution = graph->relativeHeuristc();
     return 0;
 }
