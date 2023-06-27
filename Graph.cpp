@@ -502,12 +502,12 @@ vector<int> Graph::relativeHeuristc()
     cout << "Tamanho da solução: " << solutionVector.size() << endl;
     cout << "Peso total da solução: " << totalWeight << endl;
 
-    cout << "Conjunto solução: " << endl;
+    // cout << "Conjunto solução: " << endl;
 
-    for (int i = 0; i < solutionVector.size(); i++)
-    {
-        cout << solutionVector[i] << " ";
-    }
+    // for (int i = 0; i < solutionVector.size(); i++)
+    // {
+    //     cout << solutionVector[i] << " ";
+    // }
 
     if (!viable)
     {
