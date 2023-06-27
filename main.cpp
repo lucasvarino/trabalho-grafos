@@ -93,6 +93,53 @@ Graph *readGreedy(string filename)
     return graph;
 }
 
+Graph *readMatrixMarket(string filename)
+{
+    srand(time(NULL));
+    ifstream file(filename);
+
+    if (!file.is_open())
+    {
+        cout << "Error opening file" << endl;
+        return nullptr;
+    }
+
+    string header;
+    getline(file, header); // Skip the header line
+
+    int numberOfNodes, numberOfNodesAgain, numberOfEdges;
+    file >> numberOfNodes >> numberOfNodesAgain >> numberOfEdges;
+
+    Graph *graph = new Graph(0, false, false, false);
+
+    cout << "Starting reading graph..." << endl;
+
+    for (int i = 0; i < numberOfEdges; i++)
+    {
+        int sourceId, targetId;
+
+        file >> sourceId >> targetId;
+
+        graph->addNode(sourceId, sourceId % 3 + 1);
+        graph->addNode(targetId, targetId % 3 + 1);
+
+        graph->addEdge(sourceId, targetId, 0);
+    }
+
+    if (numberOfNodes == graph->getOrder() && numberOfEdges == graph->getNumberOfEdges())
+    {
+        cout << "Graph read successfully!" << endl;
+    }
+    else
+    {
+        cout << "Error reading graph." << endl;
+    }
+
+    file.close();
+
+    return graph;
+}
+
 int main(int argc, char const *argv[])
 {
     // Verificação se todos os parâmetros do programa foram entrados
@@ -109,5 +156,7 @@ int main(int argc, char const *argv[])
     Graph *graph = readGreedy(input_file);
 
     vector<int> solution = graph->relativeHeuristc();
+
+    cout << "Passei o gustavo hahahahahahahahah" << endl;
     return 0;
 }
