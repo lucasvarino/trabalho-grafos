@@ -380,6 +380,17 @@ vector<int> Graph::directTransitiveClosure(int id)
     return this->depthSearch(id);
 }
 
+void Graph::resetMarks()
+{
+    Node *node = this->firstNode;
+
+    while (node != nullptr)
+    {
+        node->setMarked(false);
+        node = node->getNextNode();
+    }
+}
+
 bool Graph::isIsolated()
 {
     Node *currentNode = this->firstNode;
@@ -501,7 +512,7 @@ vector<int> Graph::relativeHeuristc()
 
     cout << "Tamanho da solução: " << solutionVector.size() << endl;
     cout << "Peso total da solução: " << totalWeight << endl;
-
+    this->resetMarks();
     // cout << "Conjunto solução: " << endl;
 
     // for (int i = 0; i < solutionVector.size(); i++)

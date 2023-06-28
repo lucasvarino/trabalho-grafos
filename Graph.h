@@ -45,6 +45,7 @@ public:
     void removeNode(int id);
     void removeEdge(int id, int targetId);
     void removeAllEdges(int id);
+    void resetMarks();
 
     bool isKRegular(int k);
     bool isIsolated(); // Grafo sem arestas
