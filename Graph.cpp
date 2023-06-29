@@ -7,6 +7,7 @@
 #include <map>
 #include <queue>
 #include <cmath>
+#include <deque>
 
 using namespace std;
 
@@ -465,6 +466,58 @@ priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::rela
     return minHeapPtr;
 }
 
+priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::relativeWeight2(float alpha)
+{
+    // Retorna o id do vértice com menor peso relativo
+    // O peso relativo é calculado pelo peso do vértice dividido pelo número de arestas que ele possui
+
+    Node *currentNode = this->firstNode;
+    Node *relativeWeightNode = currentNode;
+
+    // Inicializa a min heap, utilizar para sempre ter o menor peso relativo no topo
+    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> minHeap;
+    int pos = 0;
+    float random = 0.0;
+    while (currentNode != nullptr)
+    {
+        if (currentNode->isMarked())
+        {
+            currentNode = currentNode->getNextNode();
+            continue;
+        }
+
+        // int relative = ceil(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode));
+
+        random = this->getNumberOfUnmarkedEdges(currentNode) * alpha;
+        pos = ceil(random);
+        minHeap.push(make_pair(currentNode->getWeight() / pos, currentNode->getId()));
+        currentNode = currentNode->getNextNode();
+    }
+
+    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *minHeapPtr = new priority_queue<pair<float, int>, vector<pair<float, int>>, Compare>(minHeap);
+    return minHeapPtr;
+}
+
+queue<pair<float, int>, deque<pair<float, int>>> *Graph::randomizedCandidates()
+{
+    Node *currentNode = this->firstNode;
+    queue<pair<float, int>, deque<pair<float, int>>> *candidatesPtr = new queue<pair<float, int>, deque<pair<float, int>>>();
+
+    while (currentNode != nullptr)
+    {
+        if (currentNode->isMarked())
+        {
+            currentNode = currentNode->getNextNode();
+            continue;
+        }
+
+        candidatesPtr->push(make_pair(currentNode->getWeight(), currentNode->getId()));
+        currentNode = currentNode->getNextNode();
+    }
+
+    return candidatesPtr;
+}
+
 vector<int> Graph::relativeHeuristc()
 {
     // Conjunto solução inicial
@@ -547,4 +600,75 @@ void Graph::imprimeNoEArestas()
 
         currentNode = currentNode->getNextNode();
     }
+}
+
+vector<int> Graph::randomizedHeuristic(float alpha, int numInter)
+{
+    vector<int> auxSolutionVector;
+    vector<int> bestSolutionVector;
+    map<int, bool> solution;
+
+    int auxWeight = 0, bestWeight = 0, i = 1;
+    bool viable = false;
+
+    while (i <= numInter)
+    {
+        for (int i = 0; i < this->getOrder(); i++)
+        {
+            solution.insert(make_pair(i, false));
+        }
+        priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *candidates = this->relativeWeight2(alpha);
+
+        // Percorre a fila de candidatos até a posição desejada
+
+
+        candidates->pop();
+        int firstHeuristcNode = candidates->top().second;
+
+        while (!candidates->empty())
+        {
+            // Coloca o vértice na solução
+            Node *node = this->searchNode(firstHeuristcNode);
+            solution[firstHeuristcNode] = true;
+            auxSolutionVector.push_back(firstHeuristcNode);
+            auxWeight += node->getWeight();
+
+            // Marca o vértice
+            node->setMarked(true);
+
+            // Verifica se a solução é viável
+            if (this->isIsolated())
+            {
+                viable = true;
+                break;
+            }
+
+            // Atualiza a lista de candidatos
+            delete candidates;
+            candidates = this->relativeWeight2(alpha);
+
+            candidates->pop();
+            firstHeuristcNode = candidates->top().second;
+        }
+
+        cout << "Tamanho da solução " << i << ": " << auxSolutionVector.size() << endl;
+        cout << "Peso total da solução " << i << ": " << auxWeight << endl;
+        this->resetMarks();
+
+        if ((i == 1 || auxWeight < bestWeight) && !auxSolutionVector.empty())
+        {
+            bestSolutionVector = auxSolutionVector;
+            bestWeight = auxWeight;
+        }
+
+        solution.clear();
+        auxSolutionVector.clear();
+        auxWeight = 0;
+        i++;
+    }
+
+    cout << "Tamanho da melhor solução: " << bestSolutionVector.size() << endl;
+    cout << "Peso total da melhor solução: " << bestWeight << endl;
+
+    return bestSolutionVector;
 }
