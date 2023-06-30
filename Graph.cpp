@@ -7,7 +7,7 @@
 #include <map>
 #include <queue>
 #include <cmath>
-#include <deque>
+#include <random>
 
 using namespace std;
 
@@ -466,37 +466,7 @@ priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::rela
     return minHeapPtr;
 }
 
-priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::relativeWeight2(float alpha)
-{
-    // Retorna o id do vértice com menor peso relativo
-    // O peso relativo é calculado pelo peso do vértice dividido pelo número de arestas que ele possui
 
-    Node *currentNode = this->firstNode;
-    Node *relativeWeightNode = currentNode;
-
-    // Inicializa a min heap, utilizar para sempre ter o menor peso relativo no topo
-    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> minHeap;
-    int pos = 0;
-    float random = 0.0;
-    while (currentNode != nullptr)
-    {
-        if (currentNode->isMarked())
-        {
-            currentNode = currentNode->getNextNode();
-            continue;
-        }
-
-        // int relative = ceil(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode));
-
-        random = this->getNumberOfUnmarkedEdges(currentNode) * alpha;
-        pos = ceil(random);
-        minHeap.push(make_pair(currentNode->getWeight() / pos, currentNode->getId()));
-        currentNode = currentNode->getNextNode();
-    }
-
-    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *minHeapPtr = new priority_queue<pair<float, int>, vector<pair<float, int>>, Compare>(minHeap);
-    return minHeapPtr;
-}
 
 queue<pair<float, int>, deque<pair<float, int>>> *Graph::randomizedCandidates()
 {
@@ -602,6 +572,14 @@ void Graph::imprimeNoEArestas()
     }
 }
 
+int Graph::randomRange(int min, int max)
+{
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> distribution(min, max);
+    return distribution(gen);
+}
+
 vector<int> Graph::randomizedHeuristic(float alpha, int numInter)
 {
     vector<int> auxSolutionVector;
@@ -617,12 +595,15 @@ vector<int> Graph::randomizedHeuristic(float alpha, int numInter)
         {
             solution.insert(make_pair(i, false));
         }
-        priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *candidates = this->relativeWeight2(alpha);
+        priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *candidates = this->relativeWeight();
 
         // Percorre a fila de candidatos até a posição desejada
+        int pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
 
-
-        candidates->pop();
+        for (int i = 0; i < pos; i++)
+        {
+            candidates->pop();
+        }
         int firstHeuristcNode = candidates->top().second;
 
         while (!candidates->empty())
@@ -645,9 +626,14 @@ vector<int> Graph::randomizedHeuristic(float alpha, int numInter)
 
             // Atualiza a lista de candidatos
             delete candidates;
-            candidates = this->relativeWeight2(alpha);
+            candidates = this->relativeWeight();
 
-            candidates->pop();
+            pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+
+            for (int i = 0; i < pos; i++)
+            {
+                candidates->pop();
+            }
             firstHeuristcNode = candidates->top().second;
         }
 
