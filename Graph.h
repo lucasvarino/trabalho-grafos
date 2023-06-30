@@ -17,7 +17,7 @@ struct Compare
 
 struct Metric
 {
-    int time;
+    float time;
     int numberOfNodes;
     int totalWeight;
 };

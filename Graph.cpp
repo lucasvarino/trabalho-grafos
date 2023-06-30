@@ -653,12 +653,12 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
         i++;
     }
     end = chrono::high_resolution_clock::now();
-    int elapsed_seconds = chrono::duration_cast<chrono::seconds>(end - start).count();
+    float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
 
     /*     cout << "Tamanho da melhor solução: " << bestSolutionVector.size() << endl;
         cout << "Peso total da melhor solução: " << bestWeight << endl; */
     Metric metric;
-    metric.time = elapsed_seconds;
+    metric.time = elapse_time/60;
     metric.totalWeight = bestWeight;
     metric.numberOfNodes = bestSolutionVector.size();
     return metric;
@@ -670,13 +670,21 @@ void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, str
     file.open(filename);
     for (int i = 0; i < size; i++)
     {
-        Metric metric = this->randomizedHeuristic(alphas[i], numInter);
-        file <<"Alfa " << alphas[i] << " para " << numInter << " interações" << endl <<
-        "Tempo (s): "<< metric.time << endl 
-        << "Peso total: " << metric.totalWeight << endl 
-        << "Tamanho da Solução: " << metric.numberOfNodes << endl;
         file << "=============================" << endl;
-    }    
+        file << "Iteração " << i + 1 << endl;
+        file << "---------------------------" << endl;
+        for (int i = 0; i < 5; i++)
+        {
+            Metric metric = this->randomizedHeuristic(alphas[i], numInter);
+            file << "Alfa = " << alphas[i] << " para " << numInter << " iterações" << endl
+                 << "Tempo (min): " << metric.time << endl
+                 << "Peso total: " << metric.totalWeight << endl
+                 << "Tamanho da solução: " << metric.numberOfNodes << endl;
+            file << "---------------------------" << endl;
+        }
+    }
+    
+
     
     file.close();
 }

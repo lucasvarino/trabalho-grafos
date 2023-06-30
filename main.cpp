@@ -153,7 +153,7 @@ int main(int argc, char const *argv[])
 
     Graph *graph = readGreedy(input_file);
     float alphas [5] = {0.05, 0.1, 0.15, 0.3, 0.5};
-    graph->printRandomizedHeuristic(alphas, 5, 30, output_file);
+    graph->printRandomizedHeuristic(alphas, 10, 100, output_file);
     //vector<int> solution = graph->relativeHeuristc();
     return 0;
 }
