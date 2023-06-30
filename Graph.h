@@ -4,6 +4,7 @@
 #include "Node.h"
 #include <vector>
 #include <queue>
+#include <chrono>
 
 struct Compare
 {
@@ -13,6 +14,14 @@ struct Compare
         return a.first > b.first; // '>' para obter uma min heap
     }
 };
+
+struct Metric
+{
+    int time;
+    int numberOfNodes;
+    int totalWeight;
+};
+
 
 class Graph
 {
@@ -64,7 +73,8 @@ public:
     queue<pair<float, int>, deque<pair<float, int>>> *randomizedCandidates();
     int randomRange(int min, int max);
     vector<int> relativeHeuristc();  
-    vector<int> randomizedHeuristic(float alpha, int numIter);                                                      // Retorna o conjunto solução usando a heuristica do peso relativo
+    Metric randomizedHeuristic(float alpha, int numIter);                                                      // Retorna o conjunto solução usando a heuristica do peso relativo
+    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);                                       // Imprime o conjunto solução usando a heuristica do peso relativo
     void imprimeNoEArestas();
 };
 

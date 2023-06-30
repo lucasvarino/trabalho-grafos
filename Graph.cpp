@@ -466,8 +466,6 @@ priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::rela
     return minHeapPtr;
 }
 
-
-
 queue<pair<float, int>, deque<pair<float, int>>> *Graph::randomizedCandidates()
 {
     Node *currentNode = this->firstNode;
@@ -574,14 +572,16 @@ void Graph::imprimeNoEArestas()
 
 int Graph::randomRange(int min, int max)
 {
-    std::random_device rd;
-    std::mt19937 gen(rd());
+    std::mt19937 gen(1220);
     std::uniform_int_distribution<int> distribution(min, max);
     return distribution(gen);
 }
 
-vector<int> Graph::randomizedHeuristic(float alpha, int numInter)
+Metric Graph::randomizedHeuristic(float alpha, int numInter)
 {
+    std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+    start = chrono::high_resolution_clock::now();
+
     vector<int> auxSolutionVector;
     vector<int> bestSolutionVector;
     map<int, bool> solution;
@@ -637,8 +637,8 @@ vector<int> Graph::randomizedHeuristic(float alpha, int numInter)
             firstHeuristcNode = candidates->top().second;
         }
 
-        cout << "Tamanho da solução " << i << ": " << auxSolutionVector.size() << endl;
-        cout << "Peso total da solução " << i << ": " << auxWeight << endl;
+        /*         cout << "Tamanho da solução " << i << ": " << auxSolutionVector.size() << endl;
+                cout << "Peso total da solução " << i << ": " << auxWeight << endl; */
         this->resetMarks();
 
         if ((i == 1 || auxWeight < bestWeight) && !auxSolutionVector.empty())
@@ -652,9 +652,31 @@ vector<int> Graph::randomizedHeuristic(float alpha, int numInter)
         auxWeight = 0;
         i++;
     }
+    end = chrono::high_resolution_clock::now();
+    int elapsed_seconds = chrono::duration_cast<chrono::seconds>(end - start).count();
 
-    cout << "Tamanho da melhor solução: " << bestSolutionVector.size() << endl;
-    cout << "Peso total da melhor solução: " << bestWeight << endl;
+    /*     cout << "Tamanho da melhor solução: " << bestSolutionVector.size() << endl;
+        cout << "Peso total da melhor solução: " << bestWeight << endl; */
+    Metric metric;
+    metric.time = elapsed_seconds;
+    metric.totalWeight = bestWeight;
+    metric.numberOfNodes = bestSolutionVector.size();
+    return metric;
+}
 
-    return bestSolutionVector;
+void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, string filename)
+{
+    ofstream file;
+    file.open(filename);
+    for (int i = 0; i < size; i++)
+    {
+        Metric metric = this->randomizedHeuristic(alphas[i], numInter);
+        file <<"Alfa " << alphas[i] << " para " << numInter << " interações" << endl <<
+        "Tempo (s): "<< metric.time << endl 
+        << "Peso total: " << metric.totalWeight << endl 
+        << "Tamanho da Solução: " << metric.numberOfNodes << endl;
+        file << "=============================" << endl;
+    }    
+    
+    file.close();
 }
