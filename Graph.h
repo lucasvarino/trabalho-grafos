@@ -22,7 +22,6 @@ struct Metric
     int totalWeight;
 };
 
-
 class Graph
 {
 private:
@@ -69,12 +68,11 @@ public:
 
     // Trabalho 2 - Algoritmos Gulosos
     priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *relativeWeight(); // Retorna o vértice de menor peso relativo
-    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *relativeWeight2(float alpha); // Retorna o vértice de menor peso relativo
-    queue<pair<float, int>, deque<pair<float, int>>> *randomizedCandidates();
+    vector<pair<float, int>> relativeWeightVector();
     int randomRange(int min, int max);
-    vector<int> relativeHeuristc();  
-    Metric randomizedHeuristic(float alpha, int numIter);                                                      // Retorna o conjunto solução usando a heuristica do peso relativo
-    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);                                       // Imprime o conjunto solução usando a heuristica do peso relativo
+    vector<int> relativeHeuristc();
+    Metric randomizedHeuristic(float alpha, int numIter);                                  // Retorna o conjunto solução usando a heuristica do peso relativo
+    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename); // Imprime o conjunto solução usando a heuristica do peso relativo
     void imprimeNoEArestas();
 };
 

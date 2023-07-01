@@ -466,26 +466,6 @@ priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::rela
     return minHeapPtr;
 }
 
-queue<pair<float, int>, deque<pair<float, int>>> *Graph::randomizedCandidates()
-{
-    Node *currentNode = this->firstNode;
-    queue<pair<float, int>, deque<pair<float, int>>> *candidatesPtr = new queue<pair<float, int>, deque<pair<float, int>>>();
-
-    while (currentNode != nullptr)
-    {
-        if (currentNode->isMarked())
-        {
-            currentNode = currentNode->getNextNode();
-            continue;
-        }
-
-        candidatesPtr->push(make_pair(currentNode->getWeight(), currentNode->getId()));
-        currentNode = currentNode->getNextNode();
-    }
-
-    return candidatesPtr;
-}
-
 vector<int> Graph::relativeHeuristc()
 {
     // Conjunto solução inicial
@@ -577,6 +557,30 @@ int Graph::randomRange(int min, int max)
     return distribution(gen);
 }
 
+vector<pair<float, int>> Graph::relativeWeightVector()
+{
+    Node *currentNode = this->firstNode;
+    Node *relativeWeightNode = currentNode;
+
+    vector<pair<float, int>> sortedVector;
+
+    while (currentNode != nullptr)
+    {
+        if (currentNode->isMarked())
+        {
+            currentNode = currentNode->getNextNode();
+            continue;
+        }
+
+        sortedVector.push_back(make_pair(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode), currentNode->getId()));
+        std::sort(sortedVector.begin(), sortedVector.end());
+
+        currentNode = currentNode->getNextNode();
+    }
+
+    return sortedVector;
+}
+
 Metric Graph::randomizedHeuristic(float alpha, int numInter)
 {
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
@@ -595,50 +599,37 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
         {
             solution.insert(make_pair(i, false));
         }
-        priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *candidates = this->relativeWeight();
 
-        // Percorre a fila de candidatos até a posição desejada
-        int pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+        vector<pair<float, int>> candidates = this->relativeWeightVector();
 
-        for (int i = 0; i < pos; i++)
+        int pos = this->randomRange(0, static_cast<int>((candidates.size() - 1) * alpha));
+
+        candidates.erase(candidates.begin(), candidates.begin() + pos);
+        int firstHeuristcNode = candidates.begin()->second;
+
+        while (!candidates.empty())
         {
-            candidates->pop();
-        }
-        int firstHeuristcNode = candidates->top().second;
-
-        while (!candidates->empty())
-        {
-            // Coloca o vértice na solução
             Node *node = this->searchNode(firstHeuristcNode);
             solution[firstHeuristcNode] = true;
             auxSolutionVector.push_back(firstHeuristcNode);
             auxWeight += node->getWeight();
 
-            // Marca o vértice
             node->setMarked(true);
 
-            // Verifica se a solução é viável
             if (this->isIsolated())
             {
                 viable = true;
                 break;
             }
 
-            // Atualiza a lista de candidatos
-            delete candidates;
-            candidates = this->relativeWeight();
+            candidates = this->relativeWeightVector();
 
-            pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+            pos = this->randomRange(0, static_cast<int>((candidates.size() - 1) * alpha));
 
-            for (int i = 0; i < pos; i++)
-            {
-                candidates->pop();
-            }
-            firstHeuristcNode = candidates->top().second;
+            candidates.erase(candidates.begin(), candidates.begin() + pos);
+            firstHeuristcNode = candidates.begin()->second;
         }
 
-        /*         cout << "Tamanho da solução " << i << ": " << auxSolutionVector.size() << endl;
-                cout << "Peso total da solução " << i << ": " << auxWeight << endl; */
         this->resetMarks();
 
         if ((i == 1 || auxWeight < bestWeight) && !auxSolutionVector.empty())
@@ -652,13 +643,12 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
         auxWeight = 0;
         i++;
     }
+
     end = chrono::high_resolution_clock::now();
     float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
 
-    /*     cout << "Tamanho da melhor solução: " << bestSolutionVector.size() << endl;
-        cout << "Peso total da melhor solução: " << bestWeight << endl; */
     Metric metric;
-    metric.time = elapse_time/60;
+    metric.time = elapse_time / 60;
     metric.totalWeight = bestWeight;
     metric.numberOfNodes = bestSolutionVector.size();
     return metric;
@@ -683,8 +673,6 @@ void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, str
             file << "---------------------------" << endl;
         }
     }
-    
 
-    
     file.close();
 }

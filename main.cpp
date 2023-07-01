@@ -137,7 +137,6 @@ Graph *readMatrixMarket(string filename)
     return graph;
 }
 
-
 int main(int argc, char const *argv[])
 {
     // Verificação se todos os parâmetros do programa foram entrados
@@ -152,8 +151,8 @@ int main(int argc, char const *argv[])
     string output_file = argv[2];
 
     Graph *graph = readGreedy(input_file);
-    float alphas [5] = {0.05, 0.1, 0.15, 0.3, 0.5};
-    graph->printRandomizedHeuristic(alphas, 10, 100, output_file);
-    //vector<int> solution = graph->relativeHeuristc();
+    float alphas[5] = {0.05, 0.1, 0.15, 0.3, 0.5};
+    graph->printRandomizedHeuristic(alphas, 10, 10, output_file);
+    // vector<int> solution = graph->relativeHeuristc();
     return 0;
 }
