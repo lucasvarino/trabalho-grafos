@@ -20,6 +20,7 @@ struct Metric
     float time;
     int numberOfNodes;
     int totalWeight;
+    float bestAlpha;
 };
 
 
@@ -74,7 +75,13 @@ public:
     int randomRange(int min, int max);
     vector<int> relativeHeuristc();  
     Metric randomizedHeuristic(float alpha, int numIter);                                                      // Retorna o conjunto solução usando a heuristica do peso relativo
-    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);                                       // Imprime o conjunto solução usando a heuristica do peso relativo
+    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);     
+    
+    double chooseAlpha(vector<double> probabilities, double alphas[]);
+    void updateProbabilities(vector <double> *probabilities, vector <int> &bestSolutionVector, double alphas[], int bestWeight, vector<pair<double, int>>avgWeights);
+    void updateAvgWeights(vector<pair<double,int>> *avgWeights, float alphas[], double alpha, int auxWeight);
+    void printReativeHeuristic(float alphas[], int size, int numInter, string filename);
+    Metric reativeHeuristic(float alphas[], int numIter, int block);                                  // Imprime o conjunto solução usando a heuristica do peso relativo
     void imprimeNoEArestas();
 };
 

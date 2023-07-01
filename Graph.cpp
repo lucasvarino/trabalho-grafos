@@ -688,3 +688,199 @@ void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, str
     
     file.close();
 }
+
+
+double Graph::chooseAlpha(vector <double> probabilities, double alphas[]){
+    //get alpha according with prob.
+    double alpha;
+    double bigger = 0;
+    for (int i = 0; i < probabilities.size(); i++)
+    {
+        if(probabilities[i] > bigger){
+            bigger = probabilities[i];
+            alpha = alphas[i];
+        }
+    }
+    return alpha;
+}
+
+//slide 27 - aula 10
+void Graph::updateProbabilities(vector <double> *probabilities, vector <int> &bestSolutionVector, double alphas[], int bestWeight, vector<pair<double, int>>avgWeights){
+    //vector of weight ratios
+    vector<double> weightRatios;
+    double sum = 0, weightRatio;
+
+    //get the weight ratio of each alpha
+    for(int i = 0; i < 5; i++){
+        if(avgWeights.at(i).first != 0){
+            weightRatio = bestWeight/(double)avgWeights.at(i).first;
+        }else{
+            weightRatio = 1.0 / 5;
+        }
+        weightRatios.push_back(weightRatio);
+        sum += weightRatio;
+    }
+
+    for(int i = 0; i < 5; i++){
+        probabilities[i] = weightRatios[i]/sum;
+    }
+
+}
+
+void Graph::updateAvgWeights(vector<pair<double,int>> *avgWeights, float alphas[], double alpha, int auxWeight){
+    if(auxWeight == 0) return;
+
+    for(int i = 0; i < 5; i++){
+        if(alphas[i] == alpha){
+            avgWeights[i].second ++;
+
+            int quantity = avgWeights[i].second;
+            double avgWeight = avgWeights[i].first;
+
+            avgWeights[i].first = (avgWeight * (quantity - 1) + auxWeight)/quantity;
+        }
+    }
+}
+
+Metric Graph::reativeHeuristic(float alphas[], int numIter){
+
+    std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+    start = chrono::high_resolution_clock::now();
+
+    //get block size
+    int block = numIter * 0.1;
+
+
+    //list of probabilities 
+    vector<float> probabilities(5, 1.0/5);
+
+    //average of weights for each alpha
+    vector<pair<double, int>> avgWeights(5, make_pair(0, 0));
+
+    vector<int> auxSolutionVector;
+    vector<int> bestSolutionVector;
+    map<int, bool> solution;
+
+    int auxWeight = 0, bestWeight = 0, i = 1;
+    bool viable = false;
+
+    double alpha; 
+
+    while(i <= numIter){ 
+
+        //get alpha according to iteration, if iteration is bigger than alphas size, get the best alpha
+        if(i <= 5){
+            alpha = alphas[i-1];
+        }else{
+            //find the best solution
+            alpha = chooseAlpha(probabilities, alphas);
+        }
+
+        //for each 10% of iterations, update the probabilities
+        if(i % block == 0){
+            //update probabilities
+            updateProbabilities(&probabilities, bestSolutionVector, alphas, bestWeight, avgWeights);
+        }
+
+        //inicialize solution
+        for(int i = 1; i < this->order; i++){
+            solution.insert(make_pair(i, false));
+        }
+
+        //create the list of candidates(already ordered by weight)
+        priority_queue<pair<double, int>> *candidates = this->relativeWeight();
+
+        while(!candidates->empty()){
+            //get the first node
+            int firstHeuristcNode = candidates->top().second;
+
+            // Coloca o vértice na solução
+            Node *node = this->searchNode(firstHeuristcNode);
+            solution[firstHeuristcNode] = true;
+            auxSolutionVector.push_back(firstHeuristcNode);
+            auxWeight += node->getWeight();
+
+            // Marca o vértice
+            node->setMarked(true);
+
+            // Verifica se a solução é viável
+            if (this->isIsolated())
+            {
+                viable = true;
+                break;
+            }
+
+            // Atualiza a lista de candidatos
+            delete candidates;
+            candidates = this->relativeWeight();
+
+            //get the next node according to alpha
+            int pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+
+            for (int i = 0; i < pos; i++)
+            {
+                candidates->pop();
+            }
+            firstHeuristcNode = candidates->top().second;
+        }
+
+        this->resetMarks();
+
+        updateAvgWeights(&avgWeights, alphas, alpha, auxWeight);
+
+        if ((i == 1 || auxWeight < bestWeight) && !auxSolutionVector.empty())
+        {
+            bestSolutionVector = auxSolutionVector;
+            bestWeight = auxWeight;
+        }
+
+        solution.clear();
+        auxSolutionVector.clear();
+        auxWeight = 0;
+        i++;
+    }
+
+    end = chrono::high_resolution_clock::now();
+    float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
+    
+    float bestAlpha = 0;
+    for(int i = 0; i < 5; i++){
+       if(alphas[i].second > bestAlpha){
+           bestAlpha = alphas[i].second;
+       }
+    }
+
+    /*     cout << "Tamanho da melhor solução: " << bestSolutionVector.size() << endl;
+        cout << "Peso total da melhor solução: " << bestWeight << endl; */
+    Metric metric;
+    metric.time = elapse_time;
+    metric.totalWeight = bestWeight;
+    metric.numberOfNodes = bestSolutionVector.size();
+    metric.bestAlpha = bestAlpha;
+    return metric;   
+}
+
+void Graph::printReativeHeuristic(float alphas[], int size, int numInter, string filename)
+{
+    ofstream file;
+    file.open(filename);
+    for (int i = 0; i < size; i++)
+    {
+        file << "=============================" << endl;
+        file << "Iteração " << i + 1 << endl;
+        file << "---------------------------" << endl;
+
+
+        Metric metric = this->reativeHeuristic(alphas, numInter);
+        file << "Numero de iterações : " << numInter << endl
+                << "Tempo (s): " << metric.time << endl
+                << "Peso total: " << metric.totalWeight << endl
+                << "Melhor alfa: " << metric.bestAlpha << endl
+                << "Tamanho da solução: " << metric.numberOfNodes << endl;
+        file << "---------------------------" << endl;
+    }
+    
+    file.close();
+}
+
+
