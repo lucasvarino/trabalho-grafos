@@ -74,6 +74,8 @@ public:
     Metric randomizedHeuristic(float alpha, int numIter);                                  // Retorna o conjunto solução usando a heuristica do peso relativo
     void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename); // Imprime o conjunto solução usando a heuristica do peso relativo
     void imprimeNoEArestas();
+
+    void localSearch(vector<int> &solution, int &weight);
 };
 
 #endif // GRAPH_H_INCLUDED

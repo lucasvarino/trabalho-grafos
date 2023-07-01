@@ -552,7 +552,7 @@ void Graph::imprimeNoEArestas()
 
 int Graph::randomRange(int min, int max)
 {
-    std::mt19937 gen(1220);
+    std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<int> distribution(min, max);
     return distribution(gen);
 }
@@ -636,6 +636,8 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
         {
             bestSolutionVector = auxSolutionVector;
             bestWeight = auxWeight;
+
+            this->localSearch(bestSolutionVector, bestWeight);
         }
 
         solution.clear();
@@ -652,6 +654,39 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
     metric.totalWeight = bestWeight;
     metric.numberOfNodes = bestSolutionVector.size();
     return metric;
+}
+
+void Graph::localSearch(vector<int> &solution, int &weight)
+{
+    bool improvement = true;
+
+    while (improvement)
+    {
+        improvement = false;
+
+        for (int i = 0; i < solution.size(); i++)
+        {
+            // Tente remover o vértice i da solução
+            int vertex = solution[i];
+            solution.erase(solution.begin() + i);
+            weight -= this->searchNode(vertex)->getWeight();
+
+            if (this->isIsolated())
+            {
+                // A solução ainda é válida sem o vértice i, então mantemos a remoção
+                improvement = true;
+                cout << "Melhoria encontrada" << endl;
+                cout << "Removendo vértice " << vertex << endl;
+            }
+            else
+            {
+                // A solução não é mais válida sem o vértice i, então desfazemos a remoção
+                solution.insert(solution.begin() + i, vertex);
+                weight += this->searchNode(vertex)->getWeight();
+                // cout << "Remoção inválida" << endl;
+            }
+        }
+    }
 }
 
 void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, string filename)
