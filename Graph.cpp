@@ -572,7 +572,7 @@ void Graph::imprimeNoEArestas()
 
 int Graph::randomRange(int min, int max)
 {
-    std::mt19937 gen(1220);
+    std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<int> distribution(min, max);
     return distribution(gen);
 }
@@ -658,7 +658,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
     /*     cout << "Tamanho da melhor solução: " << bestSolutionVector.size() << endl;
         cout << "Peso total da melhor solução: " << bestWeight << endl; */
     Metric metric;
-    metric.time = elapse_time/60;
+    metric.time = elapse_time / 60;
     metric.totalWeight = bestWeight;
     metric.numberOfNodes = bestSolutionVector.size();
     return metric;
@@ -683,20 +683,19 @@ void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, str
             file << "---------------------------" << endl;
         }
     }
-    
 
-    
     file.close();
 }
 
-
-double Graph::chooseAlpha(vector <double> probabilities, double alphas[]){
-    //get alpha according with prob.
-    double alpha;
-    double bigger = 0;
+float Graph::chooseAlpha(vector<float> probabilities, float alphas[])
+{
+    // get alpha according with prob.
+    float alpha;
+    float bigger = 0;
     for (int i = 0; i < probabilities.size(); i++)
     {
-        if(probabilities[i] > bigger){
+        if (probabilities[i] > bigger)
+        {
             bigger = probabilities[i];
             alpha = alphas[i];
         }
@@ -704,58 +703,67 @@ double Graph::chooseAlpha(vector <double> probabilities, double alphas[]){
     return alpha;
 }
 
-//slide 27 - aula 10
-void Graph::updateProbabilities(vector <double> *probabilities, vector <int> &bestSolutionVector, double alphas[], int bestWeight, vector<pair<double, int>>avgWeights){
-    //vector of weight ratios
-    vector<double> weightRatios;
-    double sum = 0, weightRatio;
+// slide 27 - aula 10
+void Graph::updateProbabilities(vector<float> *probabilities, vector<int> &bestSolutionVector, float alphas[], int bestWeight, vector<pair<float, int>> avgWeights)
+{
+    // vector of weight ratios
+    vector<float> weightRatios;
+    float sum = 0, weightRatio;
 
-    //get the weight ratio of each alpha
-    for(int i = 0; i < 5; i++){
-        if(avgWeights.at(i).first != 0){
-            weightRatio = bestWeight/(double)avgWeights.at(i).first;
-        }else{
+    // get the weight ratio of each alpha
+    for (int i = 0; i < 5; i++)
+    {
+        if (avgWeights.at(i).first != 0)
+        {
+            weightRatio = bestWeight / (float)avgWeights.at(i).first;
+        }
+        else
+        {
             weightRatio = 1.0 / 5;
         }
         weightRatios.push_back(weightRatio);
         sum += weightRatio;
     }
 
-    for(int i = 0; i < 5; i++){
-        probabilities[i] = weightRatios[i]/sum;
+    for (int i = 0; i < 5; i++)
+    {
+        probabilities->at(i) = weightRatios.at(i) / sum;
     }
-
 }
 
-void Graph::updateAvgWeights(vector<pair<double,int>> *avgWeights, float alphas[], double alpha, int auxWeight){
-    if(auxWeight == 0) return;
+void Graph::updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[], float alpha, int auxWeight)
+{
+    if (auxWeight == 0)
+        return;
 
-    for(int i = 0; i < 5; i++){
-        if(alphas[i] == alpha){
-            avgWeights[i].second ++;
+    for (int i = 0; i < 5; i++)
+    {
+        if (alphas[i] == alpha)
+        {
+            avgWeights->at(i).second++;
 
-            int quantity = avgWeights[i].second;
-            double avgWeight = avgWeights[i].first;
+            int quantity = avgWeights->at(i).second;
+            float avgWeight = avgWeights->at(i).first;
 
-            avgWeights[i].first = (avgWeight * (quantity - 1) + auxWeight)/quantity;
+            avgWeights->at(i).first = (avgWeight * (quantity - 1) + auxWeight) / quantity;
         }
     }
 }
 
-Metric Graph::reativeHeuristic(float alphas[], int numIter){
+Metric Graph::reativeHeuristic(float alphas[], int numIter)
+{
 
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = chrono::high_resolution_clock::now();
 
-    //get block size
+    // get block size
     int block = numIter * 0.1;
 
+    // list of probabilities
+    vector<float> probabilities(5, 1.0 / 5);
 
-    //list of probabilities 
-    vector<float> probabilities(5, 1.0/5);
-
-    //average of weights for each alpha
-    vector<pair<double, int>> avgWeights(5, make_pair(0, 0));
+    // average of weights for each alpha
+    vector<pair<float, int>> avgWeights(5, make_pair(0, 0));
 
     vector<int> auxSolutionVector;
     vector<int> bestSolutionVector;
@@ -764,34 +772,41 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter){
     int auxWeight = 0, bestWeight = 0, i = 1;
     bool viable = false;
 
-    double alpha; 
+    float alpha;
 
-    while(i <= numIter){ 
+    while (i <= numIter)
+    {
 
-        //get alpha according to iteration, if iteration is bigger than alphas size, get the best alpha
-        if(i <= 5){
-            alpha = alphas[i-1];
-        }else{
-            //find the best solution
+        // get alpha according to iteration, if iteration is bigger than alphas size, get the best alpha
+        if (i <= 5)
+        {
+            alpha = alphas[i - 1];
+        }
+        else
+        {
+            // find the best solution
             alpha = chooseAlpha(probabilities, alphas);
         }
 
-        //for each 10% of iterations, update the probabilities
-        if(i % block == 0){
-            //update probabilities
+        // for each 10% of iterations, update the probabilities
+        if (i % block == 0)
+        {
+            // update probabilities
             updateProbabilities(&probabilities, bestSolutionVector, alphas, bestWeight, avgWeights);
         }
 
-        //inicialize solution
-        for(int i = 1; i < this->order; i++){
+        // inicialize solution
+        for (int i = 1; i < this->order; i++)
+        {
             solution.insert(make_pair(i, false));
         }
 
-        //create the list of candidates(already ordered by weight)
-        priority_queue<pair<double, int>> *candidates = this->relativeWeight();
+        // create the list of candidates(already ordered by weight)
+        priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *candidates = this->relativeWeight();
 
-        while(!candidates->empty()){
-            //get the first node
+        while (!candidates->empty())
+        {
+            // get the first node
             int firstHeuristcNode = candidates->top().second;
 
             // Coloca o vértice na solução
@@ -814,7 +829,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter){
             delete candidates;
             candidates = this->relativeWeight();
 
-            //get the next node according to alpha
+            // get the next node according to alpha
             int pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
 
             for (int i = 0; i < pos; i++)
@@ -842,12 +857,14 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter){
 
     end = chrono::high_resolution_clock::now();
     float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
-    
-    float bestAlpha = 0;
-    for(int i = 0; i < 5; i++){
-       if(alphas[i].second > bestAlpha){
-           bestAlpha = alphas[i].second;
-       }
+
+    int bestAlpha = 0;
+    for (int i = 0; i < 5; i++)
+    {
+        if (avgWeights[i].second > bestAlpha)
+        {
+            bestAlpha = i;
+        }
     }
 
     /*     cout << "Tamanho da melhor solução: " << bestSolutionVector.size() << endl;
@@ -857,7 +874,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter){
     metric.totalWeight = bestWeight;
     metric.numberOfNodes = bestSolutionVector.size();
     metric.bestAlpha = bestAlpha;
-    return metric;   
+    return metric;
 }
 
 void Graph::printReativeHeuristic(float alphas[], int size, int numInter, string filename)
@@ -870,17 +887,14 @@ void Graph::printReativeHeuristic(float alphas[], int size, int numInter, string
         file << "Iteração " << i + 1 << endl;
         file << "---------------------------" << endl;
 
-
         Metric metric = this->reativeHeuristic(alphas, numInter);
         file << "Numero de iterações : " << numInter << endl
-                << "Tempo (s): " << metric.time << endl
-                << "Peso total: " << metric.totalWeight << endl
-                << "Melhor alfa: " << metric.bestAlpha << endl
-                << "Tamanho da solução: " << metric.numberOfNodes << endl;
+             << "Tempo (s): " << metric.time << endl
+             << "Peso total: " << metric.totalWeight << endl
+             << "Melhor alfa: " << alphas[metric.bestAlpha] << endl
+             << "Tamanho da solução: " << metric.numberOfNodes << endl;
         file << "---------------------------" << endl;
     }
-    
+
     file.close();
 }
-
-

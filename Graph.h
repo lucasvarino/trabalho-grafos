@@ -20,9 +20,8 @@ struct Metric
     float time;
     int numberOfNodes;
     int totalWeight;
-    float bestAlpha;
+    int bestAlpha;
 };
-
 
 class Graph
 {
@@ -69,19 +68,19 @@ public:
     vector<int> directTransitiveClosure(int id);
 
     // Trabalho 2 - Algoritmos Gulosos
-    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *relativeWeight(); // Retorna o vértice de menor peso relativo
+    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *relativeWeight();             // Retorna o vértice de menor peso relativo
     priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *relativeWeight2(float alpha); // Retorna o vértice de menor peso relativo
     queue<pair<float, int>, deque<pair<float, int>>> *randomizedCandidates();
     int randomRange(int min, int max);
-    vector<int> relativeHeuristc();  
-    Metric randomizedHeuristic(float alpha, int numIter);                                                      // Retorna o conjunto solução usando a heuristica do peso relativo
-    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);     
-    
-    double chooseAlpha(vector<double> probabilities, double alphas[]);
-    void updateProbabilities(vector <double> *probabilities, vector <int> &bestSolutionVector, double alphas[], int bestWeight, vector<pair<double, int>>avgWeights);
-    void updateAvgWeights(vector<pair<double,int>> *avgWeights, float alphas[], double alpha, int auxWeight);
+    vector<int> relativeHeuristc();
+    Metric randomizedHeuristic(float alpha, int numIter); // Retorna o conjunto solução usando a heuristica do peso relativo
+    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);
+
+    float chooseAlpha(vector<float> probabilities, float alphas[]);
+    void updateProbabilities(vector<float> *probabilities, vector<int> &bestSolutionVector, float alphas[], int bestWeight, vector<pair<float, int>> avgWeights);
+    void updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[], float alpha, int auxWeight);
     void printReativeHeuristic(float alphas[], int size, int numInter, string filename);
-    Metric reativeHeuristic(float alphas[], int numIter, int block);                                  // Imprime o conjunto solução usando a heuristica do peso relativo
+    Metric reativeHeuristic(float alphas[], int numIter); // Imprime o conjunto solução usando a heuristica do peso relativo
     void imprimeNoEArestas();
 };
 
