@@ -648,7 +648,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
     float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
 
     Metric metric;
-    metric.time = elapse_time / 60;
+    metric.time = elapse_time;
     metric.totalWeight = bestWeight;
     metric.numberOfNodes = bestSolutionVector.size();
     return metric;
@@ -667,7 +667,7 @@ void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, str
         {
             Metric metric = this->randomizedHeuristic(alphas[i], numInter);
             file << "Alfa = " << alphas[i] << " para " << numInter << " iterações" << endl
-                 << "Tempo (min): " << metric.time << endl
+                 << "Tempo (s): " << metric.time << endl
                  << "Peso total: " << metric.totalWeight << endl
                  << "Tamanho da solução: " << metric.numberOfNodes << endl;
             file << "---------------------------" << endl;
