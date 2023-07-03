@@ -392,6 +392,13 @@ void Graph::resetMarks()
     }
 }
 
+/*
+ * Função para verificar se a solução é viável
+ * Verifica se todas as arestas tem pelo menos um vértice marcado
+ *
+ * Retorna true se a solução é viável e false caso contrário
+ */
+
 bool Graph::isIsolated()
 {
     Node *currentNode = this->firstNode;
@@ -418,6 +425,12 @@ bool Graph::isIsolated()
     return true;
 }
 
+/*
+ * Função que conta quantas arestas não marcadas um vértice possui, para fazer o cálculo do peso relativo
+ *
+ * Retorna o número de arestas não marcadas
+ */
+
 int Graph::getNumberOfUnmarkedEdges(Node *node)
 {
     Edge *edge = node->getFirstEdge();
@@ -436,6 +449,13 @@ int Graph::getNumberOfUnmarkedEdges(Node *node)
 
     return numberOfUnmarkedEdges;
 }
+
+/*
+ * Função que calcula o peso relativo de cada vértice
+ * Colocamos os vértices em uma max heap, para que o vértice com maior peso relativo sempre esteja no topo
+ *
+ * Retorna a max heap com os vértices ordenados pelo peso relativo
+ */
 
 priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::relativeWeight()
 {
@@ -466,28 +486,17 @@ priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::rela
     return minHeapPtr;
 }
 
-queue<pair<float, int>, deque<pair<float, int>>> *Graph::randomizedCandidates()
-{
-    Node *currentNode = this->firstNode;
-    queue<pair<float, int>, deque<pair<float, int>>> *candidatesPtr = new queue<pair<float, int>, deque<pair<float, int>>>();
-
-    while (currentNode != nullptr)
-    {
-        if (currentNode->isMarked())
-        {
-            currentNode = currentNode->getNextNode();
-            continue;
-        }
-
-        candidatesPtr->push(make_pair(currentNode->getWeight(), currentNode->getId()));
-        currentNode = currentNode->getNextNode();
-    }
-
-    return candidatesPtr;
-}
-
+/*
+ * Algoritmo Guloso Construtivo
+ * Utiliza a heurística do peso relativo para construir uma solução viável
+ *
+ * Retorna um vetor com os ids dos vértices que compõem a solução
+ */
 vector<int> Graph::relativeHeuristc()
 {
+    std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
+    start = chrono::high_resolution_clock::now();
+
     // Conjunto solução inicial
     map<int, bool> solution;
     vector<int> solutionVector;
@@ -507,7 +516,6 @@ vector<int> Graph::relativeHeuristc()
 
     while (!minHeap->empty())
     {
-        // this->imprimeNoEArestas();
         // Coloca o vértice na solução
         Node *node = this->searchNode(firstHeuristcNode);
         solution[firstHeuristcNode] = true;
@@ -524,22 +532,22 @@ vector<int> Graph::relativeHeuristc()
             break;
         }
 
-        // Atualiza a min heap
+        // Atualiza a max heap
         delete minHeap;
         minHeap = this->relativeWeight();
         firstHeuristcNode = minHeap->top().second;
         minHeap->pop();
     }
 
+    end = chrono::high_resolution_clock::now();
+    float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
+
     cout << "Tamanho da solução: " << solutionVector.size() << endl;
     cout << "Peso total da solução: " << totalWeight << endl;
-    this->resetMarks();
-    // cout << "Conjunto solução: " << endl;
+    cout << "Tempo de execução: " << elapse_time / 60 << endl;
 
-    // for (int i = 0; i < solutionVector.size(); i++)
-    // {
-    //     cout << solutionVector[i] << " ";
-    // }
+    // Reseta os vértices para não marcados para gerar outras soluções
+    this->resetMarks();
 
     if (!viable)
     {
@@ -570,12 +578,31 @@ void Graph::imprimeNoEArestas()
     }
 }
 
+/*
+ * Função que gera um número aleatório dentro de um intervalo
+ *
+ * Recebe como parâmetro o valor mínimo e máximo do intervalo
+ * Retorna um número aleatório dentro do intervalo [min, max]
+ */
+
 int Graph::randomRange(int min, int max)
 {
     std::mt19937 gen(std::random_device{}());
     std::uniform_int_distribution<int> distribution(min, max);
     return distribution(gen);
 }
+
+/*
+ * Algoritmo Guloso Randomizado Construtivo
+ *
+ * Utiliza a heurística do peso relativo para construir uma solução viável, agora de forma aleatória
+ * A cada iteração, o algoritmo escolhe um vértice aleatório dentro de uma faixa de vértices
+ *
+ * Recebe como parâmetro o valor de alpha, que é o quão aleatório o algoritmo será: 0 é totalmente aleatório e 1 é totalmente guloso
+ * Além disso, recebe o número de iterações que o algoritmo irá executar, cada iteração é uma solução diferente
+ *
+ * Retorna um vetor com os ids dos vértices que compõem a solução e as métricas de tempo e peso
+ */
 
 Metric Graph::randomizedHeuristic(float alpha, int numInter)
 {
@@ -637,12 +664,12 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
             firstHeuristcNode = candidates->top().second;
         }
 
-        /*         cout << "Tamanho da solução " << i << ": " << auxSolutionVector.size() << endl;
-                cout << "Peso total da solução " << i << ": " << auxWeight << endl; */
+        // Reseta os vértices para não marcados para gerar outras soluções
         this->resetMarks();
 
         if ((i == 1 || auxWeight < bestWeight) && !auxSolutionVector.empty())
         {
+            // Se for a primeira solução ou a solução atual for melhor que a melhor solução, atualiza a melhor solução
             bestSolutionVector = auxSolutionVector;
             bestWeight = auxWeight;
         }
@@ -655,8 +682,6 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
     end = chrono::high_resolution_clock::now();
     float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
 
-    /*     cout << "Tamanho da melhor solução: " << bestSolutionVector.size() << endl;
-        cout << "Peso total da melhor solução: " << bestWeight << endl; */
     Metric metric;
     metric.time = elapse_time / 60;
     metric.totalWeight = bestWeight;
@@ -687,6 +712,13 @@ void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, str
     file.close();
 }
 
+/*
+ * Funnção que retorna o alpha com maior probabilidade de ser escolhido
+ *
+ * Recebe como parâmetro um vetor de probabilidades e um vetor de alphas
+ * Retorna o alpha com maior probabilidade
+ */
+
 float Graph::chooseAlpha(vector<float> probabilities, float alphas[])
 {
     // get alpha according with prob.
@@ -703,7 +735,13 @@ float Graph::chooseAlpha(vector<float> probabilities, float alphas[])
     return alpha;
 }
 
-// slide 27 - aula 10
+/*
+ * Atualiza as probabilidades de cada alpha para ser escolhido na próxima iteração
+ *
+ * Recebe como parâmetro um vetor de probabilidades, o vetor da melhor solução, os alphas, o peso da melhor solução e um vetor com os pesos médios de cada alpha
+ * Usamos como base o slide 27 - aula 10
+ */
+
 void Graph::updateProbabilities(vector<float> *probabilities, vector<int> &bestSolutionVector, float alphas[], int bestWeight, vector<pair<float, int>> avgWeights)
 {
     // vector of weight ratios
@@ -731,6 +769,13 @@ void Graph::updateProbabilities(vector<float> *probabilities, vector<int> &bestS
     }
 }
 
+/*
+ * Atualiza o vetor de pesos médios de cada alpha
+ *
+ * Recebe um vetor de pesos médios, um vetor de alphas, o alpha escolhido e o peso da melhor solução
+ * Automaticamente atualiza o vetor de pesos médios
+ */
+
 void Graph::updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[], float alpha, int auxWeight)
 {
     if (auxWeight == 0)
@@ -750,19 +795,29 @@ void Graph::updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[
     }
 }
 
+/*
+ * Algoritmo Guloso Randomizado Reativo
+ *
+ * O algoritmo escolhe o alpha que tem a maior probabilidade de gerar uma solução viável de forma dinâmica
+ * O tamanho do bloco é 10% do número de iterações
+ *
+ * Recebe um vetor de alphas e o número de iterações
+ * Retorna uma struct Metric com o tempo de execução, o peso total e o tamanho da solução
+ */
+
 Metric Graph::reativeHeuristic(float alphas[], int numIter)
 {
 
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = chrono::high_resolution_clock::now();
 
-    // get block size
+    // Tamanho do bloco
     int block = numIter * 0.1;
 
-    // list of probabilities
+    // Lista de Probabilidades
     vector<float> probabilities(5, 1.0 / 5);
 
-    // average of weights for each alpha
+    // Média dos pesos para cada valor de alpha
     vector<pair<float, int>> avgWeights(5, make_pair(0, 0));
 
     vector<int> auxSolutionVector;
@@ -777,36 +832,36 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
     while (i <= numIter)
     {
 
-        // get alpha according to iteration, if iteration is bigger than alphas size, get the best alpha
+        // Pegar o valor de alpha de acordo com o número de iterações e as probabilidades
         if (i <= 5)
         {
             alpha = alphas[i - 1];
         }
         else
         {
-            // find the best solution
+            // Procura o alpha com maior probabilidade
             alpha = chooseAlpha(probabilities, alphas);
         }
 
-        // for each 10% of iterations, update the probabilities
+        // Para 10% das iterações, atualiza as probabilidades
         if (i % block == 0)
         {
-            // update probabilities
+            // Atualizando as probabilidades
             updateProbabilities(&probabilities, bestSolutionVector, alphas, bestWeight, avgWeights);
         }
 
-        // inicialize solution
+        // Iniciando o Algortimo Guloso Randomizado Reativo
         for (int i = 1; i < this->order; i++)
         {
             solution.insert(make_pair(i, false));
         }
 
-        // create the list of candidates(already ordered by weight)
+        // Criando a lista de candidatos ordenados pelo peso relativo
         priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *candidates = this->relativeWeight();
 
         while (!candidates->empty())
         {
-            // get the first node
+            // Pegar o primeiro vértice da lista de candidatos
             int firstHeuristcNode = candidates->top().second;
 
             // Coloca o vértice na solução
@@ -829,7 +884,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
             delete candidates;
             candidates = this->relativeWeight();
 
-            // get the next node according to alpha
+            // Pegando o próximo vértice de acordo com o alpha
             int pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
 
             for (int i = 0; i < pos; i++)
@@ -841,10 +896,12 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
 
         this->resetMarks();
 
+        // Atualizando a média dos pesos
         updateAvgWeights(&avgWeights, alphas, alpha, auxWeight);
 
         if ((i == 1 || auxWeight < bestWeight) && !auxSolutionVector.empty())
         {
+            // Atualizando a melhor solução
             bestSolutionVector = auxSolutionVector;
             bestWeight = auxWeight;
         }
@@ -867,8 +924,6 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
         }
     }
 
-    /*     cout << "Tamanho da melhor solução: " << bestSolutionVector.size() << endl;
-        cout << "Peso total da melhor solução: " << bestWeight << endl; */
     Metric metric;
     metric.time = elapse_time;
     metric.totalWeight = bestWeight;
