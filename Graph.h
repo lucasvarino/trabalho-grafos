@@ -2,7 +2,6 @@
 #define GRAPH_H_INCLUDED
 
 #include "Node.h"
-#include "Fib.h"
 #include <vector>
 #include <queue>
 #include <chrono>
@@ -71,8 +70,7 @@ public:
     vector<int> directTransitiveClosure(int id);
 
     // Trabalho 2 - Algoritmos Gulosos
-    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *relativeWeight(); // Retorna o vértice de menor peso relativo
-    MaxFibonacciHeap *relativeWeight2();                                                   // Retorna o vértice de menor peso relativo
+    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *relativeWeight(); // Retorna o vértice de menor peso relativo                                                // Retorna o vértice de menor peso relativo
     queue<pair<float, int>, deque<pair<float, int>>> *randomizedCandidates();
     int randomRange(int min, int max);
     vector<int> relativeHeuristc();
