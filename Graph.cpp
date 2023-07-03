@@ -221,14 +221,14 @@ void Graph::removeNode(int id)
 
 void Graph::removeEdge(int id, int targetId)
 {
-    Node *node = this->searchNode(id);
+    Node *node = this->nodeMap[id];
 
     if (node == nullptr)
     {
         return;
     }
 
-    Node *targetNode = this->searchNode(targetId);
+    Node *targetNode = this->nodeMap[targetId];
     node->removeEdge(targetNode);
     targetNode->removeEdge(node);
     node->decrementNumberOfEdges();
@@ -238,7 +238,7 @@ void Graph::removeEdge(int id, int targetId)
 
 void Graph::removeAllEdges(int id)
 {
-    Node *node = this->searchNode(id);
+    Node *node = this->nodeMap[id];
 
     if (node == nullptr)
     {
@@ -345,7 +345,7 @@ bool Graph::isComplete()
 
 vector<int> Graph::depthSearch(int id)
 {
-    Node *node = this->searchNode(id);
+    Node *node = this->nodeMap[id];
 
     if (node == nullptr)
     {
@@ -368,7 +368,7 @@ vector<int> Graph::depthSearch(int id)
 
             while (edge != nullptr)
             {
-                stack.push(this->searchNode(edge->getTargetId()));
+                stack.push(this->nodeMap[edge->getTargetId()]);
                 edge = edge->getNextEdge();
             }
         }
@@ -637,7 +637,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
         while (!candidates->empty())
         {
             // Coloca o vértice na solução
-            Node *node = this->searchNode(firstHeuristcNode);
+            Node *node = this->nodeMap[firstHeuristcNode];
             solution[firstHeuristcNode] = true;
             auxSolutionVector.push_back(firstHeuristcNode);
             auxWeight += node->getWeight();
@@ -866,7 +866,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
             int firstHeuristcNode = candidates->top().second;
 
             // Coloca o vértice na solução
-            Node *node = this->searchNode(firstHeuristcNode);
+            Node *node = this->nodeMap[firstHeuristcNode];
             solution[firstHeuristcNode] = true;
             auxSolutionVector.push_back(firstHeuristcNode);
             auxWeight += node->getWeight();
