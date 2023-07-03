@@ -73,17 +73,18 @@ public:
     vector<int> directTransitiveClosure(int id);
     void imprimeNoEArestas();
 
+    
+
     // Trabalho 2 - Algoritmos Gulosos
-    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *relativeWeight(); // Retorna o vértice de menor peso relativo                                                // Retorna o vértice de menor peso relativo
-    void createRelativeWeightVector();                                                     // Retorna o peso médio de cada vértice
-    void updateRelativeWeights(int removedNodeId);                                         // Retorna o peso médio de cada vértice
-    bool isNeighbour(int id, int targetId);
+    void createRelativeWeightVector();
+    void updateRelativeWeights(int removedNodeId);
+    void printRelativeVector();
+
     Metric relativeHeuristic();
     void printRelativeHeuristic(string filename);
 
-    void printRelativeVector();
 
-        int randomRange(int min, int max);
+    int randomRange(int min, int max);
     Metric randomizedHeuristic(float alpha, int numIter); // Retorna o conjunto solução usando a heuristica do peso relativo
     void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);
 

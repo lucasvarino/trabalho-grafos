@@ -472,41 +472,13 @@ int Graph::getNumberOfUnmarkedEdges(Node *node)
     return numberOfUnmarkedEdges;
 }
 
+
 /*
  * Função que calcula o peso relativo de cada vértice
- * Colocamos os vértices em uma max heap, para que o vértice com maior peso relativo sempre esteja no topo
+ * Colocamos os vértices em um vector ordenado, em que o vértice com menor peso relativo sempre esteja no topo
  *
- * Retorna a max heap com os vértices ordenados pelo peso relativo
+ * O vector criado é alocado no atributo relativeWeightVector
  */
-
-priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::relativeWeight()
-{
-    // Retorna o id do vértice com menor peso relativo
-    // O peso relativo é calculado pelo peso do vértice dividido pelo número de arestas que ele possui
-
-    Node *currentNode = this->firstNode;
-    Node *relativeWeightNode = currentNode;
-
-    // Inicializa a min heap, utilizar para sempre ter o menor peso relativo no topo
-    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> minHeap;
-
-    while (currentNode != nullptr)
-    {
-        if (currentNode->isMarked())
-        {
-            currentNode = currentNode->getNextNode();
-            continue;
-        }
-
-        // int relative = ceil(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode));
-
-        minHeap.push(make_pair(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode), currentNode->getId()));
-        currentNode = currentNode->getNextNode();
-    }
-
-    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *minHeapPtr = new priority_queue<pair<float, int>, vector<pair<float, int>>, Compare>(minHeap);
-    return minHeapPtr;
-}
 
 void Graph::createRelativeWeightVector()
 {
@@ -534,28 +506,9 @@ void Graph::createRelativeWeightVector()
 
 }
 
-bool Graph::isNeighbour(int id, int targetId)
-{
-    Node *node = nodeMap[id];
-
-    if (node == nullptr)
-    {
-        return false;
-    }
-
-    Edge *edge = node->getFirstEdge();
-
-    while (edge != nullptr)
-    {
-        if (edge->getTargetId() == targetId)
-        {
-            return true;
-        }
-        edge = edge->getNextEdge();
-    }
-
-    return false;
-}
+/*
+ * Função que imprime o vetor de pesos relativos
+ */
 
 void Graph::printRelativeVector()
 {
@@ -564,6 +517,13 @@ void Graph::printRelativeVector()
         cout << (*relativeWeightVector)[i].first << " " << (*relativeWeightVector)[i].second << endl;
     }
 }
+
+/*
+ * Função que atualiza o vetor de pesos relativos
+ * Quando um vértice é removido, o peso relativo dos seus vizinhos é atualizado
+ * 
+ * O vetor é ordenado novamente
+ */
 
 void Graph::updateRelativeWeights(int removedNodeId)
 {
@@ -575,24 +535,36 @@ void Graph::updateRelativeWeights(int removedNodeId)
     }
 
     // Percorre o vetor de vizinhos
-    for (int i = 0; i < relativeWeightVector->size(); i++)
-    {
-        pair<float, int> &nodeWeight = (*relativeWeightVector)[i];
+    vector<int> neighbors = getNeighbors(removedNodeId);
 
-        // Verifica se o nó corresponde a um vizinho do nó removido
-        if (isNeighbour(removedNodeId, nodeWeight.second))
+    for (int i = 0; i < neighbors.size(); i++)
+    {
+        int neighborId = neighbors[i];
+
+        // Encontra o índice do vizinho no vetor de pesos relativos
+        auto it = find_if(relativeWeightVector->begin(), relativeWeightVector->end(),
+                          [neighborId](const pair<float, int> &nodeWeight)
+                          {
+                              return nodeWeight.second == neighborId;
+                          });
+
+        if (it != relativeWeightVector->end())
         {
-            // Atualiza o peso relativo do nó
-            nodeWeight.first = nodeMap[nodeWeight.second]->getWeight() / getNumberOfUnmarkedEdges(nodeMap[nodeWeight.second]);
+            // Obtém o índice do vizinho
+            int index = distance(relativeWeightVector->begin(), it);
+
+            // Atualize o peso relativo do vizinho
+            relativeWeightVector->at(index).first = nodeMap[neighborId]->getWeight() / getNumberOfUnmarkedEdges(nodeMap[neighborId]);
         }
     }
 
-    // Ordena novamente o vetor de pesos relativos
+    // Ordena novamente o vetor de pesos relativos em ordem decrescente
     sort(relativeWeightVector->begin(), relativeWeightVector->end(),
          [](pair<float, int> &a, pair<float, int> &b)
          {
              return a.first < b.first;
          });
+
 }
 
 /*
@@ -617,6 +589,7 @@ Metric Graph::relativeHeuristic()
 
 
     createRelativeWeightVector();
+
 
     bool viable = false;
     int firstHeuristcNode = relativeWeightVector->front().second;
