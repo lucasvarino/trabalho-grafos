@@ -486,6 +486,34 @@ priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *Graph::rela
     return minHeapPtr;
 }
 
+MaxFibonacciHeap *Graph::relativeWeight2()
+{
+    // Retorna o id do vértice com menor peso relativo
+    // O peso relativo é calculado pelo peso do vértice dividido pelo número de arestas que ele possui
+
+    Node *currentNode = this->firstNode;
+    Node *relativeWeightNode = currentNode;
+
+    // Inicializa a min heap, utilizar para sempre ter o menor peso relativo no topo
+    MaxFibonacciHeap *maxHeap = new MaxFibonacciHeap(this->order);
+
+    while (currentNode != nullptr)
+    {
+        if (currentNode->isMarked())
+        {
+            currentNode = currentNode->getNextNode();
+            continue;
+        }
+
+        // int relative = ceil(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode));
+
+        maxHeap->insert(currentNode->getId(), currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode));
+        currentNode = currentNode->getNextNode();
+    }
+
+    return maxHeap;
+}
+
 /*
  * Algoritmo Guloso Construtivo
  * Utiliza a heurística do peso relativo para construir uma solução viável
@@ -506,13 +534,11 @@ vector<int> Graph::relativeHeuristc()
         solution.insert(make_pair(i, false));
     }
 
-    priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *minHeap = this->relativeWeight();
+    MaxFibonacciHeap *minHeap = this->relativeWeight2();
 
     bool viable = false;
-    int firstHeuristcNode = minHeap->top().second;
+    int firstHeuristcNode = minHeap->extractMax()->nodeIndex;
     float totalWeight = 0;
-
-    minHeap->pop();
 
     while (!minHeap->empty())
     {
@@ -533,10 +559,15 @@ vector<int> Graph::relativeHeuristc()
         }
 
         // Atualiza a max heap
-        delete minHeap;
-        minHeap = this->relativeWeight();
-        firstHeuristcNode = minHeap->top().second;
-        minHeap->pop();
+        // Atualiza a max heap
+        for (int neighbour : this->getOpenNeighborhood(node->getId())) // Supondo que você tenha um método para pegar os vizinhos
+        {
+            Node *vizinho = this->searchNode(neighbour);
+            float newRelativeWeight = vizinho->getWeight() / this->getNumberOfUnmarkedEdges(vizinho);
+            minHeap->increaseKey(vizinho->getId(), newRelativeWeight);
+        }
+
+        firstHeuristcNode = minHeap->extractMax()->nodeIndex;
     }
 
     end = chrono::high_resolution_clock::now();

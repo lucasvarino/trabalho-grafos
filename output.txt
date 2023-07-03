@@ -2,11 +2,89 @@
 Iteração 1
 ---------------------------
 Numero de iterações : 10
-Tempo (s): 340
-Peso total: 39253
-Melhor alfa: 0.3
-Tamanho da solução: 395
+Tempo (s): 10
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
 ---------------------------
 =============================
 Iteração 2
+---------------------------
+Numero de iterações : 10
+Tempo (s): 11
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+---------------------------
+=============================
+Iteração 3
+---------------------------
+Numero de iterações : 10
+Tempo (s): 10
+Peso total: 18701
+Melhor alfa: 0.15
+Tamanho da solução: 192
+---------------------------
+=============================
+Iteração 4
+---------------------------
+Numero de iterações : 10
+Tempo (s): 12
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+---------------------------
+=============================
+Iteração 5
+---------------------------
+Numero de iterações : 10
+Tempo (s): 11
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+---------------------------
+=============================
+Iteração 6
+---------------------------
+Numero de iterações : 10
+Tempo (s): 13
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+---------------------------
+=============================
+Iteração 7
+---------------------------
+Numero de iterações : 10
+Tempo (s): 11
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+---------------------------
+=============================
+Iteração 8
+---------------------------
+Numero de iterações : 10
+Tempo (s): 12
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+---------------------------
+=============================
+Iteração 9
+---------------------------
+Numero de iterações : 10
+Tempo (s): 11
+Peso total: 18748
+Melhor alfa: 0.3
+Tamanho da solução: 192
+---------------------------
+=============================
+Iteração 10
+---------------------------
+Numero de iterações : 10
+Tempo (s): 11
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
 ---------------------------
