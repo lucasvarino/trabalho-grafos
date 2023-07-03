@@ -35,9 +35,11 @@ private:
     bool weightedNodes;
     bool directed;
     map<int, Node *> nodeMap;
+    int totalOfEdges;
+    int uncoveredEdges;
 
 public:
-    Graph(int order, bool directed, bool weightedEdges, bool weightedNodes);
+    Graph(int order, bool directed, bool weightedEdges, bool weightedNodes, int totalOfEdges);
     ~Graph();
 
     int getOrder();
@@ -83,6 +85,8 @@ public:
     void printReativeHeuristic(float alphas[], int size, int numInter, string filename);
     Metric reativeHeuristic(float alphas[], int numIter); // Imprime o conjunto solução usando a heuristica do peso relativo
     void imprimeNoEArestas();
+
+    void markNode(Node *node);
 };
 
 #endif // GRAPH_H_INCLUDED
