@@ -664,7 +664,7 @@ void Graph::printRelativeHeuristic(string filename)
 {
     Metric metric = relativeHeuristic();
     ofstream file;
-    file.open(filename);
+    file.open(filename + "_constructive.txt");
     file << "=============================" << endl;
     file << "Algoritimo Guloso Construtivo" << endl;
     file << "Tamanho da solução: " << metric.numberOfNodes << endl;
@@ -804,7 +804,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
 void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, string filename)
 {
     ofstream file;
-    file.open(filename);
+    file.open(filename + "_randomized.txt");
     for (int i = 0; i < size; i++)
     {
         file << "=============================" << endl;
@@ -969,12 +969,12 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
         }
 
         // Criando a lista de candidatos ordenados pelo peso relativo
-        priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *candidates = this->relativeWeight();
-
-        while (!candidates->empty())
+        createRelativeWeightVector();
+        int pos = 0;
+        while (!this->relativeWeightVector->empty())
         {
             // Pegar o primeiro vértice da lista de candidatos
-            int firstHeuristcNode = candidates->top().second;
+            int firstHeuristcNode = this->relativeWeightVector->front().second;
 
             // Coloca o vértice na solução
             Node *node = nodeMap[firstHeuristcNode];
@@ -992,18 +992,14 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
                 break;
             }
 
+            relativeWeightVector->erase(relativeWeightVector->begin());
+            relativeWeightVector->shrink_to_fit();
+
             // Atualiza a lista de candidatos
-            delete candidates;
-            candidates = this->relativeWeight();
-
+            updateRelativeWeights(firstHeuristcNode);
             // Pegando o próximo vértice de acordo com o alpha
-            int pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
-
-            for (int i = 0; i < pos; i++)
-            {
-                candidates->pop();
-            }
-            firstHeuristcNode = candidates->top().second;
+            pos = this->randomRange(0, static_cast<int>((relativeWeightVector->size() - 1) * alpha));
+            firstHeuristcNode = this->relativeWeightVector->at(pos).second;
         }
 
         this->resetMarks();
@@ -1047,7 +1043,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
 void Graph::printReativeHeuristic(float alphas[], int size, int numInter, string filename)
 {
     ofstream file;
-    file.open(filename);
+    file.open(filename + "_reative.txt");
     for (int i = 0; i < size; i++)
     {
         file << "=============================" << endl;
