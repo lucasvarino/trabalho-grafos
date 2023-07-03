@@ -6,6 +6,7 @@
 #include <vector>
 #include <queue>
 #include <chrono>
+#include <map>
 
 struct Compare
 {
@@ -34,6 +35,7 @@ private:
     bool weightedEdges;
     bool weightedNodes;
     bool directed;
+    map<int, Node *> nodeMap;
 
 public:
     Graph(int order, bool directed, bool weightedEdges, bool weightedNodes);

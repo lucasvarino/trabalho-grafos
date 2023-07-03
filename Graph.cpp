@@ -136,13 +136,14 @@ Node *Graph::searchNode(int id)
 
 void Graph::addNode(int id, float weight)
 {
-    if (this->searchNode(id) != nullptr)
+    if (nodeMap[id] != nullptr)
     {
         return;
     }
 
     Node *newNode = new Node(id);
     newNode->setWeight(weight);
+    nodeMap[newNode->getId()] = newNode;
 
     if (this->firstNode == nullptr)
     {
@@ -159,8 +160,8 @@ void Graph::addNode(int id, float weight)
 
 void Graph::addEdge(int id, int targetId, float weight)
 {
-    Node *node = this->searchNode(id);
-    Node *targetNode = this->searchNode(targetId);
+    Node *node = nodeMap[id];
+    Node *targetNode = nodeMap[targetId];
 
     if (node == nullptr || targetNode == nullptr)
     {
@@ -281,7 +282,7 @@ bool Graph::isKRegular(int k)
 
 vector<int> Graph::getOpenNeighborhood(int id)
 {
-    Node *search = this->searchNode(id);
+    Node *search = nodeMap[id];
 
     if (search == nullptr)
     {
@@ -409,7 +410,7 @@ bool Graph::isIsolated()
 
         while (edge != nullptr)
         {
-            Node *targetNode = this->searchNode(edge->getTargetId());
+            Node *targetNode = nodeMap[edge->getTargetId()];
 
             if (!targetNode->isMarked() && !currentNode->isMarked())
             {
@@ -438,7 +439,7 @@ int Graph::getNumberOfUnmarkedEdges(Node *node)
 
     while (edge != nullptr)
     {
-        Node *targetNode = this->searchNode(edge->getTargetId());
+        Node *targetNode = nodeMap[edge->getTargetId()];
         if (!targetNode->isMarked() && !node->isMarked())
         {
             numberOfUnmarkedEdges++;
@@ -543,7 +544,7 @@ vector<int> Graph::relativeHeuristc()
     while (!minHeap->empty())
     {
         // Coloca o vértice na solução
-        Node *node = this->searchNode(firstHeuristcNode);
+        Node *node = nodeMap[firstHeuristcNode];
         solution[firstHeuristcNode] = true;
         solutionVector.push_back(firstHeuristcNode);
         totalWeight += node->getWeight();
@@ -562,7 +563,7 @@ vector<int> Graph::relativeHeuristc()
         // Atualiza a max heap
         for (int neighbour : this->getOpenNeighborhood(node->getId())) // Supondo que você tenha um método para pegar os vizinhos
         {
-            Node *vizinho = this->searchNode(neighbour);
+            Node *vizinho = nodeMap[neighbour];
             float newRelativeWeight = vizinho->getWeight() / this->getNumberOfUnmarkedEdges(vizinho);
             minHeap->increaseKey(vizinho->getId(), newRelativeWeight);
         }
