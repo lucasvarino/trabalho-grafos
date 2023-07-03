@@ -78,9 +78,12 @@ public:
     void createRelativeWeightVector();                                                     // Retorna o peso médio de cada vértice
     void updateRelativeWeights(int removedNodeId);                                         // Retorna o peso médio de cada vértice
     bool isNeighbour(int id, int targetId);
-    vector<int> relativeHeuristc();
+    Metric relativeHeuristic();
+    void printRelativeHeuristic(string filename);
 
-    int randomRange(int min, int max);
+    void printRelativeVector();
+
+        int randomRange(int min, int max);
     Metric randomizedHeuristic(float alpha, int numIter); // Retorna o conjunto solução usando a heuristica do peso relativo
     void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);
 

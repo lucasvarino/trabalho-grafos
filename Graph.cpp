@@ -526,7 +526,12 @@ void Graph::createRelativeWeightVector()
         relativeWeightVector->push_back(make_pair(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode), currentNode->getId()));
         currentNode = currentNode->getNextNode();
     }
-    sort(relativeWeightVector->begin(), relativeWeightVector->end(), Compare());
+    sort(relativeWeightVector->begin(), relativeWeightVector->end(), 
+        [](pair<float, int> &a, pair<float, int> &b) {
+            return a.first < b.first;
+        }
+    );
+
 }
 
 bool Graph::isNeighbour(int id, int targetId)
@@ -542,13 +547,22 @@ bool Graph::isNeighbour(int id, int targetId)
 
     while (edge != nullptr)
     {
-        if(edge->getTargetId() == targetId){
+        if (edge->getTargetId() == targetId)
+        {
             return true;
         }
         edge = edge->getNextEdge();
     }
 
     return false;
+}
+
+void Graph::printRelativeVector()
+{
+    for (int i = 0; i < relativeWeightVector->size(); i++)
+    {
+        cout << (*relativeWeightVector)[i].first << " " << (*relativeWeightVector)[i].second << endl;
+    }
 }
 
 void Graph::updateRelativeWeights(int removedNodeId)
@@ -574,7 +588,11 @@ void Graph::updateRelativeWeights(int removedNodeId)
     }
 
     // Ordena novamente o vetor de pesos relativos
-    sort(relativeWeightVector->begin(), relativeWeightVector->end(), Compare());
+    sort(relativeWeightVector->begin(), relativeWeightVector->end(),
+         [](pair<float, int> &a, pair<float, int> &b)
+         {
+             return a.first < b.first;
+         });
 }
 
 /*
@@ -583,7 +601,7 @@ void Graph::updateRelativeWeights(int removedNodeId)
  *
  * Retorna um vetor com os ids dos vértices que compõem a solução
  */
-vector<int> Graph::relativeHeuristc()
+Metric Graph::relativeHeuristic()
 {
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = chrono::high_resolution_clock::now();
@@ -597,12 +615,12 @@ vector<int> Graph::relativeHeuristc()
         solution.insert(make_pair(i, false));
     }
 
+
     createRelativeWeightVector();
 
     bool viable = false;
     int firstHeuristcNode = relativeWeightVector->front().second;
     float totalWeight = 0;
-
 
     while (!this->relativeWeightVector->empty())
     {
@@ -621,7 +639,10 @@ vector<int> Graph::relativeHeuristc()
             viable = true;
             break;
         }
+
         relativeWeightVector->erase(relativeWeightVector->begin());
+        relativeWeightVector->shrink_to_fit();
+
         updateRelativeWeights(firstHeuristcNode);
         firstHeuristcNode = relativeWeightVector->front().second;
     }
@@ -629,18 +650,30 @@ vector<int> Graph::relativeHeuristc()
     end = chrono::high_resolution_clock::now();
     float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
 
-    cout << "Tamanho da solução: " << solutionVector.size() << endl;
-    cout << "Peso total da solução: " << totalWeight << endl;
-    cout << "Tempo de execução: " << elapse_time << endl;
+    Metric metric;
+    metric.time = elapse_time;
+    metric.totalWeight = totalWeight;
+    metric.numberOfNodes = solutionVector.size();
 
     // Reseta os vértices para não marcados para gerar outras soluções
     this->resetMarks();
+    return metric;
+}
 
-    if (!viable)
-    {
-        return vector<int>();
-    }
-    return solutionVector;
+void Graph::printRelativeHeuristic(string filename)
+{
+    Metric metric = relativeHeuristic();
+    ofstream file;
+    file.open(filename);
+    file << "=============================" << endl;
+    file << "Algoritimo Guloso Construtivo" << endl;
+    file << "Tamanho da solução: " << metric.numberOfNodes << endl;
+    file << "Peso total da solução: " << metric.totalWeight << endl;
+    file << "Tempo de execução: " << metric.time << endl;
+    file << "=============================" << endl;
+
+    file << endl;
+    file.close();
 }
 
 void Graph::imprimeNoEArestas()
@@ -709,18 +742,14 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
         {
             solution.insert(make_pair(i, false));
         }
-        priority_queue<pair<float, int>, vector<pair<float, int>>, Compare> *candidates = this->relativeWeight();
+
+        createRelativeWeightVector();
 
         // Percorre a fila de candidatos até a posição desejada
-        int pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+        int pos = this->randomRange(0, static_cast<int>((relativeWeightVector->size() - 1) * alpha));
+        int firstHeuristcNode = relativeWeightVector->at(pos).second;
 
-        for (int i = 0; i < pos; i++)
-        {
-            candidates->pop();
-        }
-        int firstHeuristcNode = candidates->top().second;
-
-        while (!candidates->empty())
+        while (!relativeWeightVector->empty())
         {
             // Coloca o vértice na solução
             Node *node = nodeMap[firstHeuristcNode];
@@ -739,16 +768,13 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
             }
 
             // Atualiza a lista de candidatos
-            delete candidates;
-            candidates = this->relativeWeight();
+            relativeWeightVector->erase(relativeWeightVector->begin() + pos);
+            relativeWeightVector->shrink_to_fit();
+            updateRelativeWeights(firstHeuristcNode);
 
-            pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+            pos = this->randomRange(0, static_cast<int>((relativeWeightVector->size() - 1) * alpha));
 
-            for (int i = 0; i < pos; i++)
-            {
-                candidates->pop();
-            }
-            firstHeuristcNode = candidates->top().second;
+            firstHeuristcNode = relativeWeightVector->at(pos).second;
         }
 
         // Reseta os vértices para não marcados para gerar outras soluções
@@ -775,7 +801,6 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
     metric.numberOfNodes = bestSolutionVector.size();
     return metric;
 }
-
 void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, string filename)
 {
     ofstream file;
@@ -789,7 +814,7 @@ void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, str
         {
             Metric metric = this->randomizedHeuristic(alphas[i], numInter);
             file << "Alfa = " << alphas[i] << " para " << numInter << " iterações" << endl
-                 << "Tempo (min): " << metric.time << endl
+                 << "Tempo (s): " << metric.time << endl
                  << "Peso total: " << metric.totalWeight << endl
                  << "Tamanho da solução: " << metric.numberOfNodes << endl;
             file << "-----------------------------" << endl;
