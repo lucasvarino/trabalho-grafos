@@ -18,6 +18,7 @@ private:
     float weight;
     Node *nextNode;
     int numberOfEdges;
+    int numberOfUnmarkedEdges;
     bool marked;
 
 public:
@@ -33,6 +34,10 @@ public:
     Node *getNextNode();
     int getNumberOfEdges();
     bool isMarked();
+
+    int getNumberOfUnmarkedEdges();
+    void setNumberOfUnmarkedEdges(int numberOfUnmarkedEdges);
+    void decrementUnmarkedEdges();
 
     void setNextNode(Node *nextNode);
     void setWeight(float weight);

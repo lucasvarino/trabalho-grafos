@@ -416,8 +416,23 @@ void Graph::resetMarks()
 void Graph::markNode(Node *node)
 {
     node->setMarked(true);
+    node->setNumberOfUnmarkedEdges(0);
+    vector<int> neighbors = this->getNeighbors(node->getId());
+    int size = neighbors.size();
+    int i = 0;
+    for(int neighbor : neighbors)
+    {
+        Node *neighborNode = this->nodeMap[neighbor];
+        if(!neighborNode->isMarked())
+        {
+            neighborNode->decrementUnmarkedEdges();
+            this->uncoveredEdges--;
+        }
+    }
 
-    Edge *edge = node->getFirstEdge();
+
+/*     Edge *edge = node->getFirstEdge();
+    
 
     while (edge != nullptr)
     {
@@ -438,7 +453,7 @@ void Graph::markNode(Node *node)
         }
 
         edge = edge->getNextEdge();
-    }
+    } */
 }
 
 vector<int> Graph::getNeighbors(int id)

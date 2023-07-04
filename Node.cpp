@@ -14,6 +14,7 @@ Node::Node(int id)
     this->weight = 0;
     this->nextNode = nullptr;
     this->numberOfEdges = 0;
+    this->numberOfUnmarkedEdges = 0;
 }
 
 Node::~Node()
@@ -93,6 +94,7 @@ void Node::addEdge(Node *target, bool directed, float weight)
     {
         newEdge->setDirected(true);
     }
+    this->numberOfUnmarkedEdges++;
 }
 
 Edge *Node::searchEdge(int targetId)
@@ -260,4 +262,19 @@ bool Node::isMarked()
 void Node::setMarked(bool marked)
 {
     this->marked = marked;
+}
+
+int Node::getNumberOfUnmarkedEdges()
+{
+    return this->numberOfUnmarkedEdges;
+}
+
+void Node::setNumberOfUnmarkedEdges(int numberOfUnmarkedEdges)
+{
+    this->numberOfUnmarkedEdges = numberOfUnmarkedEdges;
+}
+
+void Node::decrementUnmarkedEdges()
+{
+    this->numberOfUnmarkedEdges--;
 }
