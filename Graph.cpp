@@ -11,7 +11,7 @@
 
 using namespace std;
 
-Graph::Graph(int order, bool directed, bool weightedEdges, bool weightedNodes)
+Graph::Graph(int order, bool directed, bool weightedEdges, bool weightedNodes, int totalOfEdges)
 {
     this->order = order;
     this->numberOfEdges = 0;
@@ -20,6 +20,8 @@ Graph::Graph(int order, bool directed, bool weightedEdges, bool weightedNodes)
     this->weightedEdges = weightedEdges;
     this->weightedNodes = weightedNodes;
     this->directed = directed;
+    this->totalOfEdges = totalOfEdges;
+    this->uncoveredEdges = totalOfEdges;
 }
 
 Graph::~Graph()
@@ -221,14 +223,14 @@ void Graph::removeNode(int id)
 
 void Graph::removeEdge(int id, int targetId)
 {
-    Node *node = this->searchNode(id);
+    Node *node = this->nodeMap[id];
 
     if (node == nullptr)
     {
         return;
     }
 
-    Node *targetNode = this->searchNode(targetId);
+    Node *targetNode = this->nodeMap[targetId];
     node->removeEdge(targetNode);
     targetNode->removeEdge(node);
     node->decrementNumberOfEdges();
@@ -238,7 +240,7 @@ void Graph::removeEdge(int id, int targetId)
 
 void Graph::removeAllEdges(int id)
 {
-    Node *node = this->searchNode(id);
+    Node *node = this->nodeMap[id];
 
     if (node == nullptr)
     {
@@ -345,7 +347,7 @@ bool Graph::isComplete()
 
 vector<int> Graph::depthSearch(int id)
 {
-    Node *node = this->searchNode(id);
+    Node *node = this->nodeMap[id];
 
     if (node == nullptr)
     {
@@ -368,7 +370,7 @@ vector<int> Graph::depthSearch(int id)
 
             while (edge != nullptr)
             {
-                stack.push(this->searchNode(edge->getTargetId()));
+                stack.push(this->nodeMap[edge->getTargetId()]);
                 edge = edge->getNextEdge();
             }
         }
@@ -389,7 +391,53 @@ void Graph::resetMarks()
     while (node != nullptr)
     {
         node->setMarked(false);
+
+        Edge *edge = node->getFirstEdge();
+
+        while (edge != nullptr)
+        {
+            edge->setMarked(false);
+            edge = edge->getNextEdge();
+        }
+
         node = node->getNextNode();
+    }
+
+    this->uncoveredEdges = this->totalOfEdges;
+}
+
+/*
+ * Função para marcar um vértice e suas arestas
+ *
+ * Recebe um ponteiro para o vértice a ser marcado
+ * Marca o vértice e todas as arestas que saem dele
+ */
+
+void Graph::markNode(Node *node)
+{
+    node->setMarked(true);
+
+    Edge *edge = node->getFirstEdge();
+
+    while (edge != nullptr)
+    {
+        // Se a aresta não estiver marcada
+        if (!edge->isMarked())
+        {
+            edge->setMarked(true);
+
+            Node *targetNode = this->nodeMap[edge->getTargetId()];
+            Edge *targetEdge = targetNode->searchEdge(node->getId());
+
+            if (targetEdge != nullptr && !targetEdge->isMarked())
+            {
+                targetEdge->setMarked(true);
+            }
+
+            this->uncoveredEdges--;
+        }
+
+        edge = edge->getNextEdge();
     }
 }
 
@@ -423,28 +471,7 @@ vector<int> Graph::getNeighbors(int id)
 
 bool Graph::isIsolated()
 {
-    Node *currentNode = this->firstNode;
-
-    while (currentNode != nullptr)
-    {
-        Edge *edge = currentNode->getFirstEdge();
-
-        while (edge != nullptr)
-        {
-            Node *targetNode = nodeMap[edge->getTargetId()];
-
-            if (!targetNode->isMarked() && !currentNode->isMarked())
-            {
-                return false;
-            }
-
-            edge = edge->getNextEdge();
-        }
-
-        currentNode = currentNode->getNextNode();
-    }
-
-    return true;
+    return this->uncoveredEdges == 0;
 }
 
 /*
@@ -719,7 +746,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
         while (!candidates->empty())
         {
             // Coloca o vértice na solução
-            Node *node = nodeMap[firstHeuristcNode];
+            Node *node = this->nodeMap[firstHeuristcNode];
             solution[firstHeuristcNode] = true;
             auxSolutionVector.push_back(firstHeuristcNode);
             auxWeight += node->getWeight();
@@ -948,7 +975,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
             auxWeight += node->getWeight();
 
             // Marca o vértice
-            node->setMarked(true);
+            this->markNode(node);
 
             // Verifica se a solução é viável
             if (this->isIsolated())

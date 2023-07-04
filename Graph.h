@@ -37,9 +37,11 @@ private:
     bool directed;
     map<int, Node *> nodeMap;
     vector<pair<float, int>> *candidates;
+    int totalOfEdges;
+    int uncoveredEdges;
 
 public:
-    Graph(int order, bool directed, bool weightedEdges, bool weightedNodes);
+    Graph(int order, bool directed, bool weightedEdges, bool weightedNodes, int totalOfEdges);
     ~Graph();
 
     int getOrder();
@@ -71,8 +73,6 @@ public:
 
     vector<int> depthSearch(int id);
     vector<int> directTransitiveClosure(int id);
-    void imprimeNoEArestas();
-
     
 
     // Trabalho 2 - Algoritmos Gulosos
@@ -93,6 +93,9 @@ public:
     void updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[], float alpha, int auxWeight);
     Metric reativeHeuristic(float alphas[], int numIter); // Imprime o conjunto solução usando a heuristica do peso relativo
     void printReativeHeuristic(float alphas[], int size, int numInter, string filename);
+    void imprimeNoEArestas();
+
+    void markNode(Node *node);
 };
 
 #endif // GRAPH_H_INCLUDED

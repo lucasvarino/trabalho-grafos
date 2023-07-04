@@ -10,6 +10,7 @@ Edge::Edge(int targetId, int originId, float weight)
     this->weight = weight;
     this->directed = false;
     this->originId = originId;
+    this->marked = false;
 }
 
 Edge::~Edge() { this->nextEdge = nullptr; }

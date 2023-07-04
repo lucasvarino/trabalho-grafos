@@ -18,7 +18,7 @@ Graph *readNotDirectedWeightedEdges(string filename)
 
     getline(file, order);
 
-    Graph *graph = new Graph(0, false, true, false);
+    Graph *graph = new Graph(0, false, true, false, 0);
 
     while (!file.eof())
     {
@@ -55,7 +55,7 @@ Graph *readGreedy(string filename)
     int order = stoi(orderS);
     int numberOfEdges = stoi(numberOfEdgesS);
 
-    Graph *graph = new Graph(0, false, false, false);
+    Graph *graph = new Graph(0, false, false, false, numberOfEdges);
 
     cout << "Starting reading graph..." << endl;
 
@@ -107,7 +107,7 @@ Graph *readMatrixMarket(string filename)
     int numberOfNodes, numberOfNodesAgain, numberOfEdges;
     file >> numberOfNodes >> numberOfNodesAgain >> numberOfEdges;
 
-    Graph *graph = new Graph(0, false, false, false);
+    Graph *graph = new Graph(0, false, false, false, numberOfEdges);
 
     cout << "Starting reading graph..." << endl;
 
