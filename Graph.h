@@ -36,7 +36,7 @@ private:
     bool weightedNodes;
     bool directed;
     map<int, Node *> nodeMap;
-    vector<pair<float, int>> *relativeWeightVector;
+    vector<pair<float, int>> *candidates;
 
 public:
     Graph(int order, bool directed, bool weightedEdges, bool weightedNodes);
@@ -76,8 +76,8 @@ public:
     
 
     // Trabalho 2 - Algoritmos Gulosos
-    void createRelativeWeightVector();
-    void updateRelativeWeights(int removedNodeId);
+    void createCandidates();
+    void updateCandidates(int removedNodeId);
     void printRelativeVector();
 
     Metric relativeHeuristic();

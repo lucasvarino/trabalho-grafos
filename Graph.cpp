@@ -477,13 +477,13 @@ int Graph::getNumberOfUnmarkedEdges(Node *node)
  * Função que calcula o peso relativo de cada vértice
  * Colocamos os vértices em um vector ordenado, em que o vértice com menor peso relativo sempre esteja no topo
  *
- * O vector criado é alocado no atributo relativeWeightVector
+ * O vector criado é alocado no atributo candidates
  */
 
-void Graph::createRelativeWeightVector()
+void Graph::createCandidates()
 {
-    vector<pair<float, int>> *relativeWeightVector = new vector<pair<float, int>>();
-    this->relativeWeightVector = relativeWeightVector;
+    vector<pair<float, int>> *candidates = new vector<pair<float, int>>();
+    this->candidates = candidates;
     Node *currentNode = this->firstNode;
     Node *relativeWeightNode = currentNode;
 
@@ -495,10 +495,10 @@ void Graph::createRelativeWeightVector()
             continue;
         }
 
-        relativeWeightVector->push_back(make_pair(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode), currentNode->getId()));
+        candidates->push_back(make_pair(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode), currentNode->getId()));
         currentNode = currentNode->getNextNode();
     }
-    sort(relativeWeightVector->begin(), relativeWeightVector->end(), 
+    sort(candidates->begin(), candidates->end(), 
         [](pair<float, int> &a, pair<float, int> &b) {
             return a.first < b.first;
         }
@@ -512,9 +512,9 @@ void Graph::createRelativeWeightVector()
 
 void Graph::printRelativeVector()
 {
-    for (int i = 0; i < relativeWeightVector->size(); i++)
+    for (int i = 0; i < candidates->size(); i++)
     {
-        cout << (*relativeWeightVector)[i].first << " " << (*relativeWeightVector)[i].second << endl;
+        cout << (*candidates)[i].first << " " << (*candidates)[i].second << endl;
     }
 }
 
@@ -525,13 +525,13 @@ void Graph::printRelativeVector()
  * O vetor é ordenado novamente
  */
 
-void Graph::updateRelativeWeights(int removedNodeId)
+void Graph::updateCandidates(int removedNodeId)
 {
     // Verifica se o vetor de pesos relativos foi criado anteriormente
-    if (relativeWeightVector == nullptr)
+    if (candidates == nullptr)
     {
         // Se não foi criado, cria o vetor
-        createRelativeWeightVector();
+        createCandidates();
     }
 
     // Percorre o vetor de vizinhos
@@ -542,24 +542,24 @@ void Graph::updateRelativeWeights(int removedNodeId)
         int neighborId = neighbors[i];
 
         // Encontra o índice do vizinho no vetor de pesos relativos
-        auto it = find_if(relativeWeightVector->begin(), relativeWeightVector->end(),
+        auto it = find_if(candidates->begin(), candidates->end(),
                           [neighborId](const pair<float, int> &nodeWeight)
                           {
                               return nodeWeight.second == neighborId;
                           });
 
-        if (it != relativeWeightVector->end())
+        if (it != candidates->end())
         {
             // Obtém o índice do vizinho
-            int index = distance(relativeWeightVector->begin(), it);
+            int index = distance(candidates->begin(), it);
 
             // Atualize o peso relativo do vizinho
-            relativeWeightVector->at(index).first = nodeMap[neighborId]->getWeight() / getNumberOfUnmarkedEdges(nodeMap[neighborId]);
+            candidates->at(index).first = nodeMap[neighborId]->getWeight() / getNumberOfUnmarkedEdges(nodeMap[neighborId]);
         }
     }
 
     // Ordena novamente o vetor de pesos relativos em ordem decrescente
-    sort(relativeWeightVector->begin(), relativeWeightVector->end(),
+    sort(candidates->begin(), candidates->end(),
          [](pair<float, int> &a, pair<float, int> &b)
          {
              return a.first < b.first;
@@ -588,14 +588,14 @@ Metric Graph::relativeHeuristic()
     }
 
 
-    createRelativeWeightVector();
+    createCandidates();
 
 
     bool viable = false;
-    int firstHeuristcNode = relativeWeightVector->front().second;
+    int firstHeuristcNode = candidates->front().second;
     float totalWeight = 0;
 
-    while (!this->relativeWeightVector->empty())
+    while (!this->candidates->empty())
     {
         // Coloca o vértice na solução
         Node *node = nodeMap[firstHeuristcNode];
@@ -613,11 +613,11 @@ Metric Graph::relativeHeuristic()
             break;
         }
 
-        relativeWeightVector->erase(relativeWeightVector->begin());
-        relativeWeightVector->shrink_to_fit();
+        candidates->erase(candidates->begin());
+        candidates->shrink_to_fit();
 
-        updateRelativeWeights(firstHeuristcNode);
-        firstHeuristcNode = relativeWeightVector->front().second;
+        updateCandidates(firstHeuristcNode);
+        firstHeuristcNode = candidates->front().second;
     }
 
     end = chrono::high_resolution_clock::now();
@@ -716,13 +716,13 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
             solution.insert(make_pair(i, false));
         }
 
-        createRelativeWeightVector();
+        createCandidates();
 
         // Percorre a fila de candidatos até a posição desejada
-        int pos = this->randomRange(0, static_cast<int>((relativeWeightVector->size() - 1) * alpha));
-        int firstHeuristcNode = relativeWeightVector->at(pos).second;
+        int pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+        int firstHeuristcNode = candidates->at(pos).second;
 
-        while (!relativeWeightVector->empty())
+        while (!candidates->empty())
         {
             // Coloca o vértice na solução
             Node *node = nodeMap[firstHeuristcNode];
@@ -741,13 +741,13 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
             }
 
             // Atualiza a lista de candidatos
-            relativeWeightVector->erase(relativeWeightVector->begin() + pos);
-            relativeWeightVector->shrink_to_fit();
-            updateRelativeWeights(firstHeuristcNode);
+            candidates->erase(candidates->begin() + pos);
+            candidates->shrink_to_fit();
+            updateCandidates(firstHeuristcNode);
 
-            pos = this->randomRange(0, static_cast<int>((relativeWeightVector->size() - 1) * alpha));
+            pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
 
-            firstHeuristcNode = relativeWeightVector->at(pos).second;
+            firstHeuristcNode = candidates->at(pos).second;
         }
 
         // Reseta os vértices para não marcados para gerar outras soluções
@@ -905,8 +905,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
     // Média dos pesos para cada valor de alpha
     vector<pair<float, int>> avgWeights(5, make_pair(0, 0));
 
-    vector<int> auxSolutionVector;
-    vector<int> bestSolutionVector;
+    vector<int> auxSolutionVector, bestSolutionVector;
     map<int, bool> solution;
 
     int auxWeight = 0, bestWeight = 0, i = 1;
@@ -936,21 +935,22 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
         }
 
         // Iniciando o Algortimo Guloso Randomizado Reativo
-        for (int i = 1; i < this->order; i++)
+        for (int j = 1; j < this->order; j++)
         {
             solution.insert(make_pair(i, false));
         }
 
         // Criando a lista de candidatos ordenados pelo peso relativo
-        createRelativeWeightVector();
+        createCandidates();
+
         int pos = 0;
-        while (!this->relativeWeightVector->empty())
+        while (!this->candidates->empty())
         {
             // Pegar o primeiro vértice da lista de candidatos
-            int firstHeuristcNode = this->relativeWeightVector->front().second;
+            int firstHeuristcNode = this->candidates->front().second;
 
             // Coloca o vértice na solução
-            Node *node = nodeMap[firstHeuristcNode];
+            Node *node = this->nodeMap[firstHeuristcNode];
             solution[firstHeuristcNode] = true;
             auxSolutionVector.push_back(firstHeuristcNode);
             auxWeight += node->getWeight();
@@ -965,14 +965,14 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
                 break;
             }
 
-            relativeWeightVector->erase(relativeWeightVector->begin());
-            relativeWeightVector->shrink_to_fit();
+            candidates->erase(candidates->begin());
+            candidates->shrink_to_fit();
 
             // Atualiza a lista de candidatos
-            updateRelativeWeights(firstHeuristcNode);
+            updateCandidates(firstHeuristcNode);
             // Pegando o próximo vértice de acordo com o alpha
-            pos = this->randomRange(0, static_cast<int>((relativeWeightVector->size() - 1) * alpha));
-            firstHeuristcNode = this->relativeWeightVector->at(pos).second;
+            pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+            firstHeuristcNode = this->candidates->at(pos).second;
         }
 
         this->resetMarks();
@@ -997,11 +997,11 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
     float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
 
     int bestAlpha = 0;
-    for (int i = 0; i < 5; i++)
+    for (int k = 0; k < 5; k++)
     {
-        if (avgWeights[i].second > bestAlpha)
+        if (avgWeights[k].second > bestAlpha)
         {
-            bestAlpha = i;
+            bestAlpha = k;
         }
     }
 
