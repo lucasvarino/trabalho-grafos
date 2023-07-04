@@ -386,6 +386,7 @@ vector<int> Graph::directTransitiveClosure(int id)
 
 void Graph::resetMarks()
 {
+    int count = 0;
     Node *node = this->firstNode;
 
     while (node != nullptr)
@@ -393,17 +394,18 @@ void Graph::resetMarks()
         node->setMarked(false);
 
         Edge *edge = node->getFirstEdge();
-
         while (edge != nullptr)
         {
+            count++;
             edge->setMarked(false);
             edge = edge->getNextEdge();
         }
-
+        node->setNumberOfUnmarkedEdges(count);
+        count = 0;
         node = node->getNextNode();
     }
 
-    this->uncoveredEdges = this->totalOfEdges;
+    this->uncoveredEdges = this->numberOfEdges;
 }
 
 /*
