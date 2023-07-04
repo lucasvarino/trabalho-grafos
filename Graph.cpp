@@ -538,7 +538,7 @@ void Graph::createCandidates()
             continue;
         }
 
-        candidates->push_back(make_pair(currentNode->getWeight() / this->getNumberOfUnmarkedEdges(currentNode), currentNode->getId()));
+        candidates->push_back(make_pair(currentNode->getWeight() /  currentNode->getNumberOfUnmarkedEdges(), currentNode->getId()));
         currentNode = currentNode->getNextNode();
     }
     sort(candidates->begin(), candidates->end(), 
@@ -590,7 +590,7 @@ void Graph::updateCandidates(int removedNodeId)
             int index = distance(candidates->begin(), it);
 
             // Atualize o peso relativo do vizinho
-            candidates->at(index).first = nodeMap[neighborId]->getWeight() / getNumberOfUnmarkedEdges(nodeMap[neighborId]);
+            candidates->at(index).first = nodeMap[neighborId]->getWeight() / nodeMap[neighborId]->getNumberOfUnmarkedEdges();
         }
     }
 
