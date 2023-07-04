@@ -482,6 +482,7 @@ int Graph::getNumberOfUnmarkedEdges(Node *node)
 
 void Graph::createCandidates()
 {
+    delete this->candidates;
     vector<pair<float, int>> *candidates = new vector<pair<float, int>>();
     this->candidates = candidates;
     Node *currentNode = this->firstNode;
@@ -527,13 +528,6 @@ void Graph::printRelativeVector()
 
 void Graph::updateCandidates(int removedNodeId)
 {
-    // Verifica se o vetor de pesos relativos foi criado anteriormente
-    if (candidates == nullptr)
-    {
-        // Se não foi criado, cria o vetor
-        createCandidates();
-    }
-
     // Percorre o vetor de vizinhos
     vector<int> neighbors = getNeighbors(removedNodeId);
 
@@ -941,14 +935,12 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
         }
 
         // Criando a lista de candidatos ordenados pelo peso relativo
-        createCandidates();
-
         int pos = 0;
+        createCandidates();
+        int firstHeuristcNode = this->candidates->front().second;
+
         while (!this->candidates->empty())
         {
-            // Pegar o primeiro vértice da lista de candidatos
-            int firstHeuristcNode = this->candidates->front().second;
-
             // Coloca o vértice na solução
             Node *node = this->nodeMap[firstHeuristcNode];
             solution[firstHeuristcNode] = true;
@@ -965,7 +957,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
                 break;
             }
 
-            candidates->erase(candidates->begin());
+            candidates->erase(candidates->begin()+ pos);
             candidates->shrink_to_fit();
 
             // Atualiza a lista de candidatos
