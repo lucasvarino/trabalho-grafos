@@ -154,7 +154,7 @@ int main(int argc, char const *argv[])
     float alphas[5] = {0.05, 0.1, 0.15, 0.3, 0.5};
     //graph->printRelativeHeuristic(output_file);
     //graph->printRandomizedHeuristic(alphas, 5, 1000, output_file);
-    graph->printReativeHeuristic(alphas, 5, 1000, output_file);
-
+    graph->contarArestas();
+    graph->printReativeHeuristic(alphas, 10, 1000, output_file);
     return 0;
 }

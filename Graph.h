@@ -96,6 +96,7 @@ public:
     void imprimeNoEArestas();
 
     void markNode(Node *node);
+    void contarArestas();
 };
 
 #endif // GRAPH_H_INCLUDED

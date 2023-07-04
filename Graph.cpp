@@ -175,6 +175,7 @@ void Graph::addEdge(int id, int targetId, float weight)
     {
         return;
     }
+
     node->addEdge(targetNode, this->directed, weight);
     node->incrementDegree(this->directed);
     node->incrementNumberOfEdges();
@@ -386,23 +387,14 @@ vector<int> Graph::directTransitiveClosure(int id)
 
 void Graph::resetMarks()
 {
+    ofstream file;
     Node *node = this->firstNode;
-
     while (node != nullptr)
     {
         node->setMarked(false);
-
-        Edge *edge = node->getFirstEdge();
-
-        while (edge != nullptr)
-        {
-            edge->setMarked(false);
-            edge = edge->getNextEdge();
-        }
-
+        node->setNumberOfUnmarkedEdges(node->getNumberOfEdges2());
         node = node->getNextNode();
     }
-
     this->uncoveredEdges = this->totalOfEdges;
 }
 
@@ -418,42 +410,40 @@ void Graph::markNode(Node *node)
     node->setMarked(true);
     node->setNumberOfUnmarkedEdges(0);
     vector<int> neighbors = this->getNeighbors(node->getId());
-    int size = neighbors.size();
     int i = 0;
-    for(int neighbor : neighbors)
+    for (int neighbor : neighbors)
     {
         Node *neighborNode = this->nodeMap[neighbor];
-        if(!neighborNode->isMarked())
+        if (!neighborNode->isMarked())
         {
             neighborNode->decrementUnmarkedEdges();
             this->uncoveredEdges--;
         }
     }
 
+    /*     Edge *edge = node->getFirstEdge();
 
-/*     Edge *edge = node->getFirstEdge();
-    
 
-    while (edge != nullptr)
-    {
-        // Se a aresta não estiver marcada
-        if (!edge->isMarked())
+        while (edge != nullptr)
         {
-            edge->setMarked(true);
-
-            Node *targetNode = this->nodeMap[edge->getTargetId()];
-            Edge *targetEdge = targetNode->searchEdge(node->getId());
-
-            if (targetEdge != nullptr && !targetEdge->isMarked())
+            // Se a aresta não estiver marcada
+            if (!edge->isMarked())
             {
-                targetEdge->setMarked(true);
+                edge->setMarked(true);
+
+                Node *targetNode = this->nodeMap[edge->getTargetId()];
+                Edge *targetEdge = targetNode->searchEdge(node->getId());
+
+                if (targetEdge != nullptr && !targetEdge->isMarked())
+                {
+                    targetEdge->setMarked(true);
+                }
+
+                this->uncoveredEdges--;
             }
 
-            this->uncoveredEdges--;
-        }
-
-        edge = edge->getNextEdge();
-    } */
+            edge = edge->getNextEdge();
+        } */
 }
 
 vector<int> Graph::getNeighbors(int id)
@@ -514,7 +504,6 @@ int Graph::getNumberOfUnmarkedEdges(Node *node)
     return numberOfUnmarkedEdges;
 }
 
-
 /*
  * Função que calcula o peso relativo de cada vértice
  * Colocamos os vértices em um vector ordenado, em que o vértice com menor peso relativo sempre esteja no topo
@@ -538,15 +527,14 @@ void Graph::createCandidates()
             continue;
         }
 
-        candidates->push_back(make_pair(currentNode->getWeight() /  currentNode->getNumberOfUnmarkedEdges(), currentNode->getId()));
+        candidates->push_back(make_pair(currentNode->getWeight() / currentNode->getNumberOfUnmarkedEdges(), currentNode->getId()));
         currentNode = currentNode->getNextNode();
     }
-    sort(candidates->begin(), candidates->end(), 
-        [](pair<float, int> &a, pair<float, int> &b) {
-            return a.first < b.first;
-        }
-    );
-
+    sort(candidates->begin(), candidates->end(),
+         [](pair<float, int> &a, pair<float, int> &b)
+         {
+             return a.first < b.first;
+         });
 }
 
 /*
@@ -555,21 +543,25 @@ void Graph::createCandidates()
 
 void Graph::printRelativeVector()
 {
+    ofstream file;
+    file.open("relativeVector.txt");
     for (int i = 0; i < candidates->size(); i++)
     {
-        cout << (*candidates)[i].first << " " << (*candidates)[i].second << endl;
+        file << (*candidates)[i].first << " " << (*candidates)[i].second << endl;
     }
+    file.close();
 }
 
 /*
  * Função que atualiza o vetor de pesos relativos
  * Quando um vértice é removido, o peso relativo dos seus vizinhos é atualizado
- * 
+ *
  * O vetor é ordenado novamente
  */
 
 void Graph::updateCandidates(int removedNodeId)
 {
+
     // Percorre o vetor de vizinhos
     vector<int> neighbors = getNeighbors(removedNodeId);
 
@@ -600,7 +592,6 @@ void Graph::updateCandidates(int removedNodeId)
          {
              return a.first < b.first;
          });
-
 }
 
 /*
@@ -623,9 +614,7 @@ Metric Graph::relativeHeuristic()
         solution.insert(make_pair(i, false));
     }
 
-
     createCandidates();
-
 
     bool viable = false;
     int firstHeuristcNode = candidates->front().second;
@@ -716,7 +705,7 @@ void Graph::imprimeNoEArestas()
 
 int Graph::randomRange(int min, int max)
 {
-    std::mt19937 gen(std::random_device{}());
+    std::mt19937 gen(12);
     std::uniform_int_distribution<int> distribution(min, max);
     return distribution(gen);
 }
@@ -979,6 +968,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
         // Criando a lista de candidatos ordenados pelo peso relativo
         int pos = 0;
         createCandidates();
+
         int firstHeuristcNode = this->candidates->front().second;
 
         while (!this->candidates->empty())
@@ -999,7 +989,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
                 break;
             }
 
-            candidates->erase(candidates->begin()+ pos);
+            candidates->erase(candidates->begin() + pos);
             candidates->shrink_to_fit();
 
             // Atualiza a lista de candidatos
@@ -1066,5 +1056,23 @@ void Graph::printReativeHeuristic(float alphas[], int size, int numInter, string
         file << "-----------------------------" << endl;
     }
 
+    file.close();
+}
+
+void Graph::contarArestas()
+{
+    ofstream file;
+    file.open("arestas.txt");
+    int soma = 0;
+    Node *currentNode = this->firstNode;
+    file << "ID; Arestas; Arestas não marcadas" << endl;
+    while (currentNode != nullptr)
+    {
+        file << currentNode->getId() << ": " << currentNode->getNumberOfEdges2() << "; " << currentNode->getNumberOfUnmarkedEdges() << endl;
+        soma += currentNode->getNumberOfEdges2();
+        currentNode = currentNode->getNextNode();
+    }
+
+    file << "Numero de arestas total: " << soma / 2 << endl;
     file.close();
 }
