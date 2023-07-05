@@ -1,0 +1,7 @@
+=============================
+Algoritimo Guloso Construtivo - p_hat1500-3
+Tamanho da solução: 1493
+Peso total da solução: 144539
+Tempo de execução (ms): 580
+=============================
+

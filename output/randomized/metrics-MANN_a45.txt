@@ -1,0 +1,138 @@
+=============================
+Algoritimo Guloso Randomizado Adaptativo - MANN_a45
+=============================
+=============================
+Iteração 1
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 331
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 301
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 274
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 262
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 264
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+=============================
+Iteração 2
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 249
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 254
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 277
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 278
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 308
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+=============================
+Iteração 3
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 246
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 252
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 254
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 260
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 264
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+=============================
+Iteração 4
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 248
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 251
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 253
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 264
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 264
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+=============================
+Iteração 5
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 246
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 253
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 253
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 258
+Peso total: 100568
+Tamanho da solução: 1032
+-----------------------------

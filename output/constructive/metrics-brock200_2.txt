@@ -1,0 +1,7 @@
+=============================
+Algoritimo Guloso Construtivo - brock200_2
+Tamanho da solução: 192
+Peso total da solução: 18701
+Tempo de execução (ms): 2
+=============================
+

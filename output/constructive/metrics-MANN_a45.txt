@@ -1,0 +1,7 @@
+=============================
+Algoritimo Guloso Construtivo - MANN_a45
+Tamanho da solução: 1032
+Peso total da solução: 100568
+Tempo de execução (ms): 241
+=============================
+

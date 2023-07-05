@@ -548,7 +548,6 @@ void Graph::createCandidates()
             return a.first < b.first;
         }
     );
-
 }
 
 /*
@@ -557,10 +556,13 @@ void Graph::createCandidates()
 
 void Graph::printRelativeVector()
 {
+    ofstream myfile;
+    myfile.open("relativeVector.txt" , ios::trunc);
     for (int i = 0; i < candidates->size(); i++)
     {
-        cout << (*candidates)[i].first << " " << (*candidates)[i].second << endl;
+        myfile << (*candidates)[i].first << " " << (*candidates)[i].second << endl;
     }
+    myfile.close();
 }
 
 /*
@@ -572,6 +574,10 @@ void Graph::printRelativeVector()
 
 void Graph::updateCandidates(int removedNodeId)
 {
+    if(candidates->size() == 0)
+    {
+        return;
+    }
     // Percorre o vetor de vizinhos
     vector<int> neighbors = getNeighbors(removedNodeId);
 
@@ -602,7 +608,6 @@ void Graph::updateCandidates(int removedNodeId)
          {
              return a.first < b.first;
          });
-
 }
 
 /*
@@ -628,12 +633,11 @@ Metric Graph::relativeHeuristic()
 
     createCandidates();
 
-
     bool viable = false;
     int firstHeuristcNode = candidates->front().second;
     float totalWeight = 0;
-
-    while (!this->candidates->empty())
+    int iterations = 0;
+    while (!candidates->empty())
     {
         // Coloca o vértice na solução
         Node *node = nodeMap[firstHeuristcNode];
@@ -642,7 +646,7 @@ Metric Graph::relativeHeuristic()
         totalWeight += node->getWeight();
 
         // Marca o vértice
-        node->setMarked(true);
+        this->markNode(node);
 
         // Verifica se a solução é viável
         if (this->isIsolated())
@@ -654,18 +658,20 @@ Metric Graph::relativeHeuristic()
         candidates->erase(candidates->begin());
         candidates->shrink_to_fit();
 
-        updateCandidates(firstHeuristcNode);
-        firstHeuristcNode = candidates->front().second;
+        if (!candidates->empty())
+        {
+            updateCandidates(firstHeuristcNode);
+            firstHeuristcNode = candidates->front().second;
+        }
     }
 
     end = chrono::high_resolution_clock::now();
-    float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
+    float elapse_time = chrono::duration_cast<chrono::milliseconds>(end - start).count();
 
     Metric metric;
     metric.time = elapse_time;
     metric.totalWeight = totalWeight;
     metric.numberOfNodes = solutionVector.size();
-
     // Reseta os vértices para não marcados para gerar outras soluções
     this->resetMarks();
     return metric;
@@ -675,12 +681,12 @@ void Graph::printRelativeHeuristic(string filename, string instanceName)
 {
     Metric metric = relativeHeuristic();
     ofstream file;
-    file.open(filename + "_constructive-"+instanceName+".txt");
+    file.open(filename);
     file << "=============================" << endl;
     file << "Algoritimo Guloso Construtivo - " + instanceName << endl;
     file << "Tamanho da solução: " << metric.numberOfNodes << endl;
     file << "Peso total da solução: " << metric.totalWeight << endl;
-    file << "Tempo de execução: " << metric.time << endl;
+    file << "Tempo de execução (ms): " << metric.time << endl;
     file << "=============================" << endl;
 
     file << endl;
@@ -769,7 +775,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
             auxWeight += node->getWeight();
 
             // Marca o vértice
-            node->setMarked(true);
+            this->markNode(node);
 
             // Verifica se a solução é viável
             if (this->isIsolated())
@@ -781,11 +787,16 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
             // Atualiza a lista de candidatos
             candidates->erase(candidates->begin() + pos);
             candidates->shrink_to_fit();
-            updateCandidates(firstHeuristcNode);
 
-            pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+            if (!candidates->empty())
+            {
+                updateCandidates(firstHeuristcNode);
 
-            firstHeuristcNode = candidates->at(pos).second;
+                pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+
+                firstHeuristcNode = candidates->at(pos).second;
+            }
+
         }
 
         // Reseta os vértices para não marcados para gerar outras soluções
@@ -815,7 +826,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
 void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, string filename, string instanceName)
 {
     ofstream file;
-    file.open(filename + "_randomized-"+instanceName+".txt");
+    file.open(filename);
     file << "=============================" << endl;
     file << "Algoritimo Guloso Randomizado Adaptativo - " << instanceName << endl;
     file << "=============================" << endl;
@@ -1055,7 +1066,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
 void Graph::printReativeHeuristic(float alphas[], int size, int numInter, string filename, string instanceName)
 {
     ofstream file;
-    file.open(filename + "_reative.txt");
+    file.open(filename);
     file << "=============================" << endl;
     file << "Instância: " << instanceName << endl;
     for (int i = 0; i < size; i++)

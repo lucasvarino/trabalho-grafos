@@ -17,7 +17,7 @@ do
     filename="${filename%$input_ext}"
     
     # Construir o nome do arquivo de saída
-    output_file="output/adaptative/metrics_${filename}.txt"
+    output_file="output/randomized/metrics-${filename}.txt"
     
     # Executar o programa com o arquivo de entrada e saída correspondentes
     ./execGrupo13 "$input_file" "$output_file"

@@ -1,0 +1,7 @@
+=============================
+Algoritimo Guloso Construtivo - C4000
+Tamanho da solução: 3991
+Peso total da solução: 400258
+Tempo de execução (ms): 4215
+=============================
+
