@@ -662,9 +662,9 @@ bool Graph::isBipartite()  {
 }
 
 /*
- * Função que conta quantas arestas não marcadas um vértice possui, para fazer o cálculo do peso relativo
+ * Função que percorre todos os nós do grafo e a cada nó com grau maior ele atualiza o maxDegree
  *
- * Retorna o número de arestas não marcadas
+ * Retorna o grau do grafo
  */
 
 int Graph::getGraphDegree()
