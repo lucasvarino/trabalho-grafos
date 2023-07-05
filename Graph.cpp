@@ -577,6 +577,33 @@ bool Graph::isNullGraph() {
     return true;
 }
 
+/*
+* Função para verificar se o grafo é multigrafo
+* percorre todos os nós e para cada nó conta o numero de arestas para cada nó adjacente usando um map.
+ *se for encontrado algum par de nó com mais de uma aresta significa que é multigrafo e retorna true
+* caso contrário retorna false
+*/
+bool Graph::isMultigraph()  {
+    for(Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
+        map<int, int> edgeCount; //mapeia o id do nó adjacente para o número de arestas.
+
+        for(Edge *edge = current->getFirstEdge(); edge != nullptr; edge = edge->getNextEdge()){
+            int targetId = edge->getTargetId();
+            edgeCount[targetId]++;
+        }
+
+        for(auto& pair : edgeCount){
+            if(pair.second > 1){
+                //O grafo possui multiplas arestas entre os mesmos nós
+                return true
+            }
+        }
+    }
+
+    return false;
+}
+
+
 
 /*
  * Função que conta quantas arestas não marcadas um vértice possui, para fazer o cálculo do peso relativo

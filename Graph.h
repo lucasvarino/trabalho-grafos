@@ -86,6 +86,7 @@ public:
     bool isIsolated(); // Grafo sem arestas
     bool isTrivialGraph();
     bool isNullGraph();
+    bool isMultigraph();
 
     //vizinhaça aberta e fechada 
     vector<int> getOpenNeighborhood(int id);
