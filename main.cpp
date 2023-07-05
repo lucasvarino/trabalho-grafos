@@ -154,7 +154,10 @@ int main(int argc, char const *argv[])
     float alphas[5] = {0.05, 0.1, 0.15, 0.3, 0.5};
     //graph->printRelativeHeuristic(output_file);
     //graph->printRandomizedHeuristic(alphas, 5, 1000, output_file);
-    graph->printReativeHeuristic(alphas, 5, 1000, output_file);
+    // tirar tudo antes da / e depois do .
+    input_file = input_file.substr(input_file.find_last_of("/") + 1);
+    input_file = input_file.substr(0, input_file.find_last_of("."));
+    graph->printReativeHeuristic(alphas, 5, 1000, output_file, input_file);
 
     return 0;
 }

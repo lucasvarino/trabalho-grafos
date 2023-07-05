@@ -92,7 +92,7 @@ public:
     void updateProbabilities(vector<float> *probabilities, vector<int> &bestSolutionVector, float alphas[], int bestWeight, vector<pair<float, int>> avgWeights);
     void updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[], float alpha, int auxWeight);
     Metric reativeHeuristic(float alphas[], int numIter); // Imprime o conjunto solução usando a heuristica do peso relativo
-    void printReativeHeuristic(float alphas[], int size, int numInter, string filename);
+    void printReativeHeuristic(float alphas[], int size, int numInter, string filename, string instanceName);
     void imprimeNoEArestas();
 
     void markNode(Node *node);

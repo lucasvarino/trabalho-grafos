@@ -1049,10 +1049,12 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
     return metric;
 }
 
-void Graph::printReativeHeuristic(float alphas[], int size, int numInter, string filename)
+void Graph::printReativeHeuristic(float alphas[], int size, int numInter, string filename, string instanceName)
 {
     ofstream file;
     file.open(filename + "_reative.txt");
+    file << "=============================" << endl;
+    file << "Instância: " << instanceName << endl;
     for (int i = 0; i < size; i++)
     {
         file << "=============================" << endl;
