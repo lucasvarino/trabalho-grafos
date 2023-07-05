@@ -119,6 +119,11 @@ void Graph::printGraph(string filename)
     cout << "O grafo foi salvo no arquivo .dot" << endl;
 }
 
+
+/*
+Método responsável por encontrar um nó no grafo com base no id do nó
+*/
+
 Node *Graph::searchNode(int id)
 {
     Node *currentNode = this->firstNode;
@@ -136,6 +141,9 @@ Node *Graph::searchNode(int id)
     return nullptr;
 }
 
+/*
+Método responsável por adicionar um nó no grafo
+*/
 void Graph::addNode(int id, float weight)
 {
     if (nodeMap[id] != nullptr)
@@ -160,6 +168,9 @@ void Graph::addNode(int id, float weight)
     this->order++;
 }
 
+/*
+Método responsável por adicionar uma aresta no grafo
+*/
 void Graph::addEdge(int id, int targetId, float weight)
 {
     Node *node = nodeMap[id];
@@ -191,6 +202,9 @@ void Graph::addEdge(int id, int targetId, float weight)
     this->numberOfEdges++;
 }
 
+/*
+Método responsável remover um nó do grafo
+*/
 void Graph::removeNode(int id)
 {
     Node *currentNode = this->firstNode;
@@ -221,6 +235,9 @@ void Graph::removeNode(int id)
     return;
 }
 
+/*
+Método responsável por remover uma aresta do grafo
+*/
 void Graph::removeEdge(int id, int targetId)
 {
     Node *node = this->nodeMap[id];
@@ -238,6 +255,9 @@ void Graph::removeEdge(int id, int targetId)
     this->numberOfEdges--;
 }
 
+/*
+Método responsável por remover todos as arestas do grafo
+*/
 void Graph::removeAllEdges(int id)
 {
     Node *node = this->nodeMap[id];
@@ -258,6 +278,9 @@ void Graph::removeAllEdges(int id)
     }
 }
 
+/*
+Método responsável por verificar se um grafo é k-regular
+*/
 bool Graph::isKRegular(int k)
 {
     Node *currentNode = this->firstNode;
@@ -282,6 +305,9 @@ bool Graph::isKRegular(int k)
     return true;
 }
 
+/*
+Método que retorna a vizinhaça aberta de um nó
+*/
 vector<int> Graph::getOpenNeighborhood(int id)
 {
     Node *search = nodeMap[id];
@@ -309,6 +335,9 @@ vector<int> Graph::getOpenNeighborhood(int id)
     return neighborhood;
 }
 
+/*
+Método que retorn a vizinhaça fechada de um no
+*/
 vector<int> Graph::getClosedNeighborhood(int id)
 {
     vector<int> neighborhood = this->getOpenNeighborhood(id);
@@ -317,6 +346,9 @@ vector<int> Graph::getClosedNeighborhood(int id)
     return neighborhood;
 }
 
+/*
+Método responsável por verificar se um grafo é completo
+*/
 bool Graph::isComplete()
 {
     // Verificar se todos os vértices tem grau n - 1 e se o número de arestas é n(n-1)/2
@@ -345,6 +377,9 @@ bool Graph::isComplete()
     return true;
 }
 
+/*
+Busca em profundidade com base no id de um nó
+*/
 vector<int> Graph::depthSearch(int id)
 {
     Node *node = this->nodeMap[id];
@@ -384,6 +419,9 @@ vector<int> Graph::directTransitiveClosure(int id)
     return this->depthSearch(id);
 }
 
+/*
+Método que remove todas marcações dos nós do grafo
+*/
 void Graph::resetMarks()
 {
     int count = 0;
@@ -458,6 +496,9 @@ void Graph::markNode(Node *node)
     } */
 }
 
+/*
+Obtém os vizinhos de um nó, recebe o id do nó como parametro e retorna um vetor com os vizinhos do nó
+*/
 vector<int> Graph::getNeighbors(int id)
 {
     Node *node = nodeMap[id];
