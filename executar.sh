@@ -20,5 +20,5 @@ do
     output_file="output/adaptative/metrics_${filename}.txt"
     
     # Executar o programa com o arquivo de entrada e saída correspondentes
-    ./main "$input_file" "$output_file"
+    ./execGrupo13 "$input_file" "$output_file"
 done
