@@ -1,0 +1,92 @@
+=============================
+Instância: p_hat700-3
+=============================
+Iteração 1
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 273
+Peso total: 64128
+Melhor alfa: 0.1
+Tamanho da solução: 693
+-----------------------------
+=============================
+Iteração 2
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 267
+Peso total: 64128
+Melhor alfa: 0.15
+Tamanho da solução: 693
+-----------------------------
+=============================
+Iteração 3
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 270
+Peso total: 64128
+Melhor alfa: 0.1
+Tamanho da solução: 693
+-----------------------------
+=============================
+Iteração 4
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 272
+Peso total: 64128
+Melhor alfa: 0.15
+Tamanho da solução: 693
+-----------------------------
+=============================
+Iteração 5
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 274
+Peso total: 64128
+Melhor alfa: 0.15
+Tamanho da solução: 693
+-----------------------------
+=============================
+Iteração 6
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 275
+Peso total: 64128
+Melhor alfa: 0.1
+Tamanho da solução: 693
+-----------------------------
+=============================
+Iteração 7
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 277
+Peso total: 64128
+Melhor alfa: 0.15
+Tamanho da solução: 693
+-----------------------------
+=============================
+Iteração 8
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 276
+Peso total: 64128
+Melhor alfa: 0.1
+Tamanho da solução: 693
+-----------------------------
+=============================
+Iteração 9
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 275
+Peso total: 64128
+Melhor alfa: 0.1
+Tamanho da solução: 693
+-----------------------------
+=============================
+Iteração 10
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 273
+Peso total: 64128
+Melhor alfa: 0.15
+Tamanho da solução: 693
+-----------------------------

@@ -7,15 +7,21 @@
 #include <chrono>
 #include <map>
 
+/**
+ * Struct para comparar valores com base no valor float do par para se obter uma min heap
+*/
 struct Compare
 {
     bool operator()(const std::pair<float, int> &a, const std::pair<float, int> &b)
     {
-        // Comparação com base no valor float do par
-        return a.first > b.first; // '>' para obter uma min heap
+        return a.first > b.first;
     }
 };
 
+
+/*
+ * Struct para gerar métricas dos algoritmos e auxiliar na criação do relatório
+*/
 struct Metric
 {
     float time;
@@ -24,78 +30,99 @@ struct Metric
     int bestAlpha;
 };
 
+
 class Graph
 {
 private:
     int order;
     int numberOfEdges;
-    Node *firstNode;
-    Node *lastNode;
-    Node *removedNode;
-    bool weightedEdges;
-    bool weightedNodes;
-    bool directed;
-    map<int, Node *> nodeMap;
-    vector<pair<float, int>> *candidates;
     int totalOfEdges;
     int uncoveredEdges;
 
+    bool weightedEdges;
+    bool weightedNodes;
+    bool directed;
+
+    Node *firstNode;
+    Node *lastNode;
+    Node *removedNode;
+
+    map<int, Node *> nodeMap;
+    vector<pair<float, int>> *candidates;
+
+
 public:
+    //construtor/destrutor
     Graph(int order, bool directed, bool weightedEdges, bool weightedNodes, int totalOfEdges);
     ~Graph();
 
+    //métodos relacionados a informações do grafo
     int getOrder();
     int getNumberOfEdges();
-    Node *getFirstNode();
-    Node *getLastNode();
     bool isWeightedEdges();
     bool isWeightedNodes();
     bool isDirected();
 
-    void printGraph(string filename);
-
+    // metódos relacionados a manipulação de nó
+    Node *getFirstNode();
+    Node *getLastNode();
     void addNode(int id, float weight);
-    void addEdge(int id, int targetId, float weight);
-    Node *searchNode(int id);
     void removeNode(int id);
+    Node *searchNode(int id);
+    
+    //métodos relacionados a manipulação de arestas
+    void addEdge(int id, int targetId, float weight);
     void removeEdge(int id, int targetId);
     void removeAllEdges(int id);
+    int getNumberOfUnmarkedEdges(Node *node);
+
     void resetMarks();
 
+    //caracteristicas do grafo
+    bool isComplete();
     bool isKRegular(int k);
     bool isIsolated(); // Grafo sem arestas
+
+    //vizinhaça aberta e fechada 
     vector<int> getOpenNeighborhood(int id);
     vector<int> getClosedNeighborhood(int id);
-
-    bool isComplete();
-    int getNumberOfUnmarkedEdges(Node *node);
     vector<int> getNeighbors(int id);
 
+    //busca em profundidade e feixe transitivo direto
     vector<int> depthSearch(int id);
     vector<int> directTransitiveClosure(int id);
     
+    //print
+    void printGraph(string filename);
 
     // Trabalho 2 - Algoritmos Gulosos
+
+    //Métodos relacionados a lista de candidatos
     void createCandidates();
     void updateCandidates(int removedNodeId);
+
     void printRelativeVector();
 
-    Metric relativeHeuristic();
-    void printRelativeHeuristic(string filename);
-
-
-    int randomRange(int min, int max);
-    Metric randomizedHeuristic(float alpha, int numIter); // Retorna o conjunto solução usando a heuristica do peso relativo
-    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);
-
-    float chooseAlpha(vector<float> probabilities, float alphas[]);
-    void updateProbabilities(vector<float> *probabilities, vector<int> &bestSolutionVector, float alphas[], int bestWeight, vector<pair<float, int>> avgWeights);
-    void updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[], float alpha, int auxWeight);
-    Metric reativeHeuristic(float alphas[], int numIter); // Imprime o conjunto solução usando a heuristica do peso relativo
-    void printReativeHeuristic(float alphas[], int size, int numInter, string filename, string instanceName);
     void imprimeNoEArestas();
 
     void markNode(Node *node);
+
+    //heuristicas
+    Metric relativeHeuristic();
+    Metric randomizedHeuristic(float alpha, int numIter); // Retorna o conjunto solução usando a heuristica do peso relativo
+    Metric reativeHeuristic(float alphas[], int numIter); // Imprime o conjunto solução usando a heuristica do peso relativo
+
+    //métodos para heuristica do algoritmo randomizado reativo
+    int randomRange(int min, int max);
+    float chooseAlpha(vector<float> probabilities, float alphas[]);
+    void updateProbabilities(vector<float> *probabilities, vector<int> &bestSolutionVector, float alphas[], int bestWeight, vector<pair<float, int>> avgWeights);
+    void updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[], float alpha, int auxWeight);
+
+    //métodos de prints dos resultados
+    void printRelativeHeuristic(string filename);
+    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);
+    void printReativeHeuristic(float alphas[], int size, int numInter, string filename, string instanceName);
+
 };
 
 #endif // GRAPH_H_INCLUDED
