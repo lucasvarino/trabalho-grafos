@@ -89,6 +89,7 @@ public:
     bool isTrivialGraph();
     bool isNullGraph();
     bool isMultigraph();
+    vector<int> getDegreeSequence();
 
     //vizinhaça aberta e fechada 
     vector<int> getOpenNeighborhood(int id);
@@ -98,6 +99,8 @@ public:
     //busca em profundidade e feixe transitivo direto
     vector<int> depthSearch(int id);
     vector<int> directTransitiveClosure(int id);
+    vector<int> indirectTransitiveClosure(int id);
+
     
     //print
     void printGraph(string filename);

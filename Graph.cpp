@@ -420,6 +420,43 @@ vector<int> Graph::directTransitiveClosure(int id)
 }
 
 /*
+Nessa função é percorrido os nós do grafo e verificar se cada nó está presente no conjunto do fecho transitivo direto,
+se o nó nao estiver presente, podemos adiciona-lo ao fecho transitivo indireto.
+*/
+vector<int> Graph::indirectTransitiveClosure(int id)
+{
+    vector<int> directTransitiveNodes = this->depthSearch(id);
+    vector<int> indirectTransitiveNodes;
+
+    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
+        int currentNodeId = current->getId();
+
+        if(find(directTransitiveNodes.begin(), directTransitiveNodes.end(), currentNodeId) == directTransitiveNodes.end()){
+            // O nó não está presente no fecho transitivo direto, então adicionamos ao fecho transitivo indireto
+            indirectTransitiveNodes.push_back(currentNodeId);
+        }
+    }
+    return indirectTransitiveNodes;
+}
+
+/*
+Nessa função é percorrido os nós do grafo e adicionado cada grau ao vetor, ao final é ordenado de forma decrescente 
+e a função retorna a sequencia de graus em um vetor int;
+*/
+vector<int> Graph::getDegreeSequence()
+{
+    vector<int> degreeSequence;
+    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
+        int degree = current->getInDegree();
+        degreeSequence.push_back(degree);
+    }
+
+    //Ordena em ordem não crescente
+    sort(degreeSequence.rbegin(), degreeSequence.rend());
+    return degreeSequence;
+}
+
+/*
 Método que remove todas marcações dos nós do grafo
 */
 void Graph::resetMarks()
