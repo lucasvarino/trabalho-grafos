@@ -603,6 +603,63 @@ bool Graph::isMultigraph()  {
     return false;
 }
 
+/*
+* Função para verificar se o grafo é multigrafo
+* percorre todos os nós e para cada nó conta o numero de arestas para cada nó adjacente usando um map.
+ *se for encontrado algum par de nó com mais de uma aresta significa que é multigrafo e retorna true
+* caso contrário retorna false
+*/
+bool Graph::isBipartite()  {
+    if(this->getOrder() == 0){
+        //grafo vazio, considerado bipartido
+        return true;
+    }
+
+    map<int, bool> visited; //mapa para rastrear
+    map<int, bool> colors; //mapa para atribuir cores aos nós
+
+    //inicializa os mapas de visitados e cores
+    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
+        visited[current->getId()] = false;
+        colors[current->getId()] = false;
+    }
+
+    //percorre todos os nós do grafo
+    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
+        //verifica apenas se o nó atual ainda nao foi visitado
+        if(!visited[current->getId()]){
+            queue<Node *> queue;
+            queue.push(current);
+            visited[current->getId()] = true;
+            colors[current->getId()] = true;
+
+            //executa a busca em largura
+            while(!queue.empty()){
+                Node * node = queue.front();
+                queue.pop();
+
+                //percorre todas as arestas do nó atual
+                for(Edge* edge = node->getFirstEdge(); edge != nullptr; edge = edge->getNextEdge()){
+                    int adjacentNodeId = edge->getTargetId();
+                    Node* adjacentNode = this->searchNode(adjacentNodeId);
+
+                    //verifica se o nó adjacente nao foi visitado
+                    if(!visited[adjacentNode->getId()]){
+                        visited[adjacentNode->getId()] = true;
+                        colors[adjacentNode->getId()] = !colors[node->getId()]; //atribui a cor oposta ao nó adjacente
+                        queue.push(adjacentNode);
+                    }
+                    //se o nó adjacente ja foi visitado e possui a mesma cor que o nó atual o grafo nao é bipartido
+                    else if(colors[adjacentNode->getId()]  ==  colors[node->getId()])
+                        return false;
+                }
+            }
+        }
+    }
+    //se todas as travessias com busca em largura nao encontraram nós com cores iguais entao o grafo é bipartido
+    return true;
+}
+
 
 
 /*

@@ -63,6 +63,7 @@ public:
     bool isWeightedEdges();
     bool isWeightedNodes();
     bool isDirected();
+    bool isBipartite();
 
     // metódos relacionados a manipulação de nó
     Node *getFirstNode();
