@@ -70,6 +70,7 @@ public:
     void addNode(int id, float weight);
     void removeNode(int id);
     Node *searchNode(int id);
+    pair<int, int> getNodeDegree(int id);
     
     //métodos relacionados a manipulação de arestas
     void addEdge(int id, int targetId, float weight);
@@ -84,6 +85,7 @@ public:
     bool isKRegular(int k);
     bool isIsolated(); // Grafo sem arestas
     bool isTrivialGraph();
+    bool isNullGraph();
 
     //vizinhaça aberta e fechada 
     vector<int> getOpenNeighborhood(int id);

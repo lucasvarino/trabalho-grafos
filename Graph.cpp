@@ -539,14 +539,44 @@ bool Graph::isIsolated()
  *
  * Retorna true se todas verificações forem true e false caso alguma não seja.
  */
-bool Graph::isTrivialGraph() l()
+bool Graph::isTrivialGraph()
 {
     return (this->getOrder == 1 &&
                 this->getFirstNode != nullptr &&
                 this->getFirstNode == this->getLastNode &&
-                this->getFirstNode()->getInDegree() == 0 &&
-                this->getFirstNode()->getOutDegree() == 0);
+                this->getFirstNode()->getInDegree() == 0 );
 }
+
+
+ /*
+ * Função para verificar o grau de um determinado nó do grafo
+ * Recebe como parametro o id do nó e retorna um par de grau de entrada e de saída do grafo
+ * caso o nó nao exista retorna um par -1, -1.
+ */
+pair<int, int> Graph::getNodeDegree(int id)
+{
+    Node* node = this->searchNode(id);
+    if (node == nullptr)
+        return make_pair(-1,-1);
+    }
+
+    return make_pair(node->getInDegree(), node->getOutDegree());
+}
+
+/*
+* Função para verificar se o grafo é nulo
+* percorre todos os nós e verifica se existe uma aresta adjacente a ele, caso exista alguma retorna false.
+* caso contrário retorna true
+*/
+bool Graph::isNullGraph() {
+    for(Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
+        if(current->getFirstEdge() != nullptr)
+            return false
+    }
+
+    return true;
+}
+
 
 /*
  * Função que conta quantas arestas não marcadas um vértice possui, para fazer o cálculo do peso relativo
