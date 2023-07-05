@@ -58,6 +58,7 @@ public:
 
     //métodos relacionados a informações do grafo
     int getOrder();
+    int getGraphDegree();
     
     int getNumberOfEdges();
     bool isWeightedEdges();

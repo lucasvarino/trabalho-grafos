@@ -604,10 +604,11 @@ bool Graph::isMultigraph()  {
 }
 
 /*
-* Função para verificar se o grafo é multigrafo
-* percorre todos os nós e para cada nó conta o numero de arestas para cada nó adjacente usando um map.
- *se for encontrado algum par de nó com mais de uma aresta significa que é multigrafo e retorna true
-* caso contrário retorna false
+* Função para verificar se o grafo é bipartite
+* Usa uma abordagem de busca em largura para percorrer o grafo atribuindo cores aos nós que sao visitados
+ *se durante a travessia for encontrado um nó adjacente com a mesma cor que o nó atual o grafo nao é bipartido e retorna false
+* caso contrário retorna false, se todos os nós puderem ser coloridos sem que haja nós adjacentes com a mesmo cor, o grafo é bipartido
+* e retorna true;
 */
 bool Graph::isBipartite()  {
     if(this->getOrder() == 0){
@@ -658,6 +659,26 @@ bool Graph::isBipartite()  {
     }
     //se todas as travessias com busca em largura nao encontraram nós com cores iguais entao o grafo é bipartido
     return true;
+}
+
+/*
+ * Função que conta quantas arestas não marcadas um vértice possui, para fazer o cálculo do peso relativo
+ *
+ * Retorna o número de arestas não marcadas
+ */
+
+int Graph::getGraphDegree()
+{
+    int maxDegree = 0;
+    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
+        int degree = max(current->getInDegree(), current->getOutDegree());
+
+        if(degree > maxDegree){
+            maxDegree = degree;
+        }
+    }
+
+    return maxDegree;
 }
 
 
