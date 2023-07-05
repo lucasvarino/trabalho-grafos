@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Compilar o código C++
-g++ *.cpp -o main
+g++ *.cpp -o execGrupo13 -O3 -Ofast
 
 # Pasta de entrada
 input_dir="input"
