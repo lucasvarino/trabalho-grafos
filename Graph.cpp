@@ -541,9 +541,9 @@ bool Graph::isIsolated()
  */
 bool Graph::isTrivialGraph()
 {
-    return (this->getOrder == 1 &&
-                this->getFirstNode != nullptr &&
-                this->getFirstNode == this->getLastNode &&
+    return (this->getOrder() == 1 &&
+                this->getFirstNode() != nullptr &&
+                this->getFirstNode() == this->getLastNode() &&
                 this->getFirstNode()->getInDegree() == 0 );
 }
 
@@ -556,7 +556,7 @@ bool Graph::isTrivialGraph()
 pair<int, int> Graph::getNodeDegree(int id)
 {
     Node* node = this->searchNode(id);
-    if (node == nullptr)
+    if (node == nullptr){
         return make_pair(-1,-1);
     }
 
@@ -571,7 +571,7 @@ pair<int, int> Graph::getNodeDegree(int id)
 bool Graph::isNullGraph() {
     for(Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
         if(current->getFirstEdge() != nullptr)
-            return false
+            return false;
     }
 
     return true;
@@ -595,7 +595,7 @@ bool Graph::isMultigraph()  {
         for(auto& pair : edgeCount){
             if(pair.second > 1){
                 //O grafo possui multiplas arestas entre os mesmos nós
-                return true
+                return true;
             }
         }
     }
