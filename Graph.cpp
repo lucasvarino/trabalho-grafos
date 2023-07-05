@@ -671,13 +671,13 @@ Metric Graph::relativeHeuristic()
     return metric;
 }
 
-void Graph::printRelativeHeuristic(string filename)
+void Graph::printRelativeHeuristic(string filename, string instanceName)
 {
     Metric metric = relativeHeuristic();
     ofstream file;
-    file.open(filename + "_constructive.txt");
+    file.open(filename + "_constructive-"+instanceName+".txt");
     file << "=============================" << endl;
-    file << "Algoritimo Guloso Construtivo" << endl;
+    file << "Algoritimo Guloso Construtivo - " + instanceName << endl;
     file << "Tamanho da solução: " << metric.numberOfNodes << endl;
     file << "Peso total da solução: " << metric.totalWeight << endl;
     file << "Tempo de execução: " << metric.time << endl;
@@ -812,10 +812,13 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
     metric.numberOfNodes = bestSolutionVector.size();
     return metric;
 }
-void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, string filename)
+void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, string filename, string instanceName)
 {
     ofstream file;
-    file.open(filename + "_randomized.txt");
+    file.open(filename + "_randomized-"+instanceName+".txt");
+    file << "=============================" << endl;
+    file << "Algoritimo Guloso Randomizado Adaptativo - " << instanceName << endl;
+    file << "=============================" << endl;
     for (int i = 0; i < size; i++)
     {
         file << "=============================" << endl;

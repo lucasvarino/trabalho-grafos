@@ -81,12 +81,12 @@ public:
     void printRelativeVector();
 
     Metric relativeHeuristic();
-    void printRelativeHeuristic(string filename);
+    void printRelativeHeuristic(string filename, string instanceName);
 
 
     int randomRange(int min, int max);
     Metric randomizedHeuristic(float alpha, int numIter); // Retorna o conjunto solução usando a heuristica do peso relativo
-    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);
+    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename, string instanceName);
 
     float chooseAlpha(vector<float> probabilities, float alphas[]);
     void updateProbabilities(vector<float> *probabilities, vector<int> &bestSolutionVector, float alphas[], int bestWeight, vector<pair<float, int>> avgWeights);
