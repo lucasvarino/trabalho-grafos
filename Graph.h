@@ -58,6 +58,7 @@ public:
 
     //métodos relacionados a informações do grafo
     int getOrder();
+    
     int getNumberOfEdges();
     bool isWeightedEdges();
     bool isWeightedNodes();
@@ -82,6 +83,7 @@ public:
     bool isComplete();
     bool isKRegular(int k);
     bool isIsolated(); // Grafo sem arestas
+    bool isTrivialGraph();
 
     //vizinhaça aberta e fechada 
     vector<int> getOpenNeighborhood(int id);

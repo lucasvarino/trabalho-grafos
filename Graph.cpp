@@ -533,6 +533,22 @@ bool Graph::isIsolated()
 }
 
 /*
+ * Função para verificar se o grafo é trivial
+ * Verifica se o numero de vertices é igual a 1, se o primeiro nó nao é nulo, se o primeiro nó é igual ao ultimo nó
+ * e se o grau do primeiro nó é igual a zero
+ *
+ * Retorna true se todas verificações forem true e false caso alguma não seja.
+ */
+bool Graph::isTrivialGraph() l()
+{
+    return (this->getOrder == 1 &&
+                this->getFirstNode != nullptr &&
+                this->getFirstNode == this->getLastNode &&
+                this->getFirstNode()->getInDegree() == 0 &&
+                this->getFirstNode()->getOutDegree() == 0);
+}
+
+/*
  * Função que conta quantas arestas não marcadas um vértice possui, para fazer o cálculo do peso relativo
  *
  * Retorna o número de arestas não marcadas
