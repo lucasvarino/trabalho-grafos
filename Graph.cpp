@@ -103,8 +103,11 @@ void Graph::printGraph(string filename)
 
             while (currentEdge != nullptr)
             {
-                file << currentNode->getId() << " -- " << currentEdge->getTargetId()
-                     << endl;
+                if (currentEdge->getTargetId() > currentNode->getId())
+                {
+                    file << currentNode->getId() << " -- " << currentEdge->getTargetId()
+                         << endl;
+                }
                 currentEdge = currentEdge->getNextEdge();
             }
 
@@ -694,14 +697,9 @@ void Graph::imprimeNoEArestas()
  * Retorna um número aleatório dentro do intervalo [min, max]
  */
 
-int Graph::randomRange(int min, int max, std::mt19937 seed)
+int Graph::randomRange(int min, int max)
 {
-<<<<<<< HEAD
     return min + rand() % (max - min + 1);
-=======
-    std::uniform_int_distribution<int> distribution(min, max);
-    return distribution(seed);
->>>>>>> main
 }
 
 /*
@@ -720,8 +718,6 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
 {
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = chrono::high_resolution_clock::now();
-    int seed = std::random_device()();
-    std::mt19937 gen = std::mt19937(seed);
 
     vector<int> auxSolutionVector;
     vector<int> bestSolutionVector;
@@ -740,7 +736,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
         createCandidates();
 
         // Percorre a fila de candidatos até a posição desejada
-        int pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha), gen);
+        int pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
         int firstHeuristcNode = candidates->at(pos).second;
 
         while (!candidates->empty())
@@ -768,7 +764,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
             {
                 updateCandidates(firstHeuristcNode);
 
-                pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha), gen);
+                pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
 
                 firstHeuristcNode = candidates->at(pos).second;
             }
@@ -793,7 +789,6 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
     float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
 
     Metric metric;
-    metric.seed = seed;
     metric.time = elapse_time;
     metric.totalWeight = bestWeight;
     metric.numberOfNodes = bestSolutionVector.size();
@@ -815,7 +810,6 @@ void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, str
         {
             Metric metric = this->randomizedHeuristic(alphas[i], numInter);
             file << "Alfa = " << alphas[i] << " para " << numInter << " iterações" << endl
-                 << "Seed: " << metric.seed << endl
                  << "Tempo (s): " << metric.time << endl
                  << "Peso total: " << metric.totalWeight << endl
                  << "Tamanho da solução: " << metric.numberOfNodes << endl;
@@ -924,11 +918,9 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
     createNeighborhoodMap();
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = chrono::high_resolution_clock::now();
-    int seed = std::random_device()();
-    std::mt19937 gen = std::mt19937(seed);
 
-        // Tamanho do bloco
-        int block = numIter * 0.1;
+    // Tamanho do bloco
+    int block = numIter * 0.1;
 
     // Lista de Probabilidades
     vector<float> probabilities(5, 1.0 / 5);
@@ -993,12 +985,13 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
             }
 
             candidates->erase(candidates->begin() + pos);
+            candidates->erase(candidates->begin() + pos);
             candidates->shrink_to_fit();
 
             // Atualiza a lista de candidatos
             updateCandidates(firstHeuristcNode);
             // Pegando o próximo vértice de acordo com o alpha
-            pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha), gen);
+            pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
             firstHeuristcNode = this->candidates->at(pos).second;
         }
 
@@ -1033,7 +1026,6 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
     }
 
     Metric metric;
-    metric.seed = seed; 
     metric.time = elapse_time;
     metric.totalWeight = bestWeight;
     metric.numberOfNodes = bestSolutionVector.size();
@@ -1054,8 +1046,7 @@ void Graph::printReativeHeuristic(float alphas[], int size, int numInter, string
         file << "-----------------------------" << endl;
 
         Metric metric = this->reativeHeuristic(alphas, numInter);
-        file << "Seed: " << metric.seed << endl 
-             << "Numero de iterações : " << numInter << endl
+        file << "Numero de iterações : " << numInter << endl
              << "Tempo (s): " << metric.time << endl
              << "Peso total: " << metric.totalWeight << endl
              << "Melhor alfa: " << alphas[metric.bestAlpha] << endl

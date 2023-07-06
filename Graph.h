@@ -23,7 +23,6 @@ struct Metric
     int numberOfNodes;
     int totalWeight;
     int bestAlpha;
-    int seed;
 };
 
 class Graph
