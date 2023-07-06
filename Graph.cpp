@@ -103,11 +103,8 @@ void Graph::printGraph(string filename)
 
             while (currentEdge != nullptr)
             {
-                if (currentEdge->getTargetId() > currentNode->getId())
-                {
-                    file << currentNode->getId() << " -- " << currentEdge->getTargetId()
-                         << endl;
-                }
+                file << currentNode->getId() << " -- " << currentEdge->getTargetId()
+                     << endl;
                 currentEdge = currentEdge->getNextEdge();
             }
 
@@ -610,6 +607,7 @@ Metric Graph::relativeHeuristic()
 
     createCandidates();
 
+    bool viable = false;
     int firstHeuristcNode = candidates->front().second;
     float totalWeight = 0;
     int iterations = 0;
@@ -627,6 +625,7 @@ Metric Graph::relativeHeuristic()
         // Verifica se a solução é viável
         if (this->isIsolated())
         {
+            viable = true;
             break;
         }
 
@@ -753,6 +752,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
             // Verifica se a solução é viável
             if (this->isIsolated())
             {
+                viable = true;
                 break;
             }
 
@@ -932,6 +932,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
     map<int, bool> solution;
 
     int auxWeight = 0, bestWeight = 0, i = 1;
+    bool viable = false;
 
     float alpha;
 
@@ -981,10 +982,10 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
             // Verifica se a solução é viável
             if (this->isIsolated())
             {
+                viable = true;
                 break;
             }
 
-            candidates->erase(candidates->begin() + pos);
             candidates->erase(candidates->begin() + pos);
             candidates->shrink_to_fit();
 
