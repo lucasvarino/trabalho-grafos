@@ -36,6 +36,7 @@ private:
     bool weightedNodes;
     bool directed;
     map<int, Node *> nodeMap;
+    map<int, vector<int>> openNeighborhoodMap;
     vector<pair<float, int>> *candidates;
     int totalOfEdges;
     int uncoveredEdges;
@@ -73,7 +74,6 @@ public:
 
     vector<int> depthSearch(int id);
     vector<int> directTransitiveClosure(int id);
-    
 
     // Trabalho 2 - Algoritmos Gulosos
     void createCandidates();
@@ -82,7 +82,6 @@ public:
 
     Metric relativeHeuristic();
     void printRelativeHeuristic(string filename, string instanceName);
-
 
     int randomRange(int min, int max);
     Metric randomizedHeuristic(float alpha, int numIter); // Retorna o conjunto solução usando a heuristica do peso relativo
@@ -96,6 +95,17 @@ public:
     void imprimeNoEArestas();
 
     void markNode(Node *node);
+
+    void createNeighborhoodMap()
+    {
+        Node *aux = firstNode;
+        while (aux != nullptr)
+        {
+            vector<int> neighborhood = getOpenNeighborhood(aux->getId());
+            openNeighborhoodMap.insert(pair<int, vector<int>>(aux->getId(), neighborhood));
+            aux = aux->getNextNode();
+        }
+    }
 };
 
 #endif // GRAPH_H_INCLUDED

@@ -156,9 +156,9 @@ int main(int argc, char const *argv[])
     input_file = input_file.substr(input_file.find_last_of("/") + 1);
     input_file = input_file.substr(0, input_file.find_last_of("."));
     cout << "Instance: " << input_file << endl;
-    //graph->printRelativeHeuristic(output_file, input_file);
-    graph->printRandomizedHeuristic(alphas, 30, 1000, output_file, input_file);
-    //graph->printReativeHeuristic(alphas, 10, 5000, output_file, input_file);
+    // graph->printRelativeHeuristic(output_file, input_file);
+    //  graph->printRandomizedHeuristic(alphas, 30, 1000, output_file, input_file);
+    graph->printReativeHeuristic(alphas, 10, 5000, output_file, input_file);
 
     return 0;
 }
