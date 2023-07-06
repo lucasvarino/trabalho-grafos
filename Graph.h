@@ -6,6 +6,7 @@
 #include <queue>
 #include <chrono>
 #include <map>
+#include <random>
 
 struct Compare
 {
@@ -22,6 +23,7 @@ struct Metric
     int numberOfNodes;
     int totalWeight;
     int bestAlpha;
+    int seed;
 };
 
 class Graph
@@ -83,8 +85,7 @@ public:
     Metric relativeHeuristic();
     void printRelativeHeuristic(string filename, string instanceName);
 
-
-    int randomRange(int min, int max);
+    int randomRange(int min, int max, std::mt19937 seed);
     Metric randomizedHeuristic(float alpha, int numIter); // Retorna o conjunto solução usando a heuristica do peso relativo
     void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename, string instanceName);
 

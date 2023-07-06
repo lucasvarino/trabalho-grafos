@@ -1,0 +1,102 @@
+=============================
+Instância: brock200_2
+=============================
+Iteração 1
+-----------------------------
+Seed: -2145847308
+Numero de iterações : 5000
+Tempo (s): 14
+Peso total: 18749
+Melhor alfa: 0.1
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 2
+-----------------------------
+Seed: 2146833111
+Numero de iterações : 5000
+Tempo (s): 14
+Peso total: 18749
+Melhor alfa: 0.1
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 3
+-----------------------------
+Seed: -167316625
+Numero de iterações : 5000
+Tempo (s): 14
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 4
+-----------------------------
+Seed: -1755492596
+Numero de iterações : 5000
+Tempo (s): 14
+Peso total: 18749
+Melhor alfa: 0.1
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 5
+-----------------------------
+Seed: 242759770
+Numero de iterações : 5000
+Tempo (s): 14
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 6
+-----------------------------
+Seed: 730933438
+Numero de iterações : 5000
+Tempo (s): 15
+Peso total: 18749
+Melhor alfa: 0.1
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 7
+-----------------------------
+Seed: -2083235925
+Numero de iterações : 5000
+Tempo (s): 14
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 8
+-----------------------------
+Seed: 1626729559
+Numero de iterações : 5000
+Tempo (s): 15
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 9
+-----------------------------
+Seed: 430814377
+Numero de iterações : 5000
+Tempo (s): 14
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 10
+-----------------------------
+Seed: 2126389263
+Numero de iterações : 5000
+Tempo (s): 14
+Peso total: 18701
+Melhor alfa: 0.1
+Tamanho da solução: 192
+-----------------------------
