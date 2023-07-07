@@ -788,7 +788,12 @@ Graph* Graph::getComplementGraph()
     return complementGraph;
 }
 
-
+/*
+    * Função que verifica se o grafo é euleriano
+    * verifica se o grafo é conexo, se todos os vértices possuem grau par e se o grafo é não direcionado e ponderado
+    * nao verifica se o grafo é conexo pois a propria criaçao do grafo ja torna-o conexo, removendo vertices isolados
+    * Retorna true se o grafo é euleriano e false caso contrário
+*/
 bool Graph::isEuclerian()
 {
     if(isDirected() || !isWeightedEdges() || !isWeightedNodes()){
