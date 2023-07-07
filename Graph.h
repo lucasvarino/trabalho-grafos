@@ -63,6 +63,7 @@ public:
     bool isEuclerian();
 
     void printGraph(string filename);
+    void printGraphProperties();
     Graph* getInducedSubgraph(vector<int> nodes);
     Graph* getComplementGraph();
 

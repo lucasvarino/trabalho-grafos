@@ -788,6 +788,58 @@ Graph* Graph::getComplementGraph()
     return complementGraph;
 }
 
+void Graph::printGraphProperties(){
+    int radius = numeric_limits<int>::max();
+    int diameter = 0;
+    vector<int> centerNodes;
+    vector<int> peripheralNodes;
+
+    for(Node* node = getFirstNode(); node != nullptr; node = node->getNextNode()){
+        vector<int> distances(this->getOrder(), numeric_limits<int>::max());//Distâncias mínimas de um nó para os outros nós
+        queue<int> queue;//fila para busca em largura
+        queue.push(node->getId());
+        distances[node->getId()] = 0;
+
+        while(!queue.empty()){
+            int currentId = queue.front();
+            queue.pop();
+
+            for(int neighbor : this->getOpenNeighborhood(currentId)){
+                if(distances[neighbor] == numeric_limits<int>::max()){
+                    distances[neighbor] = distances[currentId] + 1;
+                    queue.push(neighbor);
+                }
+            }
+        }
+
+        //atualiza o raio e o diametro do grafo
+        int maxDistance = *max_element(distances.begin(), distances.end());
+        radius = min(radius, maxDistance);
+        diameter = max(diameter, maxDistance);
+
+        //atualiza os nós centrais e periféricos
+        if(maxDistance == radius){
+            centerNodes.push_back(node->getId());
+        }
+        if(maxDistance == diameter){
+            peripheralNodes.push_back(node->getId());
+        }
+    }
+
+    cout << "Raio: " << radius << endl;
+    cout << "Diâmetro: " << diameter << endl;
+    cout << "Nós centrais: ";
+    for(int id : centerNodes){
+        cout << id << " ";
+    }
+    cout << endl;
+    cout << "Nós periféricos: ";
+    for(int id : peripheralNodes){
+        cout << id << " ";
+    }
+    cout << endl;
+}
+
 /*
     * Função que verifica se o grafo é euleriano
     * verifica se o grafo é conexo, se todos os vértices possuem grau par e se o grafo é não direcionado e ponderado
