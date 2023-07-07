@@ -788,6 +788,9 @@ Graph* Graph::getComplementGraph()
     return complementGraph;
 }
 
+/*
+*Função que printa as propriedades do grafo, como raio, diâmetro, centro e periferia
+*/
 void Graph::printGraphProperties(){
     int radius = numeric_limits<int>::max();
     int diameter = 0;
