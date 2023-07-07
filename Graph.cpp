@@ -750,6 +750,12 @@ Graph* Graph::getInducedSubgraph(vector<int> nodes)
     return subgraph;
 }
 
+/*
+    * Função que retorna o grafo complementar do grafo atual
+    * O grafo complementar possui os mesmos vértices do grafo original, mas possui uma aresta entre dois vértices
+    * se e somente se o grafo original não possui uma aresta entre esses dois vértices  
+    * retorna o grafo complementar
+*/
 Graph* Graph::getComplementGraph()
 {
     //Cria um novo grafo complementar com o mesmo número de vértices

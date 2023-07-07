@@ -161,8 +161,11 @@ int main(int argc, char const *argv[])
     //  graph->printRandomizedHeuristic(alphas, 30, 1000, output_file, input_file);
     // graph->printReativeHeuristic(alphas, 10, 5000, output_file, input_file);
     graph->printGraph("visualizeGraph.dot");
-
-    Graph *complement = graph->getComplementGraph();
-    complement->printGraph("visualizeGraph2.dot");
+    vector<int> nodes;
+    nodes.push_back(1);
+    nodes.push_back(2);
+    nodes.push_back(5);
+    Graph *subgraph = graph->getInducedSubgraph(nodes);
+    subgraph->printGraph("visualizeGraph2.dot");
     return 0;
 }
