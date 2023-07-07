@@ -54,6 +54,7 @@ public:
     ~Graph();
 
     //métodos relacionados a informações do grafo
+    
     int getOrder();
     int getNumberOfEdges();
     int getGraphDegree();
@@ -63,6 +64,7 @@ public:
     pair<int, int> getNodeDegree(int id);
 
     //métodos relacionados a caracteristicas do grafo
+    
     bool isWeightedEdges();
     bool isWeightedNodes();
     bool isDirected();
@@ -80,6 +82,7 @@ public:
     Graph* getComplementGraph();
 
     //métodos relacionados a manipulação do grafo
+
     void addNode(int id, float weight);
     void addEdge(int id, int targetId, float weight);
     Node *searchNode(int id);
@@ -103,41 +106,33 @@ public:
 
     // Trabalho 2 - Algoritmos Gulosos
     //Métodos relacionados a lista de candidatos
+
     void createCandidates();
     void updateCandidates(int removedNodeId);
+    void createNeighborhoodMap();
 
     void printRelativeVector();
-
-    void imprimeNoEArestas();
 
     void markNode(Node *node);
 
     //Métodos relacionados a heurística do peso relativo
+
     Metric relativeHeuristic();
-    Metric randomizedHeuristic(float alpha, int numIter); // Retorna o conjunto solução usando a heuristica do peso relativo
-    Metric reativeHeuristic(float alphas[], int numIter); // Imprime o conjunto solução usando a heuristica do peso relativo
+    Metric randomizedHeuristic(float alpha, int numIter, int seed); // Retorna o conjunto solução usando a heuristica do peso relativo
+    Metric reativeHeuristic(float alphas[], int numIter, int seed); // Imprime o conjunto solução usando a heuristica do peso relativo
 
     //metodos utilizados na heuristica
+    
     int randomRange(int min, int max);
     float chooseAlpha(vector<float> probabilities, float alphas[]);
     void updateProbabilities(vector<float> *probabilities, vector<int> &bestSolutionVector, float alphas[], int bestWeight, vector<pair<float, int>> avgWeights);
     void updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[], float alpha, int auxWeight);
     
     //prints
+
     void printConstructiveGreedy(string output, string instanceName);
-    void printRandomizedGreedy(float alphas[], int numIter, int numIterAlpha, string output, string instanceName);
-    void printReativeGreedy(float alphas[], int size, int numInter, string output, string instanceName);
-    
-    void createNeighborhoodMap()
-    {
-        Node *aux = firstNode;
-        while (aux != nullptr)
-        {
-            vector<int> neighborhood = getOpenNeighborhood(aux->getId());
-            openNeighborhoodMap.insert(pair<int, vector<int>>(aux->getId(), neighborhood));
-            aux = aux->getNextNode();
-        }
-    }
+    void printRandomizedGreedy(float alphas[], int numIter, int numIterAlpha, string output, string instanceName, int seed);
+    void printReativeGreedy(float alphas[], int numIter, int numIterAlpha, string output, string instanceName, int seed);
 };
 
 #endif // GRAPH_H_INCLUDED

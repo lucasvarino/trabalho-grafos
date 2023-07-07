@@ -51,10 +51,13 @@ bool Graph::isWeightedNodes() { return this->weightedNodes; }
 
 bool Graph::isDirected() { return this->directed; }
 
+/*
+ * Método responsável por imprimir o grafo no formato .dot
+ * @param filename nome do arquivo .dot
+ * @return void
+ */
 void Graph::printGraph(string filename)
 {
-    // Função para imprimir o grafo em formato .dot
-
     string graphType = this->directed ? "digraph" : "graph";
 
     ofstream file(filename, ios::out | ios::trunc);
@@ -122,10 +125,11 @@ void Graph::printGraph(string filename)
     cout << "O grafo foi salvo no arquivo .dot" << endl;
 }
 
-
 /*
-Método responsável por encontrar um nó no grafo com base no id do nó
-*/
+ * Método responsável por encontrar um nó no grafo com base no id do nó
+    * @param id id do nó
+    * @return nó encontrado
+ */
 
 Node *Graph::searchNode(int id)
 {
@@ -145,8 +149,11 @@ Node *Graph::searchNode(int id)
 }
 
 /*
-Método responsável por adicionar um nó no grafo
-*/
+ * Método responsável por adicionar um nó no grafo
+    * @param id id do nó
+    * @param weight peso do nó
+    * @return void
+ */
 void Graph::addNode(int id, float weight)
 {
     if (nodeMap[id] != nullptr)
@@ -172,8 +179,12 @@ void Graph::addNode(int id, float weight)
 }
 
 /*
-Método responsável por adicionar uma aresta no grafo
-*/
+ * Método responsável por adicionar uma aresta no grafo
+    * @param id id do nó
+    * @param targetId id do nó alvo
+    * @param weight peso da aresta
+    * @return void
+ */
 void Graph::addEdge(int id, int targetId, float weight)
 {
     Node *node = nodeMap[id];
@@ -206,8 +217,10 @@ void Graph::addEdge(int id, int targetId, float weight)
 }
 
 /*
-Método responsável remover um nó do grafo
-*/
+ * Método responsável remover um nó do grafo
+    * @param id id do nó
+    * @return void
+ */
 void Graph::removeNode(int id)
 {
     Node *currentNode = this->firstNode;
@@ -239,8 +252,11 @@ void Graph::removeNode(int id)
 }
 
 /*
-Método responsável por remover uma aresta do grafo
-*/
+ * Método responsável por remover uma aresta do grafo
+    * @param id id do nó
+    * @param targetId id do nó alvo
+    * @return void
+ */
 void Graph::removeEdge(int id, int targetId)
 {
     Node *node = this->nodeMap[id];
@@ -259,8 +275,10 @@ void Graph::removeEdge(int id, int targetId)
 }
 
 /*
-Método responsável por remover todos as arestas do grafo
-*/
+ * Método responsável por remover todos as arestas do grafo
+    * @param id id do nó
+    * @return void
+ */
 void Graph::removeAllEdges(int id)
 {
     Node *node = this->nodeMap[id];
@@ -282,8 +300,10 @@ void Graph::removeAllEdges(int id)
 }
 
 /*
-Método responsável por verificar se um grafo é k-regular
-*/
+ * Método responsável por verificar se um grafo é k-regular
+    * @param k grau do grafo
+    * @return true se o grafo for k-regular, false caso contrário
+ */
 bool Graph::isKRegular(int k)
 {
     Node *currentNode = this->firstNode;
@@ -309,8 +329,10 @@ bool Graph::isKRegular(int k)
 }
 
 /*
-Método que retorna a vizinhaça aberta de um nó
-*/
+ * Método que retorna a vizinhaça aberta de um nó
+    * @param id id do nó
+    * @return vetor com os ids dos nós vizinhos
+ */
 vector<int> Graph::getOpenNeighborhood(int id)
 {
     Node *search = nodeMap[id];
@@ -339,8 +361,10 @@ vector<int> Graph::getOpenNeighborhood(int id)
 }
 
 /*
-Método que retorn a vizinhaça fechada de um no
-*/
+ * Método que retorna a vizinhaça fechada de um no
+    * @param id id do nó
+    * @return vetor com os ids dos nós vizinhos
+ */
 vector<int> Graph::getClosedNeighborhood(int id)
 {
     vector<int> neighborhood = this->getOpenNeighborhood(id);
@@ -350,8 +374,9 @@ vector<int> Graph::getClosedNeighborhood(int id)
 }
 
 /*
-Método responsável por verificar se um grafo é completo
-*/
+ * Método responsável por verificar se um grafo é completo
+    * @return true se o grafo for completo, false caso contrário
+ */
 bool Graph::isComplete()
 {
     // Verificar se todos os vértices tem grau n - 1 e se o número de arestas é n(n-1)/2
@@ -381,8 +406,10 @@ bool Graph::isComplete()
 }
 
 /*
-Busca em profundidade com base no id de um nó
-*/
+ * Busca em profundidade com base no id de um nó
+    * @param id
+    * @return vetor com os ids dos nós visitados
+ */
 vector<int> Graph::depthSearch(int id)
 {
     Node *node = this->nodeMap[id];
@@ -417,23 +444,29 @@ vector<int> Graph::depthSearch(int id)
     return visited;
 }
 
+/* 
+ * Função para achar o fecho transitivo direto de um nó
+    * @param id
+    * @return vetor com os ids dos nós do fecho transitivo direto
+ */
 vector<int> Graph::directTransitiveClosure(int id)
 {
     return this->depthSearch(id);
 }
 
 /*
-Nessa função é percorrido os nós do grafo e verificar se cada nó está presente no conjunto do fecho transitivo direto,
-se o nó nao estiver presente, podemos adiciona-lo ao fecho transitivo indireto.
-*/
+ * Função para achar o fecho transitivo indireto de um nó
+    * @param id
+    * @return vetor com os ids dos nós do fecho transitivo indireto
+ */
 vector<int> Graph::indirectTransitiveClosure(int id)
-{ 
+{
     vector<int> closure;
     vector<int> visited(this->getOrder() + 1, -1);
 
     auxIndirectTransitiveClosure(id, visited);
 
-        // Retorna o fecho transitivo indireto como um vetor
+    // Retorna o fecho transitivo indireto como um vetor
     for (int i = 1; i <= order; i++)
     {
         if (visited[i] != -1)
@@ -443,13 +476,21 @@ vector<int> Graph::indirectTransitiveClosure(int id)
     return closure;
 }
 
-void Graph::auxIndirectTransitiveClosure(int id, vector<int>& visited)
-{
-    Node* startNode = searchNode(id);
 
-    if(startNode != nullptr){
+/* 
+ * Função auxiliar para achar o fecho transitivo indireto de um nó
+    * @param id
+    * @param visited vetor de nós visitados
+    * @return void
+ */
+void Graph::auxIndirectTransitiveClosure(int id, vector<int> &visited)
+{
+    Node *startNode = searchNode(id);
+
+    if (startNode != nullptr)
+    {
         // Busca por qualquer nó que possua uma aresta apontando para o nó atual
-        for (Node* aux = firstNode; aux != nullptr; aux = aux->getNextNode())
+        for (Node *aux = firstNode; aux != nullptr; aux = aux->getNextNode())
         {
             if (visited[aux->getId()] == -1 && aux->searchEdge(id))
             {
@@ -457,29 +498,31 @@ void Graph::auxIndirectTransitiveClosure(int id, vector<int>& visited)
                 auxIndirectTransitiveClosure(aux->getId(), visited);
             }
         }
-    }    
+    }
 }
 
 /*
-Nessa função é percorrido os nós do grafo e adicionado cada grau ao vetor, ao final é ordenado de forma decrescente 
-e a função retorna a sequencia de graus em um vetor int;
-*/
+ * Função para achar a sequência de graus do grafo, ordenada de forma decrescente
+    * @return vetor com os graus dos nós do grafo
+ */
 vector<int> Graph::getDegreeSequence()
 {
     vector<int> degreeSequence;
-    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
+    for (Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode())
+    {
         int degree = current->getInDegree();
         degreeSequence.push_back(degree);
     }
 
-    //Ordena em ordem não crescente
+    // Ordena em ordem não crescente
     sort(degreeSequence.rbegin(), degreeSequence.rend());
     return degreeSequence;
 }
 
 /*
-Método que remove todas marcações dos nós do grafo
-*/
+ * Método que remove todas marcações dos nós do grafo
+    * @return void
+ */
 void Graph::resetMarks()
 {
     int count = 0;
@@ -505,12 +548,10 @@ void Graph::resetMarks()
 }
 
 /*
- * Função para marcar um vértice e suas arestas
- *
- * Recebe um ponteiro para o vértice a ser marcado
- * Marca o vértice e todas as arestas que saem dele
+ * Função para marcar um vértice e suas arestas que saem dele
+    * @param node nó a ser marcado
+    * @return void
  */
-
 void Graph::markNode(Node *node)
 {
     node->setMarked(true);
@@ -531,8 +572,10 @@ void Graph::markNode(Node *node)
 }
 
 /*
-Obtém os vizinhos de um nó, recebe o id do nó como parametro e retorna um vetor com os vizinhos do nó
-*/
+ *Obtém os vizinhos de um nó, recebe o id do nó como parametro e retorna um vetor com os vizinhos do nó
+    * @param id
+    * @return vetor com os ids dos vizinhos do nó
+ */
 vector<int> Graph::getNeighbors(int id)
 {
     Node *node = nodeMap[id];
@@ -555,56 +598,55 @@ vector<int> Graph::getNeighbors(int id)
 }
 
 /*
- * Função para verificar se a solução é viável
+ * Função para verificar se a solução é viável ou não
  * Verifica se todas as arestas tem pelo menos um vértice marcado
- *
- * Retorna true se a solução é viável e false caso contrário
+    * @return true se a solução é viável e false caso contrário
  */
-
 bool Graph::isIsolated()
 {
     return this->uncoveredEdges == 0;
 }
 
 /*
- * Função para verificar se o grafo é trivial
+ * Função para verificar se o grafo é trivial.
  * Verifica se o numero de vertices é igual a 1, se o primeiro nó nao é nulo, se o primeiro nó é igual ao ultimo nó
  * e se o grau do primeiro nó é igual a zero
- *
- * Retorna true se todas verificações forem true e false caso alguma não seja.
+    * @return true se todas verificações forem true e false caso alguma não seja.
  */
 bool Graph::isTrivialGraph()
 {
     return (this->getOrder() == 1 &&
-                this->getFirstNode() != nullptr &&
-                this->getFirstNode() == this->getLastNode() &&
-                this->getFirstNode()->getInDegree() == 0 );
+            this->getFirstNode() != nullptr &&
+            this->getFirstNode() == this->getLastNode() &&
+            this->getFirstNode()->getInDegree() == 0);
 }
 
-
- /*
+/*
  * Função para verificar o grau de um determinado nó do grafo
- * Recebe como parametro o id do nó e retorna um par de grau de entrada e de saída do grafo
- * caso o nó nao exista retorna um par -1, -1.
+    * @param id
+    * @return pair com o grau de entrada e o grau de saída do nó
  */
 pair<int, int> Graph::getNodeDegree(int id)
 {
-    Node* node = this->searchNode(id);
-    if (node == nullptr){
-        return make_pair(-1,-1);
+    Node *node = this->searchNode(id);
+    if (node == nullptr)
+    {
+        return make_pair(-1, -1);
     }
 
     return make_pair(node->getInDegree(), node->getOutDegree());
 }
 
 /*
-* Função para verificar se o grafo é nulo
-* percorre todos os nós e verifica se existe uma aresta adjacente a ele, caso exista alguma retorna false.
-* caso contrário retorna true
-*/
-bool Graph::isNullGraph() {
-    for(Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
-        if(current->getFirstEdge() != nullptr)
+ * Função para verificar se o grafo é nulo
+ * percorre todos os nós e verifica se existe uma aresta adjacente a ele.
+    * @return true se o grafo for nulo e false caso contrário  
+ */
+bool Graph::isNullGraph()
+{
+    for (Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode())
+    {
+        if (current->getFirstEdge() != nullptr)
             return false;
     }
 
@@ -612,23 +654,27 @@ bool Graph::isNullGraph() {
 }
 
 /*
-* Função para verificar se o grafo é multigrafo
-* percorre todos os nós e para cada nó conta o numero de arestas para cada nó adjacente usando um map.
- *se for encontrado algum par de nó com mais de uma aresta significa que é multigrafo e retorna true
-* caso contrário retorna false
-*/
-bool Graph::isMultigraph()  {
-    for(Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
-        map<int, int> edgeCount; //mapeia o id do nó adjacente para o número de arestas.
+ * Função para verificar se o grafo é multigrafo
+ * percorre todos os nós e para cada nó conta o numero de arestas para cada nó adjacente usando um map.
+    * @return true se o grafo for multigrafo e false caso contrário 
+ */
+bool Graph::isMultigraph()
+{
+    for (Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode())
+    {
+        map<int, int> edgeCount; // mapeia o id do nó adjacente para o número de arestas.
 
-        for(Edge *edge = current->getFirstEdge(); edge != nullptr; edge = edge->getNextEdge()){
+        for (Edge *edge = current->getFirstEdge(); edge != nullptr; edge = edge->getNextEdge())
+        {
             int targetId = edge->getTargetId();
             edgeCount[targetId]++;
         }
 
-        for(auto& pair : edgeCount){
-            if(pair.second > 1){
-                //O grafo possui multiplas arestas entre os mesmos nós
+        for (auto &pair : edgeCount)
+        {
+            if (pair.second > 1)
+            {
+                // O grafo possui multiplas arestas entre os mesmos nós
                 return true;
             }
         }
@@ -638,76 +684,85 @@ bool Graph::isMultigraph()  {
 }
 
 /*
-* Função para verificar se o grafo é bipartite
-* Usa uma abordagem de busca em largura para percorrer o grafo atribuindo cores aos nós que sao visitados
- *se durante a travessia for encontrado um nó adjacente com a mesma cor que o nó atual o grafo nao é bipartido e retorna false
-* caso contrário retorna false, se todos os nós puderem ser coloridos sem que haja nós adjacentes com a mesmo cor, o grafo é bipartido
-* e retorna true;
-*/
-bool Graph::isBipartite()  {
-    if(this->getOrder() == 0){
-        //grafo vazio, considerado bipartido
+ * Função para verificar se o grafo é bipartido
+ * Usa uma abordagem de busca em largura para percorrer o grafo atribuindo cores aos nós que sao visitados
+ * se durante a travessia for encontrado um nó adjacente com a mesma cor que o nó atual o grafo nao é bipartido e retorna false
+ * caso contrário retorna false, se todos os nós puderem ser coloridos sem que haja nós adjacentes com a mesmo cor, o grafo é bipartido
+ * e retorna true
+    * @return true se o grafo for bipartido e false caso contrário
+ */
+bool Graph::isBipartite()
+{
+    if (this->getOrder() == 0)
+    {
+        // grafo vazio, considerado bipartido
         return true;
     }
 
-    map<int, bool> visited; //mapa para rastrear
-    map<int, bool> colors; //mapa para atribuir cores aos nós
+    map<int, bool> visited; // mapa para rastrear
+    map<int, bool> colors;  // mapa para atribuir cores aos nós
 
-    //inicializa os mapas de visitados e cores
-    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
+    // inicializa os mapas de visitados e cores
+    for (Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode())
+    {
         visited[current->getId()] = false;
         colors[current->getId()] = false;
     }
 
-    //percorre todos os nós do grafo
-    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
-        //verifica apenas se o nó atual ainda nao foi visitado
-        if(!visited[current->getId()]){
+    // percorre todos os nós do grafo
+    for (Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode())
+    {
+        // verifica apenas se o nó atual ainda nao foi visitado
+        if (!visited[current->getId()])
+        {
             queue<Node *> queue;
             queue.push(current);
             visited[current->getId()] = true;
             colors[current->getId()] = true;
 
-            //executa a busca em largura
-            while(!queue.empty()){
-                Node * node = queue.front();
+            // executa a busca em largura
+            while (!queue.empty())
+            {
+                Node *node = queue.front();
                 queue.pop();
 
-                //percorre todas as arestas do nó atual
-                for(Edge* edge = node->getFirstEdge(); edge != nullptr; edge = edge->getNextEdge()){
+                // percorre todas as arestas do nó atual
+                for (Edge *edge = node->getFirstEdge(); edge != nullptr; edge = edge->getNextEdge())
+                {
                     int adjacentNodeId = edge->getTargetId();
-                    Node* adjacentNode = this->searchNode(adjacentNodeId);
+                    Node *adjacentNode = this->searchNode(adjacentNodeId);
 
-                    //verifica se o nó adjacente nao foi visitado
-                    if(!visited[adjacentNode->getId()]){
+                    // verifica se o nó adjacente nao foi visitado
+                    if (!visited[adjacentNode->getId()])
+                    {
                         visited[adjacentNode->getId()] = true;
-                        colors[adjacentNode->getId()] = !colors[node->getId()]; //atribui a cor oposta ao nó adjacente
+                        colors[adjacentNode->getId()] = !colors[node->getId()]; // atribui a cor oposta ao nó adjacente
                         queue.push(adjacentNode);
                     }
-                    //se o nó adjacente ja foi visitado e possui a mesma cor que o nó atual o grafo nao é bipartido
-                    else if(colors[adjacentNode->getId()]  ==  colors[node->getId()])
+                    // se o nó adjacente ja foi visitado e possui a mesma cor que o nó atual o grafo nao é bipartido
+                    else if (colors[adjacentNode->getId()] == colors[node->getId()])
                         return false;
                 }
             }
         }
     }
-    //se todas as travessias com busca em largura nao encontraram nós com cores iguais entao o grafo é bipartido
+    // se todas as travessias com busca em largura nao encontraram nós com cores iguais entao o grafo é bipartido
     return true;
 }
 
 /*
  * Função que percorre todos os nós do grafo e a cada nó com grau maior ele atualiza o maxDegree
- *
- * Retorna o grau do grafo
+    * @return grau do grafo
  */
-
 int Graph::getGraphDegree()
 {
     int maxDegree = 0;
-    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
+    for (Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode())
+    {
         int degree = max(current->getInDegree(), current->getOutDegree());
 
-        if(degree > maxDegree){
+        if (degree > maxDegree)
+        {
             maxDegree = degree;
         }
     }
@@ -716,19 +771,20 @@ int Graph::getGraphDegree()
 }
 
 /*
-A função a seguir cria um novo objeto Grafo que representa o subgrafo vertice induzido
-pelos vértices fornecidos. Ele percorre os vértices informados, adicionando ao subgrafo e 
-adiciona as arestas pertencentes ao conjunto 
-
-A função retorna um objeto do tipo Graph, que contém o subgrafo induzido pelo conjunto de vértices fornecidos
-*/
-Graph* Graph::getInducedSubgraph(vector<int> nodes)
+ * A função cria um novo objeto Grafo que representa o subgrafo vertice induzido
+ * pelos vértices fornecidos. Ele percorre os vértices informados, adicionando ao subgrafo e
+ * adiciona as arestas pertencentes ao conjunto de vértices fornecidos.
+    * @return Objeto do tipo Graph, que contém o subgrafo induzido pelo conjunto de vértices fornecidos
+ */
+Graph *Graph::getInducedSubgraph(vector<int> nodes)
 {
     Graph *subgraph = new Graph(0, false, true, false, 0);
 
-    for(int id: nodes){
-        Node* node = searchNode(id);
-        if(!node){
+    for (int id : nodes)
+    {
+        Node *node = searchNode(id);
+        if (!node)
+        {
             cout << "ERROR : node not found ! " << endl;
             return nullptr;
         }
@@ -736,12 +792,15 @@ Graph* Graph::getInducedSubgraph(vector<int> nodes)
         subgraph->addNode(id, node->getWeight());
     }
 
-    for(int id: nodes){
-        //obtém os vizinhos do nó
-        vector <int> neighbors = this->getOpenNeighborhood(id);
-        for(int neighbor : neighbors){
+    for (int id : nodes)
+    {
+        // obtém os vizinhos do nó
+        vector<int> neighbors = this->getOpenNeighborhood(id);
+        for (int neighbor : neighbors)
+        {
             auto it = find(nodes.begin(), nodes.end(), neighbor);
-            if(it != nodes.end()){
+            if (it != nodes.end())
+            {
                 subgraph->addEdge(id, neighbor, 0);
             }
         }
@@ -751,80 +810,91 @@ Graph* Graph::getInducedSubgraph(vector<int> nodes)
 }
 
 /*
-    * Função que retorna o grafo complementar do grafo atual
-    * O grafo complementar possui os mesmos vértices do grafo original, mas possui uma aresta entre dois vértices
-    * se e somente se o grafo original não possui uma aresta entre esses dois vértices  
-    * retorna o grafo complementar
-*/
-Graph* Graph::getComplementGraph()
+ * Função que retorna o grafo complementar do grafo atual
+ * O grafo complementar possui os mesmos vértices do grafo original, mas possui uma aresta entre dois vértices
+ * se e somente se o grafo original não possui uma aresta entre esses dois vértices
+    * @return Objeto do tipo Graph, que contém o grafo complementar do grafo atual 
+ */
+Graph *Graph::getComplementGraph()
 {
-    //Cria um novo grafo complementar com o mesmo número de vértices
-    Graph* complementGraph = new Graph(this->getOrder(), this->isDirected(), this->isWeightedEdges(), this->isWeightedNodes(), this->getNumberOfEdges());
+    // Cria um novo grafo complementar com o mesmo número de vértices
+    Graph *complementGraph = new Graph(this->getOrder(), this->isDirected(), this->isWeightedEdges(), this->isWeightedNodes(), this->getNumberOfEdges());
 
     // Adiciona todos os vértices do grafo original no grafo complementar
-    Node* currentNode = this->getFirstNode();
+    Node *currentNode = this->getFirstNode();
     while (currentNode != nullptr)
     {
         complementGraph->addNode(currentNode->getId(), currentNode->getWeight());
         currentNode = currentNode->getNextNode();
     }
 
-    //percorre todos os pares de vértices e adiciona uma aresta no grafo complementar
-    for(int i = 1; i <= this->getOrder(); i++){
-        for(int j = 1; j <= this->getOrder(); j++){
-            if(i != j){
-                Node* nodeI = this->searchNode(i);
-                Node* nodeJ = this->searchNode(j);
+    // percorre todos os pares de vértices e adiciona uma aresta no grafo complementar
+    for (int i = 1; i <= this->getOrder(); i++)
+    {
+        for (int j = 1; j <= this->getOrder(); j++)
+        {
+            if (i != j)
+            {
+                Node *nodeI = this->searchNode(i);
+                Node *nodeJ = this->searchNode(j);
 
-
-                //verifica se já existe uma aresta entre os vértices
-                if(!nodeI->hasEdgeTo(j)){
+                // verifica se já existe uma aresta entre os vértices
+                if (!nodeI->hasEdgeTo(j))
+                {
                     complementGraph->addEdge(i, j, 0);
                 }
             }
         }
-    } 
+    }
 
     return complementGraph;
 }
 
 /*
-*Função que printa as propriedades do grafo, como raio, diâmetro, centro e periferia
-*/
-void Graph::printGraphProperties(){
+ * Função que printa as propriedades do grafo, como raio, diâmetro, centro e periferia
+    * @return void
+ */
+void Graph::printGraphProperties()
+{
     int radius = numeric_limits<int>::max();
     int diameter = 0;
     vector<int> centerNodes;
     vector<int> peripheralNodes;
 
-    for(Node* node = getFirstNode(); node != nullptr; node = node->getNextNode()){
-        vector<int> distances(this->getOrder(), numeric_limits<int>::max());//Distâncias mínimas de um nó para os outros nós
-        queue<int> queue;//fila para busca em largura
+    for (Node *node = getFirstNode(); node != nullptr; node = node->getNextNode())
+    {
+        vector<int> distances(this->getOrder(), numeric_limits<int>::max()); // Distâncias mínimas de um nó para os outros nós
+        queue<int> queue;                                                    // fila para busca em largura
         queue.push(node->getId());
         distances[node->getId()] = 0;
 
-        while(!queue.empty()){
+        while (!queue.empty())
+        {
             int currentId = queue.front();
             queue.pop();
 
-            for(int neighbor : this->getOpenNeighborhood(currentId)){
-                if(distances[neighbor] == numeric_limits<int>::max()){
+            for (int neighbor : this->getOpenNeighborhood(currentId))
+            {
+                if (distances[neighbor] == numeric_limits<int>::max())
+                {
                     distances[neighbor] = distances[currentId] + 1;
                     queue.push(neighbor);
                 }
             }
         }
 
-        //atualiza o raio e o diametro do grafo
+        // atualiza o raio e o diametro do grafo
         int maxDistance = *max_element(distances.begin(), distances.end());
         radius = min(radius, maxDistance);
         diameter = max(diameter, maxDistance);
 
-        //atualiza os nós centrais e periféricos
-        if(maxDistance == radius){
+        // atualiza os nós centrais e periféricos
+        if (maxDistance == radius)
+        {
             centerNodes.push_back(node->getId());
         }
-        if(maxDistance == diameter){
+        if (maxDistance == diameter)
+        {
             peripheralNodes.push_back(node->getId());
         }
     }
@@ -832,33 +902,38 @@ void Graph::printGraphProperties(){
     cout << "Raio: " << radius << endl;
     cout << "Diâmetro: " << diameter << endl;
     cout << "Nós centrais: ";
-    for(int id : centerNodes){
+    for (int id : centerNodes)
+    {
         cout << id << " ";
     }
     cout << endl;
     cout << "Nós periféricos: ";
-    for(int id : peripheralNodes){
+    for (int id : peripheralNodes)
+    {
         cout << id << " ";
     }
     cout << endl;
 }
 
 /*
-    * Função que verifica se o grafo é euleriano
-    * verifica se o grafo é conexo, se todos os vértices possuem grau par e se o grafo é não direcionado e ponderado
-    * nao verifica se o grafo é conexo pois a propria criaçao do grafo ja torna-o conexo, removendo vertices isolados
-    * Retorna true se o grafo é euleriano e false caso contrário
-*/
+ * Função que verifica se o grafo é euleriano
+ * verifica se o grafo é conexo, se todos os vértices possuem grau par e se o grafo é não direcionado e ponderado
+ * nao verifica se o grafo é conexo pois a propria criaçao do grafo ja torna-o conexo, removendo vertices isolados
+    * @return bool, que indica se o grafo é euleriano ou não   
+ */
 bool Graph::isEulerian()
 {
-    if(isDirected() || !isWeightedEdges() || !isWeightedNodes()){
+    if (isDirected() || !isWeightedEdges() || !isWeightedNodes())
+    {
         return false;
     }
 
-    //verifica se todos os vértices possuem grau par
-    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
-        pair<int,int> nodeDegree = this->getNodeDegree(current->getId());
-        if(nodeDegree.first % 2 != 0){
+    // verifica se todos os vértices possuem grau par
+    for (Node *current = this->getFirstNode(); current != nullptr; current = current->getNextNode())
+    {
+        pair<int, int> nodeDegree = this->getNodeDegree(current->getId());
+        if (nodeDegree.first % 2 != 0)
+        {
             return false;
         }
     }
@@ -866,13 +941,11 @@ bool Graph::isEulerian()
     return true;
 }
 
-
 /*
  * Função que conta quantas arestas não marcadas um vértice possui, para fazer o cálculo do peso relativo
- *
- * Retorna o número de arestas não marcadas
+    * @param Node *node, nó que será verificado
+    * @return int, que indica quantas arestas não marcadas o nó possui   
  */
-
 int Graph::getNumberOfUnmarkedEdges(Node *node)
 {
     Edge *edge = node->getFirstEdge();
@@ -893,10 +966,26 @@ int Graph::getNumberOfUnmarkedEdges(Node *node)
 }
 
 /*
+ * Função que cria um mapa com a vizinhança aberta de cada nó
+ * O mapa é alocado no atributo openNeighborhoodMap
+    * @return void
+ */
+void Graph::createNeighborhoodMap()
+{
+    Node *aux = firstNode;
+    while (aux != nullptr)
+    {
+        vector<int> neighborhood = getOpenNeighborhood(aux->getId());
+        this->openNeighborhoodMap.insert(pair<int, vector<int>>(aux->getId(), neighborhood));
+        aux = aux->getNextNode();
+    }
+}
+
+/*
  * Função que calcula o peso relativo de cada vértice
  * Colocamos os vértices em um vector ordenado, em que o vértice com menor peso relativo sempre esteja no topo
- *
  * O vector criado é alocado no atributo candidates
+    * @return void
  */
 
 void Graph::createCandidates()
@@ -927,6 +1016,7 @@ void Graph::createCandidates()
 
 /*
  * Função que imprime o vetor de pesos relativos
+    * @return void
  */
 
 void Graph::printRelativeVector()
@@ -945,8 +1035,9 @@ void Graph::printRelativeVector()
  * Quando um vértice é removido, o peso relativo dos seus vizinhos é atualizado
  *
  * O vetor é ordenado novamente
+    * @param int removedNodeId, id do nó removido
+    * @return void  
  */
-
 void Graph::updateCandidates(int removedNodeId)
 {
     if (candidates->size() == 0)
@@ -988,8 +1079,7 @@ void Graph::updateCandidates(int removedNodeId)
 /*
  * Algoritmo Guloso Construtivo
  * Utiliza a heurística do peso relativo para construir uma solução viável
- *
- * Retorna um vetor com os ids dos vértices que compõem a solução
+    * @return Metric, que indica o tempo de execução do algoritmo, o peso da solução e o número de nós presentes na solução	  
  */
 Metric Graph::relativeHeuristic()
 {
@@ -1053,51 +1143,10 @@ Metric Graph::relativeHeuristic()
     return metric;
 }
 
-void Graph::printConstructiveGreedy(string output, string instanceName)
-{
-    cout << "Iniciando algoritmo guloso construtivo" << endl;
-    Metric metric = relativeHeuristic();
-    cout << "Algoritmo guloso construtivo finalizado, resultados em: " << output << endl;
-    ofstream file;
-    file.open(output);
-    file << "=============================" << endl;
-    file << "Algoritimo Guloso Construtivo - " + instanceName << endl;
-    file << "Tamanho da solução: " << metric.numberOfNodes << endl;
-    file << "Peso total da solução: " << metric.totalWeight << endl;
-    file << "Tempo de execução (ms): " << metric.time << endl;
-    file << "=============================" << endl;
-
-    file << endl;
-    file.close();
-}
-
-void Graph::imprimeNoEArestas()
-{
-    cout << "=============================" << endl;
-    cout << "Imprimindo nós e arestas" << endl;
-    cout << "=============================" << endl;
-    cout << endl;
-    Node *currentNode = this->firstNode;
-
-    while (currentNode != nullptr)
-    {
-        cout << "Nó: " << currentNode->getId() << endl;
-        Edge *currentEdge = currentNode->getFirstEdge();
-
-        while (currentEdge != nullptr)
-        {
-            currentEdge = currentEdge->getNextEdge();
-        }
-
-        currentNode = currentNode->getNextNode();
-    }
-}
-
 /*
  * Função que gera um número aleatório dentro de um intervalo
- *
- * Recebe como parâmetro o valor mínimo e máximo do intervalo
- * Retorna um número aleatório dentro do intervalo [min, max]
+    * @param int min, valor mínimo do intervalo
+    * @return int, valor aleatório gerado
  */
 
 int Graph::randomRange(int min, int max)
@@ -1106,22 +1155,24 @@ int Graph::randomRange(int min, int max)
 }
 
 /*
- * Algoritmo Guloso Randomizado Construtivo
+ * Algoritmo Guloso Randomizado Adaptativo
  *
  * Utiliza a heurística do peso relativo para construir uma solução viável, agora de forma aleatória
  * A cada iteração, o algoritmo escolhe um vértice aleatório dentro de uma faixa de vértices
  *
  * Recebe como parâmetro o valor de alpha, que é o quão aleatório o algoritmo será: 0 é totalmente aleatório e 1 é totalmente guloso
  * Além disso, recebe o número de iterações que o algoritmo irá executar, cada iteração é uma solução diferente
- *
- * Retorna um vetor com os ids dos vértices que compõem a solução e as métricas de tempo e peso
+    * @param float alpha, valor que indica o quão aleatório o algoritmo será
+    * @param int numInter, número de iterações que o algoritmo irá executar
+    * @param int seed, semente para gerar números aleatórios
+    * @return Metric, que indica o tempo de execução do algoritmo, o peso da solução, o número de nós presentes na solução e o valor de alpha utilizado
  */
-
-Metric Graph::randomizedHeuristic(float alpha, int numInter)
+Metric Graph::randomizedHeuristic(float alpha, int numInter, int seed)
 {
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = chrono::high_resolution_clock::now();
     createNeighborhoodMap();
+    srand(seed);
 
     vector<int> auxSolutionVector;
     vector<int> bestSolutionVector;
@@ -1199,49 +1250,12 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
     metric.numberOfNodes = bestSolutionVector.size();
     return metric;
 }
-void Graph::printRandomizedGreedy(float alphas[], int numInter, int numInterAlpha, string output, string instanceName)
-{   
-    cout << "Algoritmo guloso randomizado iniciado - " << instanceName << endl;
-    cout << "Número de iterações: " << numInter << endl;
-    cout << "Número de iterações para cada alfa: " << numInterAlpha << endl;
-
-    cout << "Alfas: ";
-    for (int i = 0; i < 5; i++)
-    {
-        cout << alphas[i] << " ";
-    }
-    cout << endl;
-    cout << "=============================" << endl;
-
-    ofstream file;
-    file.open(output);
-    file << "=============================" << endl;
-    file << "Algoritimo Guloso Randomizado Adaptativo - " << instanceName << endl;
-    file << "=============================" << endl;
-    for (int i = 0; i < numInter; i++)
-    {
-        file << "=============================" << endl;
-        file << "Iteração " << i + 1 << endl;
-        file << "-----------------------------" << endl;
-        for (int i = 0; i < 5; i++)
-        {
-            Metric metric = this->randomizedHeuristic(alphas[i], numInterAlpha);
-            file << "Alfa = " << alphas[i] << " para " << numInterAlpha << " iterações" << endl
-                 << "Tempo (s): " << metric.time << endl
-                 << "Peso total: " << metric.totalWeight << endl
-                 << "Tamanho da solução: " << metric.numberOfNodes << endl;
-            file << "-----------------------------" << endl;
-        }
-    }
-    file.close();
-    cout << "Algoritmo guloso randomizado finalizado, resultados em: " << output << endl;
-}
 
 /*
- * Funnção que retorna o alpha com maior probabilidade de ser escolhido
- *
- * Recebe como parâmetro um vetor de probabilidades e um vetor de alphas
- * Retorna o alpha com maior probabilidade
+ * Função que retorna o alpha com maior probabilidade de ser escolhido
+    * @param vector<float> probabilities, vetor com as probabilidades de cada alpha
+    * @param float alphas[], vetor com os alphas
+    * @return float, alpha com maior probabilidade de ser escolhido 
  */
 
 float Graph::chooseAlpha(vector<float> probabilities, float alphas[])
@@ -1262,11 +1276,16 @@ float Graph::chooseAlpha(vector<float> probabilities, float alphas[])
 
 /*
  * Atualiza as probabilidades de cada alpha para ser escolhido na próxima iteração
- *
- * Recebe como parâmetro um vetor de probabilidades, o vetor da melhor solução, os alphas, o peso da melhor solução e um vetor com os pesos médios de cada alpha
  * Usamos como base o slide 27 - aula 10
+    * @param vector<float> *probabilities, vetor com as probabilidades de cada alpha
+    * @param vector<int> &bestSolutionVector, vetor com a melhor solução
+    * @param float alphas[], vetor com os alphas
+    * @param int bestWeight, peso da melhor solução
+    * @param vector<pair<float,int>> avgWeights, vetor com os pesos médios de cada alpha
+    * @param int numInter, número de iterações que o algoritmo irá executar
+    * @param int i, iteração atual
+    * @return void  
  */
-
 void Graph::updateProbabilities(vector<float> *probabilities, vector<int> &bestSolutionVector, float alphas[], int bestWeight, vector<pair<float, int>> avgWeights)
 {
     // vector of weight ratios
@@ -1296,9 +1315,11 @@ void Graph::updateProbabilities(vector<float> *probabilities, vector<int> &bestS
 
 /*
  * Atualiza o vetor de pesos médios de cada alpha
- *
- * Recebe um vetor de pesos médios, um vetor de alphas, o alpha escolhido e o peso da melhor solução
- * Automaticamente atualiza o vetor de pesos médios
+    * @param vector<pair<float,int>> *avgWeights, vetor com os pesos médios de cada alpha
+    * @param float alphas[], vetor com os alphas
+    * @param float alpha, alpha atual
+    * @param int auxWeight, peso da solução atual
+    * @return void  
  */
 
 void Graph::updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[], float alpha, int auxWeight)
@@ -1321,21 +1342,22 @@ void Graph::updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[
 }
 
 /*
- * Algoritmo Guloso Randomizado Reativo
+ * Algoritmo Guloso Randomizado Adaptativo Reativo
  *
  * O algoritmo escolhe o alpha que tem a maior probabilidade de gerar uma solução viável de forma dinâmica
  * O tamanho do bloco é 10% do número de iterações
- *
- * Recebe um vetor de alphas e o número de iterações
- * Retorna uma struct Metric com o tempo de execução, o peso total e o tamanho da solução
+    * @param float alphas[], vetor com os alphas
+    * @param int numIter, número de iterações que o algoritmo irá executar
+    * @param int seed, semente para gerar números aleatórios
+    * @return Metric, struct com o tempo de execução, o peso total e o tamanho da solução
  */
 
-Metric Graph::reativeHeuristic(float alphas[], int numIter)
+Metric Graph::reativeHeuristic(float alphas[], int numIter, int seed)
 {
-    createNeighborhoodMap();
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = chrono::high_resolution_clock::now();
-
+    createNeighborhoodMap();
+    srand(seed);
     // Tamanho do bloco
     int block = numIter * 0.1;
 
@@ -1352,7 +1374,6 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
     bool viable = false;
 
     float alpha;
-
     while (i <= numIter)
     {
 
@@ -1410,6 +1431,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
             updateCandidates(firstHeuristcNode);
             // Pegando o próximo vértice de acordo com o alpha
             pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+            
             firstHeuristcNode = this->candidates->at(pos).second;
         }
 
@@ -1451,11 +1473,45 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
     return metric;
 }
 
-void Graph::printReativeGreedy(float alphas[], int numIter, int numIterReative, string output, string instanceName)
+/*
+ *  Função que imprime os resultados do algoritmo guloso construtivo no arquivo de saída
+    * @param string output, nome do arquivo de saída
+    * @param string instanceName, nome da instância
+    * @return void
+ */
+void Graph::printConstructiveGreedy(string output, string instanceName)
 {
-    cout << "Iniciando algoritmo guloso randomizado reativo - " << instanceName << endl;
-    cout << "Número de iterações: " << numIter << endl;
-    cout << "Número de iterações dentro de cada chamada: " << numIterReative << endl;
+    cout << "Iniciando algoritmo guloso construtivo" << endl;
+    Metric metric = relativeHeuristic();
+    cout << "Algoritmo guloso construtivo finalizado, resultados em: " << output << endl;
+    ofstream file;
+    file.open(output);
+    file << "=============================" << endl;
+    file << "Algoritimo Guloso Construtivo - " + instanceName << endl;
+    file << "Tamanho da solução: " << metric.numberOfNodes << endl;
+    file << "Peso total da solução: " << metric.totalWeight << endl;
+    file << "Tempo de execução (ms): " << metric.time << endl;
+    file << "=============================" << endl;
+
+    file << endl;
+    file.close();
+}
+
+/*
+ *  Função que imprime os resultados do algoritmo guloso randomizado adaptativo no arquivo de saída
+    * @param float alphas[], vetor com os valores de alfa
+    * @param int numInter, número de iterações
+    * @param int numInterAlpha, número de iterações para cada alfa
+    * @param string output, nome do arquivo de saída
+    * @param string instanceName, nome da instância
+    * @param int seed, semente para o gerador de números aleatórios
+    * @return void
+ */
+void Graph::printRandomizedGreedy(float alphas[], int numInter, int numInterAlpha, string output, string instanceName, int seed)
+{
+    cout << "=============================" << endl;
+    cout << "Algoritmo guloso randomizado iniciado - " << instanceName << endl;
+    
     cout << "Alfas: ";
     for (int i = 0; i < 5; i++)
     {
@@ -1463,26 +1519,79 @@ void Graph::printReativeGreedy(float alphas[], int numIter, int numIterReative, 
     }
     cout << endl;
     cout << "=============================" << endl;
+    cout << "Resultados em " << output << endl;
+
+    ofstream file;
+    file.open(output);
+    file << "=============================" << endl;
+    file << "Algoritimo Guloso Randomizado Adaptativo - " << instanceName << endl;
+    file << "Número de iterações: " << numInter << endl;
+    file << "Seed: " << seed << endl;
+    file << "=============================" << endl;
+    for (int i = 0; i < numInter; i++)
+    {
+        file << "=============================" << endl;
+        file << "Iteração " << i + 1 << endl;
+        file << "-----------------------------" << endl;
+        for (int i = 0; i < 5; i++)
+        {
+            Metric metric = this->randomizedHeuristic(alphas[i], numInterAlpha, seed);
+            file << "Alfa = " << alphas[i] << " para " << numInterAlpha << " iterações" << endl
+                 << "Tempo (s): " << metric.time << endl
+                 << "Peso total: " << metric.totalWeight << endl
+                 << "Tamanho da solução: " << metric.numberOfNodes << endl;
+            file << "-----------------------------" << endl;
+        }
+    }
+    file.close();
+    cout << "Algoritmo guloso randomizado finalizado!" << endl;
+}
+
+/*
+ * Função que imprime os resultados do algoritmo guloso randomizado reativo no arquivo de saída
+    * @param float alphas[], vetor com os valores de alfa
+    * @param int numIter, número de iterações
+    * @param int numIterReative, número de iterações para cada alfa
+    * @param string output, nome do arquivo de saída
+    * @param string instanceName, nome da instância
+    * @param int seed, semente para o gerador de números aleatórios
+    * @return void
+ */
+void Graph::printReativeGreedy(float alphas[], int numIter, int numIterAlpha, string output, string instanceName, int seed)
+{
+    cout << "=============================" << endl;
+    cout << "Iniciando algoritmo guloso randomizado reativo - " << instanceName << endl;
+    cout << "Número de iterações: " << numIter << endl;
+    cout << "Número de iterações dentro de cada chamada: " << numIterAlpha << endl;
+    cout << "Alfas: ";
+    for (int i = 0; i < 5; i++)
+    {
+        cout << alphas[i] << " ";
+    }
+    cout << endl;
+    cout << "=============================" << endl;
+    cout << "Resultados em: " << output << endl;
 
     ofstream file;
     file.open(output);
     file << "=============================" << endl;
     file << "Instância: " << instanceName << endl;
+    file << "Seed: " << seed << endl;
     for (int i = 0; i < numIter; i++)
     {
         file << "=============================" << endl;
         file << "Iteração " << i + 1 << endl;
         file << "-----------------------------" << endl;
 
-        Metric metric = this->reativeHeuristic(alphas, numIterReative);
-        file << "Numero de iterações: " << numIterReative << endl
+        Metric metric = this->reativeHeuristic(alphas, numIterAlpha, seed);
+        file << "Numero de iterações: " << numIterAlpha << endl
              << "Tempo (s): " << metric.time << endl
              << "Peso total: " << metric.totalWeight << endl
              << "Melhor alfa: " << alphas[metric.bestAlpha] << endl
              << "Tamanho da solução: " << metric.numberOfNodes << endl;
         file << "-----------------------------" << endl;
     }
-    cout << "Finalizando algoritmo guloso randomizado reativo, resultados em: " << output << endl;
+    cout << "Algoritmo guloso randomizado reativo finalizado!" << endl;
 
     file.close();
 }

@@ -88,37 +88,6 @@ Graph *readGreedy(string filename)
 
     return graph;
 }
-void menuParte1(string input_file, string output_file, bool isDirected, bool isWeightedEdges, bool isWeightedNodes);
-void menuParte2(string input_file, string output_file);
-
-void menu(string input_file, string output_file, bool isDirected, bool isWeightedEdges, bool isWeightedNodes)
-{
-    int option;
-    cout << "Trabalho de Teoria dos Grafos" << endl;
-    cout << "=============================" << endl;
-    cout << "1 - Parte 01" << endl;
-    cout << "2 - Parte 02" << endl;
-    cout << "0 - Sair" << endl;
-    cout << "=============================" << endl;
-    cout << "Informe a opção desejada:" << endl;
-    cin >> option;
-    switch (option)
-    {
-    case 1:
-        menuParte1(input_file, output_file, isDirected, isWeightedEdges, isWeightedNodes);
-        break;
-    case 2:
-        menuParte2(input_file, output_file);
-        break;
-    case 0:
-        cout << "Saindo..." << endl;
-        break;
-    default:
-        cout << "Opção inválida" << endl;
-        menu(input_file, output_file, isDirected, isWeightedEdges, isWeightedNodes);
-        break;
-    }
-}
 
 void menuParte1(string input_file, string output_file, bool isDirected, bool isWeightedEdges, bool isWeightedNodes)
 {
@@ -126,7 +95,7 @@ void menuParte1(string input_file, string output_file, bool isDirected, bool isW
 
     Graph *aux;
     pair<int, int> degree;
-    int option = 0, node, k;
+    int option, node, k;
     vector<int> nodes;
 
     cout << "========================================" << endl;
@@ -150,7 +119,7 @@ void menuParte1(string input_file, string output_file, bool isDirected, bool isW
     cout << "16 - Apresentar o grafo complementar" << endl;
     cout << "17 - Verificar se o grafo é euleriano" << endl;
     cout << "18 - Apresentar o raio, diâmetro, centro e periferia do grafo" << endl;
-    cout << "19 - Sair" << endl;
+    cout << "0 - Sair" << endl;
     cout << "========================================" << endl;
 
     cout << "Informe a opção desejada:" << endl;
@@ -248,15 +217,15 @@ void menuParte1(string input_file, string output_file, bool isDirected, bool isW
             nodes.push_back(node);
             cin >> node;
         }
-        cout << "Subgrafo induzido criado em output/subgraph.txt";
+        cout << "Subgrafo induzido criado em output/subgraph.dot" << endl;
         aux = graph->getInducedSubgraph(nodes);
-        aux->printGraph("output/subgraph.txt");
+        aux->printGraph("output/subgraph.dot");
         delete aux;
         break;
     case 16:
-        cout << "Grafo complementar criado em output/complementary.txt";
+        cout << "Grafo complementar criado em output/complementary.dot" << endl;
         aux = graph->getComplementGraph();
-        aux->printGraph("output/complementary.txt");
+        aux->printGraph("output/complementary.dot");
         delete aux;
         break;
     case 17:
@@ -265,26 +234,28 @@ void menuParte1(string input_file, string output_file, bool isDirected, bool isW
     case 18:
         graph->printGraphProperties();
         break;
-    case 19:
+    case 0:
         delete graph;
         cout << "Saindo..." << endl;
+        exit(0);
         break;
     default:
         cout << "Opção inválida" << endl;
         menuParte1(input_file, output_file, isDirected, isWeightedEdges, isWeightedNodes);
         break;
     }
+    menuParte1(input_file, output_file, isDirected, isWeightedEdges, isWeightedNodes);
 }
 
-void menuParte2(string input_file, string output_file)
+void menuParte2(string input_file, string output_file, int numIter, int numIterAlpha, int seed)
 {
     Graph *graphGreedy = readGreedy(input_file);
-    
+
     string instance = input_file.substr(input_file.find_last_of("/") + 1);
     instance = instance.substr(0, instance.find_last_of("."));
 
     float alphas[5] = {0.05, 0.1, 0.15, 0.3, 0.5};
-    
+
     cout << "=============================" << endl;
     cout << "Trabalho de Teoria dos Grafos - Parte 02" << endl;
     cout << "Instância: " << instance << endl;
@@ -300,53 +271,72 @@ void menuParte2(string input_file, string output_file)
     cin >> option;
     switch (option)
     {
-        case 1:
+    case 1:
         graphGreedy->printConstructiveGreedy(output_file, instance);
         break;
-        case 2:
-        graphGreedy->printRandomizedGreedy(alphas, 30, 5000, output_file, instance);
+    case 2:
+        graphGreedy->printRandomizedGreedy(alphas, numIter, numIterAlpha, output_file, instance, seed);
         break;
-        case 3:
-        graphGreedy->printReativeGreedy(alphas, 10, 1000, output_file, instance);
+    case 3:
+        graphGreedy->printReativeGreedy(alphas, numIter, numIterAlpha, output_file, instance, seed);
         break;
-        case 0:
+    case 0:
         cout << "Saindo..." << endl;
         break;
-        default:
+    default:
         cout << "Opção inválida" << endl;
-        menuParte2(input_file, output_file);
+        menuParte2(input_file, output_file, numIter, numIterAlpha, seed);
     }
+    delete graphGreedy;
 }
 
 int main(int argc, char const *argv[])
 {
     // Verificação se todos os parâmetros do programa foram entrados
-    bool isDirected, isWeightedEdges, isWeightedNodes;
-    if (argc == 3)
+    bool isDirected, isWeightedEdges, isWeightedNodes, isGreedy;
+    int numIter, numIterAlpha, seed;
+    cout << "Uso para a parte 01: " << argv[0] << " <input_file> <output_file> <isDirected> <isWeightedEdges> <isWeightedNodes>" << endl;
+    cout << "Uso para a parte 02: " << argv[0] << " <input_file> <output_file> <isGreedy> <numIter> <numIterAlpha> <seed>" << endl;
+    if (argc == 7)
     {
-        cout << "Programa inciado para a parte 02" << endl;
         isDirected = false;
         isWeightedEdges = false;
         isWeightedNodes = true;
+        isGreedy = argv[3];
+
+        numIter = stoi(argv[4]);
+        numIterAlpha = stoi(argv[5]);
+        seed = stoi(argv[6]);
     }
     else if (argc == 6)
     {
-        cout << "Programa inciado para a parte 01" << endl;
         bool isDirected = argv[3];
         bool isWeightedEdges = argv[4];
         bool isWeightedNodes = argv[5];
-    }else
+        isGreedy = false;
+        numIter = 0;
+        numIterAlpha = 0;
+        seed = 0;
+    }
+    else
     {
         cout << "Número de parâmetros inválido" << endl;
-        cout << "Uso para a parte 01: " << argv[0] << " <input_file> <output_file> <isDirected> <isWeightedEdges> <isWeightedNodes>" << endl;
-        cout << "Uso para a parte 02: " << argv[0] << " <input_file> <output_file>" << endl;
         return 1;
     }
 
     string program_name = argv[0];
     string input_file = argv[1];
     string output_file = argv[2];
-    menu(input_file, output_file, isDirected, isWeightedEdges, isWeightedNodes);
+    srand(seed);
+
+    if (isGreedy)
+    {
+        menuParte2(input_file, output_file, numIter, numIterAlpha, seed);
+    }
+    else
+    {
+        menuParte1(input_file, output_file, isDirected, isWeightedEdges, isWeightedNodes);
+    }
 
     return 0;
 }
