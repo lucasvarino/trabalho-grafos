@@ -4,7 +4,7 @@
 
 using namespace std;
 
-Graph *readNotDirectedWeightedEdges(string filename)
+Graph *readGraph(string filename, bool isDirected, bool isWeightedEdges, bool isWeightedNodes)
 {
     ifstream file(filename);
 
@@ -18,7 +18,7 @@ Graph *readNotDirectedWeightedEdges(string filename)
 
     getline(file, order);
 
-    Graph *graph = new Graph(0, false, true, false, 0);
+    Graph *graph = new Graph(0, isDirected, isWeightedEdges, isWeightedNodes, 0);
 
     while (!file.eof())
     {
@@ -68,7 +68,6 @@ Graph *readGreedy(string filename)
 
         // Mudando o peso dos vértices apenas para comparação com o outro artigo
         // A Fast and Robust Heuristic Algorithm for the Minimum Weight Vertex Cover Problem
-        // TODO: Voltar o peso para i mod 3 + 1
 
         graph->addNode(sourceId, (sourceId % 200) + 1);
         graph->addNode(targetId, (targetId % 200) + 1);
@@ -89,78 +88,265 @@ Graph *readGreedy(string filename)
 
     return graph;
 }
+void menuParte1(string input_file, string output_file, bool isDirected, bool isWeightedEdges, bool isWeightedNodes);
+void menuParte2(string input_file, string output_file);
 
-Graph *readMatrixMarket(string filename)
+void menu(string input_file, string output_file, bool isDirected, bool isWeightedEdges, bool isWeightedNodes)
 {
-    srand(time(NULL));
-    ifstream file(filename);
-
-    if (!file.is_open())
+    int option;
+    cout << "Trabalho de Teoria dos Grafos" << endl;
+    cout << "=============================" << endl;
+    cout << "1 - Parte 01" << endl;
+    cout << "2 - Parte 02" << endl;
+    cout << "0 - Sair" << endl;
+    cout << "=============================" << endl;
+    cout << "Informe a opção desejada:" << endl;
+    cin >> option;
+    switch (option)
     {
-        cout << "Error opening file" << endl;
-        return nullptr;
+    case 1:
+        menuParte1(input_file, output_file, isDirected, isWeightedEdges, isWeightedNodes);
+        break;
+    case 2:
+        menuParte2(input_file, output_file);
+        break;
+    case 0:
+        cout << "Saindo..." << endl;
+        break;
+    default:
+        cout << "Opção inválida" << endl;
+        menu(input_file, output_file, isDirected, isWeightedEdges, isWeightedNodes);
+        break;
     }
+}
 
-    string header;
-    getline(file, header); // Skip the header line
+void menuParte1(string input_file, string output_file, bool isDirected, bool isWeightedEdges, bool isWeightedNodes)
+{
+    Graph *graph = readGraph(input_file, isDirected, isWeightedEdges, isWeightedNodes);
 
-    int numberOfNodes, numberOfNodesAgain, numberOfEdges;
-    file >> numberOfNodes >> numberOfNodesAgain >> numberOfEdges;
+    Graph *aux;
+    pair<int, int> degree;
+    int option = 0, node, k;
+    vector<int> nodes;
 
-    Graph *graph = new Graph(0, false, false, false, numberOfEdges);
+    cout << "========================================" << endl;
+    cout << "Trabalho de Teoria dos Grafos - Parte 01" << endl;
+    cout << "========================================" << endl;
+    cout << "1 - Retornar o grau de um determinado nó" << endl;
+    cout << "2 - Verificar k-regularidade do grafo" << endl;
+    cout << "3 - Retornar a ordem do grafo" << endl;
+    cout << "4 - Verificar se o grafo é trivial" << endl;
+    cout << "5 - Verificar se o grafo é nulo" << endl;
+    cout << "6 - Vizinhança aberta de um determinado nó" << endl;
+    cout << "7 - Vizinhança fechada de um determinado nó" << endl;
+    cout << "8 - Verificar se o grafo é um multigrafo" << endl;
+    cout << "9 - Verificar se o grafo é completo" << endl;
+    cout << "10 - Verificar se o grafo é bipartido" << endl;
+    cout << "11 - Retornar o grau do grafo " << endl;
+    cout << "12 - Fecho Transitivo Direto de um determiado nó" << endl;
+    cout << "13 - Fecho Transitivo Indireto de um determiado nó" << endl;
+    cout << "14 - Apresentar a sequência de graus" << endl;
+    cout << "15 - Apresentar o subgrafo induzido de um conjunto de vértices" << endl;
+    cout << "16 - Apresentar o grafo complementar" << endl;
+    cout << "17 - Verificar se o grafo é euleriano" << endl;
+    cout << "18 - Apresentar o raio, diâmetro, centro e periferia do grafo" << endl;
+    cout << "19 - Sair" << endl;
+    cout << "========================================" << endl;
 
-    cout << "Starting reading graph..." << endl;
-
-    for (int i = 0; i < numberOfEdges; i++)
+    cout << "Informe a opção desejada:" << endl;
+    cin >> option;
+    switch (option)
     {
-        int sourceId, targetId;
+    case 1:
+        cout << "Informe o nó desejado:" << endl;
+        cin >> node;
+        degree = graph->getNodeDegree(node);
+        cout << "Grau de entrada: " << degree.first << endl;
+        cout << "Grau de saída: " << degree.second << endl;
+        break;
 
-        file >> sourceId >> targetId;
+    case 2:
+        cout << "Informe o valor de k:" << endl;
+        cin >> k;
+        cout << (graph->isKRegular(k) ? "O grafo é " : "O grafo não é ") << k << "-regular" << endl;
+        break;
+    case 3:
+        cout << "Ordem do grafo: " << graph->getOrder() << endl;
+        break;
+    case 4:
+        cout << (graph->isTrivialGraph() ? "O grafo é trivial" : "O grafo não é trivial") << endl;
+        break;
+    case 5:
+        cout << (graph->isNullGraph() ? "O grafo é nulo" : "O grafo não é nulo") << endl;
+        break;
+    case 6:
+        cout << "Informe o nó desejado:" << endl;
+        cin >> node;
+        cout << "Vizinhança aberta do nó " << node << ": ";
+        for (int i = 0; i < graph->getOpenNeighborhood(node).size(); i++)
+        {
+            cout << graph->getOpenNeighborhood(node)[i] << " ";
+        }
+        cout << endl;
+        break;
+    case 7:
+        cout << "Informe o nó desejado:" << endl;
+        cin >> node;
+        cout << "Vizinhança fechada do nó " << node << ": ";
+        for (int i = 0; i < graph->getClosedNeighborhood(node).size(); i++)
+        {
+            cout << graph->getClosedNeighborhood(node)[i] << " ";
+        }
+        cout << endl;
+        break;
+    case 8:
+        cout << (graph->isMultigraph() ? "O grafo é um multigrafo" : "O grafo não é um multigrafo") << endl;
+        break;
+    case 9:
+        cout << (graph->isComplete() ? "O grafo é completo" : "O grafo não é completo") << endl;
+        break;
+    case 10:
+        cout << (graph->isBipartite() ? "O grafo é bipartido" : "O grafo não é bipartido") << endl;
+        break;
+    case 11:
+        cout << "Grau do grafo: " << graph->getGraphDegree() << endl;
+        break;
+    case 12:
+        cout << "Informe o nó desejado:" << endl;
+        cin >> node;
+        cout << "Fecho Transitivo Direto do nó " << node << ": ";
+        for (int i = 0; i < graph->directTransitiveClosure(node).size(); i++)
+        {
+            cout << graph->directTransitiveClosure(node)[i] << " ";
+        }
+        cout << endl;
+        break;
+    case 13:
+        cout << "Informe o nó desejado:" << endl;
+        cin >> node;
+        cout << "Fecho Transitivo Indireto do nó " << node << ": ";
+        for (int i = 0; i < graph->indirectTransitiveClosure(node).size(); i++)
+        {
+            cout << graph->indirectTransitiveClosure(node)[i] << " ";
+        }
+        cout << endl;
+        break;
+    case 14:
+        cout << "Sequência de graus: ";
+        for (int i = 0; i < graph->getDegreeSequence().size(); i++)
+        {
+            cout << graph->getDegreeSequence()[i] << " ";
+        }
+        cout << endl;
+        break;
+    case 15:
+        cout << "Informe os nós desejados: (-1 para sair)" << endl;
 
-        graph->addNode(sourceId, sourceId % 3 + 1);
-        graph->addNode(targetId, targetId % 3 + 1);
-
-        graph->addEdge(sourceId, targetId, 0);
+        cin >> node;
+        while (node != -1)
+        {
+            nodes.push_back(node);
+            cin >> node;
+        }
+        cout << "Subgrafo induzido criado em output/subgraph.txt";
+        aux = graph->getInducedSubgraph(nodes);
+        aux->printGraph("output/subgraph.txt");
+        delete aux;
+        break;
+    case 16:
+        cout << "Grafo complementar criado em output/complementary.txt";
+        aux = graph->getComplementGraph();
+        aux->printGraph("output/complementary.txt");
+        delete aux;
+        break;
+    case 17:
+        cout << (graph->isEulerian() ? "O grafo é euleriano" : "O grafo não é euleriano") << endl;
+        break;
+    case 18:
+        graph->printGraphProperties();
+        break;
+    case 19:
+        delete graph;
+        cout << "Saindo..." << endl;
+        break;
+    default:
+        cout << "Opção inválida" << endl;
+        menuParte1(input_file, output_file, isDirected, isWeightedEdges, isWeightedNodes);
+        break;
     }
+}
 
-    if (numberOfNodes == graph->getOrder() && numberOfEdges == graph->getNumberOfEdges())
+void menuParte2(string input_file, string output_file)
+{
+    Graph *graphGreedy = readGreedy(input_file);
+    
+    string instance = input_file.substr(input_file.find_last_of("/") + 1);
+    instance = instance.substr(0, instance.find_last_of("."));
+
+    float alphas[5] = {0.05, 0.1, 0.15, 0.3, 0.5};
+    
+    cout << "=============================" << endl;
+    cout << "Trabalho de Teoria dos Grafos - Parte 02" << endl;
+    cout << "Instância: " << instance << endl;
+    cout << "=============================" << endl;
+    cout << "1 - Guloso Construtivo" << endl;
+    cout << "2 - Guloso Randomizado" << endl;
+    cout << "3 - Guloso Randomizado Reativo" << endl;
+    cout << "0 - Sair" << endl;
+    cout << "=============================" << endl;
+
+    int option;
+    cout << "Informe a opção desejada:" << endl;
+    cin >> option;
+    switch (option)
     {
-        cout << "Graph read successfully!" << endl;
+        case 1:
+        graphGreedy->printConstructiveGreedy(output_file, instance);
+        break;
+        case 2:
+        graphGreedy->printRandomizedGreedy(alphas, 30, 5000, output_file, instance);
+        break;
+        case 3:
+        graphGreedy->printReativeGreedy(alphas, 10, 1000, output_file, instance);
+        break;
+        case 0:
+        cout << "Saindo..." << endl;
+        break;
+        default:
+        cout << "Opção inválida" << endl;
+        menuParte2(input_file, output_file);
     }
-    else
-    {
-        cout << "Error reading graph." << endl;
-    }
-
-    file.close();
-
-    return graph;
 }
 
 int main(int argc, char const *argv[])
 {
     // Verificação se todos os parâmetros do programa foram entrados
-    if (argc != 3)
+    bool isDirected, isWeightedEdges, isWeightedNodes;
+    if (argc == 3)
     {
-
-        cout << "ERROR: Expecting: ./<program_name> <input_file> <output_file> " << endl;
+        cout << "Programa inciado para a parte 02" << endl;
+        isDirected = false;
+        isWeightedEdges = false;
+        isWeightedNodes = true;
+    }
+    else if (argc == 6)
+    {
+        cout << "Programa inciado para a parte 01" << endl;
+        bool isDirected = argv[3];
+        bool isWeightedEdges = argv[4];
+        bool isWeightedNodes = argv[5];
+    }else
+    {
+        cout << "Número de parâmetros inválido" << endl;
+        cout << "Uso para a parte 01: " << argv[0] << " <input_file> <output_file> <isDirected> <isWeightedEdges> <isWeightedNodes>" << endl;
+        cout << "Uso para a parte 02: " << argv[0] << " <input_file> <output_file>" << endl;
         return 1;
     }
+
     string program_name = argv[0];
     string input_file = argv[1];
     string output_file = argv[2];
+    menu(input_file, output_file, isDirected, isWeightedEdges, isWeightedNodes);
 
-    Graph *graph = readNotDirectedWeightedEdges(input_file);
-    float alphas[5] = {0.05, 0.1, 0.15, 0.3, 0.5};
-    // tirar tudo antes da / e depois do .
-    input_file = input_file.substr(input_file.find_last_of("/") + 1);
-    input_file = input_file.substr(0, input_file.find_last_of("."));
-    // graph->printReativeHeuristic(alphas, 5, 1000, output_file, input_file);
-    cout << "Instance: " << input_file << endl;
-    // graph->printRelativeHeuristic(output_file, input_file);
-    //  graph->printRandomizedHeuristic(alphas, 30, 1000, output_file, input_file);
-    //graph->printReativeHeuristic(alphas, 10, 1000, output_file, input_file);
-    graph->printGraph("visualizeGraph.dot");
-    graph->printGraphProperties();
     return 0;
 }

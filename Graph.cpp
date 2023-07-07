@@ -849,7 +849,7 @@ void Graph::printGraphProperties(){
     * nao verifica se o grafo é conexo pois a propria criaçao do grafo ja torna-o conexo, removendo vertices isolados
     * Retorna true se o grafo é euleriano e false caso contrário
 */
-bool Graph::isEuclerian()
+bool Graph::isEulerian()
 {
     if(isDirected() || !isWeightedEdges() || !isWeightedNodes()){
         return false;
@@ -995,6 +995,7 @@ Metric Graph::relativeHeuristic()
 {
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = chrono::high_resolution_clock::now();
+    createNeighborhoodMap();
 
     // Conjunto solução inicial
     map<int, bool> solution;
@@ -1038,6 +1039,7 @@ Metric Graph::relativeHeuristic()
             firstHeuristcNode = candidates->front().second;
         }
     }
+    this->resetMarks();
 
     end = chrono::high_resolution_clock::now();
     float elapse_time = chrono::duration_cast<chrono::milliseconds>(end - start).count();
@@ -1051,11 +1053,13 @@ Metric Graph::relativeHeuristic()
     return metric;
 }
 
-void Graph::printRelativeHeuristic(string filename, string instanceName)
+void Graph::printConstructiveGreedy(string output, string instanceName)
 {
+    cout << "Iniciando algoritmo guloso construtivo" << endl;
     Metric metric = relativeHeuristic();
+    cout << "Algoritmo guloso construtivo finalizado, resultados em: " << output << endl;
     ofstream file;
-    file.open(filename);
+    file.open(output);
     file << "=============================" << endl;
     file << "Algoritimo Guloso Construtivo - " + instanceName << endl;
     file << "Tamanho da solução: " << metric.numberOfNodes << endl;
@@ -1117,6 +1121,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
 {
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = chrono::high_resolution_clock::now();
+    createNeighborhoodMap();
 
     vector<int> auxSolutionVector;
     vector<int> bestSolutionVector;
@@ -1194,30 +1199,42 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
     metric.numberOfNodes = bestSolutionVector.size();
     return metric;
 }
-void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, string filename, string instanceName)
-{
+void Graph::printRandomizedGreedy(float alphas[], int numInter, int numInterAlpha, string output, string instanceName)
+{   
+    cout << "Algoritmo guloso randomizado iniciado - " << instanceName << endl;
+    cout << "Número de iterações: " << numInter << endl;
+    cout << "Número de iterações para cada alfa: " << numInterAlpha << endl;
+
+    cout << "Alfas: ";
+    for (int i = 0; i < 5; i++)
+    {
+        cout << alphas[i] << " ";
+    }
+    cout << endl;
+    cout << "=============================" << endl;
+
     ofstream file;
-    file.open(filename);
+    file.open(output);
     file << "=============================" << endl;
     file << "Algoritimo Guloso Randomizado Adaptativo - " << instanceName << endl;
     file << "=============================" << endl;
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < numInter; i++)
     {
         file << "=============================" << endl;
         file << "Iteração " << i + 1 << endl;
         file << "-----------------------------" << endl;
         for (int i = 0; i < 5; i++)
         {
-            Metric metric = this->randomizedHeuristic(alphas[i], numInter);
-            file << "Alfa = " << alphas[i] << " para " << numInter << " iterações" << endl
+            Metric metric = this->randomizedHeuristic(alphas[i], numInterAlpha);
+            file << "Alfa = " << alphas[i] << " para " << numInterAlpha << " iterações" << endl
                  << "Tempo (s): " << metric.time << endl
                  << "Peso total: " << metric.totalWeight << endl
                  << "Tamanho da solução: " << metric.numberOfNodes << endl;
             file << "-----------------------------" << endl;
         }
     }
-
     file.close();
+    cout << "Algoritmo guloso randomizado finalizado, resultados em: " << output << endl;
 }
 
 /*
@@ -1434,26 +1451,38 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
     return metric;
 }
 
-void Graph::printReativeHeuristic(float alphas[], int size, int numInter, string filename, string instanceName)
+void Graph::printReativeGreedy(float alphas[], int numIter, int numIterReative, string output, string instanceName)
 {
+    cout << "Iniciando algoritmo guloso randomizado reativo - " << instanceName << endl;
+    cout << "Número de iterações: " << numIter << endl;
+    cout << "Número de iterações dentro de cada chamada: " << numIterReative << endl;
+    cout << "Alfas: ";
+    for (int i = 0; i < 5; i++)
+    {
+        cout << alphas[i] << " ";
+    }
+    cout << endl;
+    cout << "=============================" << endl;
+
     ofstream file;
-    file.open(filename);
+    file.open(output);
     file << "=============================" << endl;
     file << "Instância: " << instanceName << endl;
-    for (int i = 0; i < size; i++)
+    for (int i = 0; i < numIter; i++)
     {
         file << "=============================" << endl;
         file << "Iteração " << i + 1 << endl;
         file << "-----------------------------" << endl;
 
-        Metric metric = this->reativeHeuristic(alphas, numInter);
-        file << "Numero de iterações : " << numInter << endl
+        Metric metric = this->reativeHeuristic(alphas, numIterReative);
+        file << "Numero de iterações: " << numIterReative << endl
              << "Tempo (s): " << metric.time << endl
              << "Peso total: " << metric.totalWeight << endl
              << "Melhor alfa: " << alphas[metric.bestAlpha] << endl
              << "Tamanho da solução: " << metric.numberOfNodes << endl;
         file << "-----------------------------" << endl;
     }
+    cout << "Finalizando algoritmo guloso randomizado reativo, resultados em: " << output << endl;
 
     file.close();
 }

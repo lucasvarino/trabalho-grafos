@@ -70,7 +70,7 @@ public:
     bool isNullGraph();
     bool isMultigraph();
     bool isBipartite();
-    bool isEuclerian();
+    bool isEulerian();
     bool isComplete();
 
 
@@ -124,9 +124,9 @@ public:
     void updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[], float alpha, int auxWeight);
     
     //prints
-    void printRelativeHeuristic(string filename, string instanceName);
-    void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename, string instanceName);
-    void printReativeHeuristic(float alphas[], int size, int numInter, string filename, string instanceName);
+    void printConstructiveGreedy(string output, string instanceName);
+    void printRandomizedGreedy(float alphas[], int numIter, int numIterAlpha, string output, string instanceName);
+    void printReativeGreedy(float alphas[], int size, int numInter, string output, string instanceName);
     
     void createNeighborhoodMap()
     {
