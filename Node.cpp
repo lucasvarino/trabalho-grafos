@@ -75,6 +75,18 @@ void Node::setWeight(float weight)
     this->weight = weight;
 }
 
+bool Node::hasEdgeTo(int targetId)
+{
+    Edge* currentEdge = this->getFirstEdge();
+    while(currentEdge != nullptr){
+        if(currentEdge->getTargetId() == targetId){
+            return true; //aresta encontrada para vértice de destino
+        }
+        currentEdge = currentEdge->getNextEdge();
+    }
+    return false; //não encontrou aresta para vértice de destino
+}
+
 void Node::addEdge(Node *target, bool directed, float weight)
 {
     Edge *newEdge = new Edge(target->getId(), this->id, weight);

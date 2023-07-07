@@ -33,6 +33,8 @@ public:
     float getWeight();
     Node *getNextNode();
     int getNumberOfEdges();
+
+    bool hasEdgeTo(int targetId);
     bool isMarked();
 
     int getNumberOfUnmarkedEdges();

@@ -750,6 +750,38 @@ Graph* Graph::getInducedSubgraph(vector<int> nodes)
     return subgraph;
 }
 
+Graph* Graph::getComplementGraph()
+{
+    //Cria um novo grafo complementar com o mesmo número de vértices
+    Graph* complementGraph = new Graph(this->getOrder(), this->isDirected(), this->isWeightedEdges(), this->isWeightedNodes(), this->getNumberOfEdges());
+
+    // Adiciona todos os vértices do grafo original no grafo complementar
+    Node* currentNode = this->getFirstNode();
+    while (currentNode != nullptr)
+    {
+        complementGraph->addNode(currentNode->getId(), currentNode->getWeight());
+        currentNode = currentNode->getNextNode();
+    }
+
+    //percorre todos os pares de vértices e adiciona uma aresta no grafo complementar
+    for(int i = 1; i <= this->getOrder(); i++){
+        for(int j = 1; j <= this->getOrder(); j++){
+            if(i != j){
+                Node* nodeI = this->searchNode(i);
+                Node* nodeJ = this->searchNode(j);
+
+
+                //verifica se já existe uma aresta entre os vértices
+                if(!nodeI->hasEdgeTo(j)){
+                    complementGraph->addEdge(i, j, 0);
+                }
+            }
+        }
+    } 
+
+    return complementGraph;
+}
+
 
 
 /*

@@ -39,3 +39,39 @@ Tamanho da solução: 1032
 =============================
 Iteração 5
 -----------------------------
+Numero de iterações : 5000
+Tempo (s): 648
+Peso total: 100568
+Melhor alfa: 0.3
+Tamanho da solução: 1032
+-----------------------------
+=============================
+Iteração 6
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 634
+Peso total: 100568
+Melhor alfa: 0.15
+Tamanho da solução: 1032
+-----------------------------
+=============================
+Iteração 7
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 650
+Peso total: 100568
+Melhor alfa: 0.3
+Tamanho da solução: 1032
+-----------------------------
+=============================
+Iteração 8
+-----------------------------
+Numero de iterações : 5000
+Tempo (s): 655
+Peso total: 100568
+Melhor alfa: 0.3
+Tamanho da solução: 1032
+-----------------------------
+=============================
+Iteração 9
+-----------------------------
