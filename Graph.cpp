@@ -87,8 +87,11 @@ void Graph::printGraph(string filename)
 
             while (currentEdge != nullptr)
             {
-                file << currentNode->getId() << " -- " << currentEdge->getTargetId()
-                     << " [label=" << currentEdge->getWeight() << "]" << endl;
+                if (currentEdge->getTargetId() > currentNode->getId())
+                {
+                    file << currentNode->getId() << " -- " << currentEdge->getTargetId()
+                         << endl;
+                }
                 currentEdge = currentEdge->getNextEdge();
             }
 
