@@ -161,9 +161,11 @@ int main(int argc, char const *argv[])
     //  graph->printRandomizedHeuristic(alphas, 30, 1000, output_file, input_file);
     // graph->printReativeHeuristic(alphas, 10, 5000, output_file, input_file);
     graph->printGraph("visualizeGraph.dot");
-    vector<int> idirectClosure = graph->directTransitiveClosure(2);
-    cout << "conjunto fecho transitivo indireto : " << endl;
-    for(int i = 0; i < idirectClosure.size(); i++)
-        cout << " " << idirectClosure[i] << " " << endl;
+    vector<int> nodes;
+    nodes.push_back(1);
+    nodes.push_back(2);
+    nodes.push_back(5);
+    Graph *subgraph = graph->getInducedSubgraph(nodes);
+    subgraph->printGraph("visualizeGraph2.dot");
     return 0;
 }

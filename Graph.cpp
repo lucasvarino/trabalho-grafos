@@ -715,6 +715,34 @@ int Graph::getGraphDegree()
     return maxDegree;
 }
 
+Graph* Graph::getInducedSubgraph(vector<int> nodes)
+{
+    Graph *subgraph = new Graph(0, false, true, false, 0);
+
+    for(int id: nodes){
+        Node* node = searchNode(id);
+        if(!node){
+            cout << "ERROR : node not found ! " << endl;
+            return nullptr;
+        }
+
+        subgraph->addNode(id, node->getWeight());
+    }
+
+    for(int id: nodes){
+        //obtém os vizinhos do nó
+        vector <int> neighbors = this->getOpenNeighborhood(id);
+        for(int neighbor : neighbors){
+            auto it = find(nodes.begin(), nodes.end(), neighbor);
+            if(it != nodes.end()){
+                subgraph->addEdge(id, neighbor, 0);
+            }
+        }
+    }
+
+    return subgraph;
+}
+
 
 
 /*

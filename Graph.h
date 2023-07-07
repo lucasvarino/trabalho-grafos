@@ -62,6 +62,7 @@ public:
     bool isBipartite();
 
     void printGraph(string filename);
+    Graph *getInducedSubgraph(vector<int> nodes);
 
     void addNode(int id, float weight);
     void addEdge(int id, int targetId, float weight);
