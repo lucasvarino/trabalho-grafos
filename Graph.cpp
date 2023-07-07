@@ -715,6 +715,13 @@ int Graph::getGraphDegree()
     return maxDegree;
 }
 
+/*
+A função a seguir cria um novo objeto Grafo que representa o subgrafo vertice induzido
+pelos vértices fornecidos. Ele percorre os vértices informados, adicionando ao subgrafo e 
+adiciona as arestas pertencentes ao conjunto 
+
+A função retorna um objeto do tipo Graph, que contém o subgrafo induzido pelo conjunto de vértices fornecidos
+*/
 Graph* Graph::getInducedSubgraph(vector<int> nodes)
 {
     Graph *subgraph = new Graph(0, false, true, false, 0);
