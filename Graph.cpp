@@ -427,19 +427,37 @@ Nessa função é percorrido os nós do grafo e verificar se cada nó está pres
 se o nó nao estiver presente, podemos adiciona-lo ao fecho transitivo indireto.
 */
 vector<int> Graph::indirectTransitiveClosure(int id)
-{
-    vector<int> directTransitiveNodes = this->depthSearch(id);
-    vector<int> indirectTransitiveNodes;
+{ 
+    vector<int> closure;
+    vector<int> visited(this->getOrder() + 1, -1);
 
-    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
-        int currentNodeId = current->getId();
+    auxIndirectTransitiveClosure(id, visited);
 
-        if(find(directTransitiveNodes.begin(), directTransitiveNodes.end(), currentNodeId) == directTransitiveNodes.end()){
-            // O nó não está presente no fecho transitivo direto, então adicionamos ao fecho transitivo indireto
-            indirectTransitiveNodes.push_back(currentNodeId);
-        }
+        // Retorna o fecho transitivo indireto como um vetor
+    for (int i = 1; i <= order; i++)
+    {
+        if (visited[i] != -1)
+            closure.push_back(visited[i]);
     }
-    return indirectTransitiveNodes;
+
+    return closure;
+}
+
+void Graph::auxIndirectTransitiveClosure(int id, vector<int>& visited)
+{
+    Node* startNode = searchNode(id);
+
+    if(startNode != nullptr){
+        // Busca por qualquer nó que possua uma aresta apontando para o nó atual
+        for (Node* aux = firstNode; aux != nullptr; aux = aux->getNextNode())
+        {
+            if (visited[aux->getId()] == -1 && aux->searchEdge(id))
+            {
+                visited[aux->getId()] = aux->getId();
+                auxIndirectTransitiveClosure(aux->getId(), visited);
+            }
+        }
+    }    
 }
 
 /*
