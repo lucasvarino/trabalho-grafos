@@ -1,0 +1,7 @@
+=============================
+Algoritimo Guloso Construtivo - MANN_a81
+Tamanho da solução: 3318
+Peso total da solução: 328505
+Tempo de execução (ms): 4790
+=============================
+

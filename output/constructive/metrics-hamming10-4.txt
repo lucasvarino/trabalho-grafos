@@ -1,0 +1,7 @@
+=============================
+Algoritimo Guloso Construtivo - hamming10-4
+Tamanho da solução: 1016
+Peso total da solução: 99259
+Tempo de execução (ms): 221
+=============================
+

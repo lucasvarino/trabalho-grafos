@@ -36,6 +36,15 @@ class Graph
 private:
     int order;
     int numberOfEdges;
+    Node *firstNode;
+    Node *lastNode;
+    Node *removedNode;
+    bool weightedEdges;
+    bool weightedNodes;
+    bool directed;
+    map<int, Node *> nodeMap;
+    map<int, vector<int>> openNeighborhoodMap;
+    vector<pair<float, int>> *candidates;
     int totalOfEdges;
     int uncoveredEdges;
 
@@ -99,11 +108,6 @@ public:
     //busca em profundidade e feixe transitivo direto
     vector<int> depthSearch(int id);
     vector<int> directTransitiveClosure(int id);
-    vector<int> indirectTransitiveClosure(int id);
-
-    
-    //print
-    void printGraph(string filename);
 
     // Trabalho 2 - Algoritmos Gulosos
 
@@ -133,6 +137,16 @@ public:
     void printRandomizedHeuristic(float alphas[], int size, int numIter, string filename);
     void printReativeHeuristic(float alphas[], int size, int numInter, string filename, string instanceName);
 
+    void createNeighborhoodMap()
+    {
+        Node *aux = firstNode;
+        while (aux != nullptr)
+        {
+            vector<int> neighborhood = getOpenNeighborhood(aux->getId());
+            openNeighborhoodMap.insert(pair<int, vector<int>>(aux->getId(), neighborhood));
+            aux = aux->getNextNode();
+        }
+    }
 };
 
 #endif // GRAPH_H_INCLUDED

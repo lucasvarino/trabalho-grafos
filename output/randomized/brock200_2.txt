@@ -1,0 +1,581 @@
+=============================
+Algoritimo Guloso Randomizado Adaptativo - brock200_2
+=============================
+=============================
+Iteração 1
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 3
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 3
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 2
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 3
+Peso total: 18678
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 3
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 3
+Peso total: 18823
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 3
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18678
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 3
+Peso total: 18744
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 4
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18913
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 5
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18845
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 6
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 5
+Peso total: 18817
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 7
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 3
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18804
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 8
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18859
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 9
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18721
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18796
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 10
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18790
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 11
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18678
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18823
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 12
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18747
+Tamanho da solução: 192
+-----------------------------
+=============================
+Iteração 13
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 5
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 5
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18817
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 14
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 5
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18624
+Tamanho da solução: 191
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18854
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 15
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18803
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 16
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 4
+Peso total: 18678
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18678
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18804
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 17
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 5
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 3
+Peso total: 18804
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 18
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18678
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 3
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 4
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18678
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 3
+Peso total: 18803
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 19
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 3
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 4
+Peso total: 18804
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 20
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 3
+Peso total: 18658
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.3 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.5 para 1000 iterações
+Tempo (s): 3
+Peso total: 18823
+Tamanho da solução: 193
+-----------------------------
+=============================
+Iteração 21
+-----------------------------
+Alfa = 0.05 para 1000 iterações
+Tempo (s): 4
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.1 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------
+Alfa = 0.15 para 1000 iterações
+Tempo (s): 3
+Peso total: 18701
+Tamanho da solução: 192
+-----------------------------

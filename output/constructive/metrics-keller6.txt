@@ -1,0 +1,7 @@
+=============================
+Algoritimo Guloso Construtivo - keller6
+Tamanho da solução: 3325
+Peso total da solução: 328167
+Tempo de execução (ms): 5400
+=============================
+

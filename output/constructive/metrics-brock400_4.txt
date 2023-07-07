@@ -1,0 +1,7 @@
+=============================
+Algoritimo Guloso Construtivo - brock400_4
+Tamanho da solução: 395
+Peso total da solução: 39286
+Tempo de execução (ms): 20
+=============================
+

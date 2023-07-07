@@ -1,0 +1,7 @@
+=============================
+Algoritimo Guloso Construtivo - p_hat700-3
+Tamanho da solução: 694
+Peso total da solução: 64320
+Tempo de execução (ms): 79
+=============================
+

@@ -87,8 +87,11 @@ void Graph::printGraph(string filename)
 
             while (currentEdge != nullptr)
             {
-                file << currentNode->getId() << " -- " << currentEdge->getTargetId()
-                     << " [label=" << currentEdge->getWeight() << "]" << endl;
+                if (currentEdge->getTargetId() > currentNode->getId())
+                {
+                    file << currentNode->getId() << " -- " << currentEdge->getTargetId()
+                         << endl;
+                }
                 currentEdge = currentEdge->getNextEdge();
             }
 
@@ -494,43 +497,19 @@ void Graph::markNode(Node *node)
 {
     node->setMarked(true);
     node->setNumberOfUnmarkedEdges(0);
-    vector<int> neighbors = this->getNeighbors(node->getId());
+    const vector<int> &neighbors = this->openNeighborhoodMap[node->getId()];
+
     int size = neighbors.size();
     int i = 0;
-    for(int neighbor : neighbors)
+    for (int neighbor : neighbors)
     {
         Node *neighborNode = this->nodeMap[neighbor];
-        if(!neighborNode->isMarked())
+        if (!neighborNode->isMarked())
         {
             neighborNode->decrementUnmarkedEdges();
             this->uncoveredEdges--;
         }
     }
-
-
-/*     Edge *edge = node->getFirstEdge();
-    
-
-    while (edge != nullptr)
-    {
-        // Se a aresta não estiver marcada
-        if (!edge->isMarked())
-        {
-            edge->setMarked(true);
-
-            Node *targetNode = this->nodeMap[edge->getTargetId()];
-            Edge *targetEdge = targetNode->searchEdge(node->getId());
-
-            if (targetEdge != nullptr && !targetEdge->isMarked())
-            {
-                targetEdge->setMarked(true);
-            }
-
-            this->uncoveredEdges--;
-        }
-
-        edge = edge->getNextEdge();
-    } */
 }
 
 /*
@@ -745,7 +724,6 @@ int Graph::getNumberOfUnmarkedEdges(Node *node)
     return numberOfUnmarkedEdges;
 }
 
-
 /*
  * Função que calcula o peso relativo de cada vértice
  * Colocamos os vértices em um vector ordenado, em que o vértice com menor peso relativo sempre esteja no topo
@@ -769,15 +747,14 @@ void Graph::createCandidates()
             continue;
         }
 
-        candidates->push_back(make_pair(currentNode->getWeight() /  currentNode->getNumberOfUnmarkedEdges(), currentNode->getId()));
+        candidates->push_back(make_pair(currentNode->getWeight() / currentNode->getNumberOfUnmarkedEdges(), currentNode->getId()));
         currentNode = currentNode->getNextNode();
     }
-    sort(candidates->begin(), candidates->end(), 
-        [](pair<float, int> &a, pair<float, int> &b) {
-            return a.first < b.first;
-        }
-    );
-
+    sort(candidates->begin(), candidates->end(),
+         [](pair<float, int> &a, pair<float, int> &b)
+         {
+             return a.first < b.first;
+         });
 }
 
 /*
@@ -786,23 +763,30 @@ void Graph::createCandidates()
 
 void Graph::printRelativeVector()
 {
+    ofstream myfile;
+    myfile.open("relativeVector.txt", ios::trunc);
     for (int i = 0; i < candidates->size(); i++)
     {
-        cout << (*candidates)[i].first << " " << (*candidates)[i].second << endl;
+        myfile << (*candidates)[i].first << " " << (*candidates)[i].second << endl;
     }
+    myfile.close();
 }
 
 /*
  * Função que atualiza o vetor de pesos relativos
  * Quando um vértice é removido, o peso relativo dos seus vizinhos é atualizado
- * 
+ *
  * O vetor é ordenado novamente
  */
 
 void Graph::updateCandidates(int removedNodeId)
 {
+    if (candidates->size() == 0)
+    {
+        return;
+    }
     // Percorre o vetor de vizinhos
-    vector<int> neighbors = getNeighbors(removedNodeId);
+    const vector<int> &neighbors = this->openNeighborhoodMap[removedNodeId];
 
     for (int i = 0; i < neighbors.size(); i++)
     {
@@ -831,7 +815,6 @@ void Graph::updateCandidates(int removedNodeId)
          {
              return a.first < b.first;
          });
-
 }
 
 /*
@@ -854,15 +837,13 @@ Metric Graph::relativeHeuristic()
         solution.insert(make_pair(i, false));
     }
 
-
     createCandidates();
-
 
     bool viable = false;
     int firstHeuristcNode = candidates->front().second;
     float totalWeight = 0;
-
-    while (!this->candidates->empty())
+    int iterations = 0;
+    while (!candidates->empty())
     {
         // Coloca o vértice na solução
         Node *node = nodeMap[firstHeuristcNode];
@@ -871,7 +852,7 @@ Metric Graph::relativeHeuristic()
         totalWeight += node->getWeight();
 
         // Marca o vértice
-        node->setMarked(true);
+        this->markNode(node);
 
         // Verifica se a solução é viável
         if (this->isIsolated())
@@ -883,33 +864,35 @@ Metric Graph::relativeHeuristic()
         candidates->erase(candidates->begin());
         candidates->shrink_to_fit();
 
-        updateCandidates(firstHeuristcNode);
-        firstHeuristcNode = candidates->front().second;
+        if (!candidates->empty())
+        {
+            updateCandidates(firstHeuristcNode);
+            firstHeuristcNode = candidates->front().second;
+        }
     }
 
     end = chrono::high_resolution_clock::now();
-    float elapse_time = chrono::duration_cast<chrono::seconds>(end - start).count();
+    float elapse_time = chrono::duration_cast<chrono::milliseconds>(end - start).count();
 
     Metric metric;
     metric.time = elapse_time;
     metric.totalWeight = totalWeight;
     metric.numberOfNodes = solutionVector.size();
-
     // Reseta os vértices para não marcados para gerar outras soluções
     this->resetMarks();
     return metric;
 }
 
-void Graph::printRelativeHeuristic(string filename)
+void Graph::printRelativeHeuristic(string filename, string instanceName)
 {
     Metric metric = relativeHeuristic();
     ofstream file;
-    file.open(filename + "_constructive.txt");
+    file.open(filename);
     file << "=============================" << endl;
-    file << "Algoritimo Guloso Construtivo" << endl;
+    file << "Algoritimo Guloso Construtivo - " + instanceName << endl;
     file << "Tamanho da solução: " << metric.numberOfNodes << endl;
     file << "Peso total da solução: " << metric.totalWeight << endl;
-    file << "Tempo de execução: " << metric.time << endl;
+    file << "Tempo de execução (ms): " << metric.time << endl;
     file << "=============================" << endl;
 
     file << endl;
@@ -947,9 +930,7 @@ void Graph::imprimeNoEArestas()
 
 int Graph::randomRange(int min, int max)
 {
-    std::mt19937 gen(std::random_device{}());
-    std::uniform_int_distribution<int> distribution(min, max);
-    return distribution(gen);
+    return min + rand() % (max - min + 1);
 }
 
 /*
@@ -998,7 +979,7 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
             auxWeight += node->getWeight();
 
             // Marca o vértice
-            node->setMarked(true);
+            this->markNode(node);
 
             // Verifica se a solução é viável
             if (this->isIsolated())
@@ -1010,11 +991,15 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
             // Atualiza a lista de candidatos
             candidates->erase(candidates->begin() + pos);
             candidates->shrink_to_fit();
-            updateCandidates(firstHeuristcNode);
 
-            pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+            if (!candidates->empty())
+            {
+                updateCandidates(firstHeuristcNode);
 
-            firstHeuristcNode = candidates->at(pos).second;
+                pos = this->randomRange(0, static_cast<int>((candidates->size() - 1) * alpha));
+
+                firstHeuristcNode = candidates->at(pos).second;
+            }
         }
 
         // Reseta os vértices para não marcados para gerar outras soluções
@@ -1041,10 +1026,13 @@ Metric Graph::randomizedHeuristic(float alpha, int numInter)
     metric.numberOfNodes = bestSolutionVector.size();
     return metric;
 }
-void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, string filename)
+void Graph::printRandomizedHeuristic(float alphas[], int size, int numInter, string filename, string instanceName)
 {
     ofstream file;
-    file.open(filename + "_randomized.txt");
+    file.open(filename);
+    file << "=============================" << endl;
+    file << "Algoritimo Guloso Randomizado Adaptativo - " << instanceName << endl;
+    file << "=============================" << endl;
     for (int i = 0; i < size; i++)
     {
         file << "=============================" << endl;
@@ -1159,7 +1147,7 @@ void Graph::updateAvgWeights(vector<pair<float, int>> *avgWeights, float alphas[
 
 Metric Graph::reativeHeuristic(float alphas[], int numIter)
 {
-
+    createNeighborhoodMap();
     std::chrono::time_point<std::chrono::high_resolution_clock> start, end;
     start = chrono::high_resolution_clock::now();
 
@@ -1230,7 +1218,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
                 break;
             }
 
-            candidates->erase(candidates->begin()+ pos);
+            candidates->erase(candidates->begin() + pos);
             candidates->shrink_to_fit();
 
             // Atualiza a lista de candidatos
@@ -1281,7 +1269,7 @@ Metric Graph::reativeHeuristic(float alphas[], int numIter)
 void Graph::printReativeHeuristic(float alphas[], int size, int numInter, string filename, string instanceName)
 {
     ofstream file;
-    file.open(filename + "_reative.txt");
+    file.open(filename);
     file << "=============================" << endl;
     file << "Instância: " << instanceName << endl;
     for (int i = 0; i < size; i++)
