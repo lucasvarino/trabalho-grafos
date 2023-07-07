@@ -789,6 +789,23 @@ Graph* Graph::getComplementGraph()
 }
 
 
+bool Graph::isEuclerian()
+{
+    if(isDirected() || !isWeightedEdges() || !isWeightedNodes()){
+        return false;
+    }
+
+    //verifica se todos os vértices possuem grau par
+    for(Node* current = this->getFirstNode(); current != nullptr; current = current->getNextNode()){
+        pair<int,int> nodeDegree = this->getNodeDegree(current->getId());
+        if(nodeDegree.first % 2 != 0){
+            return false;
+        }
+    }
+
+    return true;
+}
+
 
 /*
  * Função que conta quantas arestas não marcadas um vértice possui, para fazer o cálculo do peso relativo

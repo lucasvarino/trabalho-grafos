@@ -60,6 +60,7 @@ public:
     bool isNullGraph();
     bool isMultigraph();
     bool isBipartite();
+    bool isEuclerian();
 
     void printGraph(string filename);
     Graph* getInducedSubgraph(vector<int> nodes);

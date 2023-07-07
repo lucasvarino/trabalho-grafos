@@ -159,7 +159,7 @@ int main(int argc, char const *argv[])
     cout << "Instance: " << input_file << endl;
     // graph->printRelativeHeuristic(output_file, input_file);
     //  graph->printRandomizedHeuristic(alphas, 30, 1000, output_file, input_file);
-    // graph->printReativeHeuristic(alphas, 10, 5000, output_file, input_file);
+    //graph->printReativeHeuristic(alphas, 10, 5000, output_file, input_file);
     graph->printGraph("visualizeGraph.dot");
     vector<int> nodes;
     nodes.push_back(1);
