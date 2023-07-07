@@ -217,15 +217,15 @@ void menuParte1(string input_file, string output_file, bool isDirected, bool isW
             nodes.push_back(node);
             cin >> node;
         }
-        cout << "Subgrafo induzido criado em output/subgraph.dot" << endl;
+        cout << "Subgrafo induzido criado em " << output_file << endl;
         aux = graph->getInducedSubgraph(nodes);
-        aux->printGraph("output/subgraph.dot");
+        aux->printGraph(output_file);
         delete aux;
         break;
     case 16:
-        cout << "Grafo complementar criado em output/complementary.dot" << endl;
+        cout << "Grafo complementar criado em " << output_file << endl;
         aux = graph->getComplementGraph();
-        aux->printGraph("output/complementary.dot");
+        aux->printGraph(output_file);
         delete aux;
         break;
     case 17:
